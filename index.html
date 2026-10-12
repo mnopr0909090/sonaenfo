@@ -1,907 +1,135 @@
-<!-- =========================================================
-     SONINFO — PROFESSIONAL SETTLEMENT PAYMENT LOCK
-     Total Settlement: ₹3,600 + ₹450 = ₹4,050
-     
-     IMPORTANT:
-     PAYMENT_PENDING = true  -> Portal locked
-     PAYMENT_PENDING = false -> Portal unlocked
-     ========================================================= -->
-
+<!-- ===== Payment warning v2 (paste just before </body>, after your last </script>) =====
+     Purane code ko touch nahi karta. Purana payment-warning.html wala snippet hata dena, dono mat lagana. -->
 <style>
-/* =========================
-   SONINFO PAYMENT SCREEN
-   ========================= */
-
-#payLock{
-  position:fixed;
-  inset:0;
-  z-index:2147483000;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  overflow:auto;
-  padding:24px;
-  background:#f4f6f8;
-  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
-  color:#17202a;
-}
-
-#payLock *,
-#payLock *::before,
-#payLock *::after{
-  box-sizing:border-box;
-}
-
-/* Soft professional background */
-#payLock::before{
-  content:"";
-  position:fixed;
-  width:620px;
-  height:620px;
-  top:-260px;
-  right:-180px;
-  border-radius:50%;
-  background:rgba(15,118,110,.07);
-  pointer-events:none;
-}
-
-#payLock::after{
-  content:"";
-  position:fixed;
-  width:500px;
-  height:500px;
-  bottom:-280px;
-  left:-180px;
-  border-radius:50%;
-  background:rgba(37,99,235,.045);
-  pointer-events:none;
-}
-
-
-/* =========================
-   MAIN CARD
-   ========================= */
-
-.soni-payment-card{
-  position:relative;
-  z-index:2;
-  width:100%;
-  max-width:900px;
-  background:#fff;
-  border:1px solid #e1e6eb;
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:
-    0 20px 60px rgba(15,23,42,.10),
-    0 2px 8px rgba(15,23,42,.04);
-
-  animation:soniCardIn .35s ease-out both;
-}
-
-@keyframes soniCardIn{
-  from{
-    opacity:0;
-    transform:translateY(12px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-
-/* =========================
-   HEADER
-   ========================= */
-
-.soni-header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  padding:22px 28px;
-  border-bottom:1px solid #e8edf1;
-  background:#fff;
-}
-
-.soni-brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.soni-logo{
-  width:42px;
-  height:42px;
-  border-radius:10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#0f766e;
-  color:#fff;
-  font-size:20px;
-  font-weight:700;
-}
-
-.soni-brand-name{
-  font-size:16px;
-  font-weight:750;
-  letter-spacing:.08em;
-  color:#18212b;
-}
-
-.soni-brand-sub{
-  margin-top:2px;
-  font-size:10px;
-  letter-spacing:.08em;
-  color:#8994a0;
-}
-
-.soni-status{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  padding:8px 12px;
-  border-radius:8px;
-  background:#fff7ed;
-  border:1px solid #fed7aa;
-  color:#c2410c;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.05em;
-}
-
-.soni-status-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#ea580c;
-}
-
-
-/* =========================
-   CONTENT
-   ========================= */
-
-.soni-content{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0;
-}
-
-.soni-info{
-  padding:36px 32px;
-  border-right:1px solid #e8edf1;
-}
-
-.soni-info-label{
-  margin-bottom:9px;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:#64748b;
-}
-
-.soni-title{
-  margin:0;
-  font-size:32px;
-  line-height:1.15;
-  font-weight:750;
-  letter-spacing:-.025em;
-  color:#111827;
-}
-
-.soni-description{
-  margin:15px 0 0;
-  max-width:470px;
-  font-size:14px;
-  line-height:1.7;
-  color:#64748b;
-}
-
-.soni-notice{
-  margin-top:28px;
-  padding:15px 16px;
-  border-left:3px solid #0f766e;
-  border-radius:7px;
-  background:#f0fdfa;
-  color:#36505a;
-  font-size:13px;
-  line-height:1.6;
-}
-
-.soni-notice strong{
-  color:#115e59;
-}
-
-
-/* =========================
-   PAYMENT PANEL
-   ========================= */
-
-.soni-payment{
-  padding:36px 32px;
-  background:#fafbfc;
-}
-
-.soni-payment-heading{
-  margin-bottom:18px;
-  font-size:12px;
-  font-weight:750;
-  letter-spacing:.09em;
-  text-transform:uppercase;
-  color:#64748b;
-}
-
-.soni-total-box{
-  padding:22px;
-  border-radius:13px;
-  background:#122c35;
-  color:#fff;
-}
-
-.soni-total-label{
-  font-size:11px;
-  font-weight:600;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:#9fb5bb;
-}
-
-.soni-total{
-  margin-top:4px;
-  font-size:42px;
-  line-height:1.1;
-  font-weight:750;
-  letter-spacing:-.025em;
-  color:#fff;
-}
-
-.soni-total-note{
-  margin-top:7px;
-  font-size:12px;
-  color:#b8c9cd;
-}
-
-
-/* =========================
-   BREAKDOWN
-   ========================= */
-
-.soni-breakdown{
-  margin-top:16px;
-  border:1px solid #e1e7eb;
-  border-radius:12px;
-  overflow:hidden;
-  background:#fff;
-}
-
-.soni-row{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  padding:13px 15px;
-  border-bottom:1px solid #edf1f4;
-  font-size:13px;
-}
-
-.soni-row:last-child{
-  border-bottom:0;
-}
-
-.soni-row-label{
-  color:#64748b;
-}
-
-.soni-row-value{
-  font-weight:700;
-  color:#1e293b;
-}
-
-.soni-row.total{
-  background:#f8fafc;
-}
-
-.soni-row.total .soni-row-label{
-  color:#334155;
-  font-weight:700;
-}
-
-.soni-row.total .soni-row-value{
-  color:#0f766e;
-  font-size:15px;
-}
-
-
-/* =========================
-   REFERENCE
-   ========================= */
-
-.soni-reference{
-  margin-top:16px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  padding:13px 15px;
-  border:1px solid #e1e7eb;
-  border-radius:10px;
-  background:#fff;
-}
-
-.soni-reference-label{
-  font-size:11px;
-  color:#94a3b8;
-  text-transform:uppercase;
-  letter-spacing:.07em;
-}
-
-.soni-reference-value{
-  font-size:12px;
-  font-weight:700;
-  color:#334155;
-}
-
-
-/* =========================
-   STEPS
-   ========================= */
-
-.soni-steps{
-  margin-top:28px;
-}
-
-.soni-step{
-  display:flex;
-  gap:12px;
-  margin-bottom:15px;
-}
-
-.soni-step:last-child{
-  margin-bottom:0;
-}
-
-.soni-step-number{
-  flex:0 0 25px;
-  width:25px;
-  height:25px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:50%;
-  background:#e6f4f2;
-  color:#0f766e;
-  font-size:11px;
-  font-weight:800;
-}
-
-.soni-step-text{
-  padding-top:3px;
-  font-size:12.5px;
-  line-height:1.55;
-  color:#64748b;
-}
-
-
-/* =========================
-   FOOTER
-   ========================= */
-
-.soni-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
-  padding:18px 28px;
-  border-top:1px solid #e8edf1;
-  background:#fff;
-}
-
-.soni-footer-text{
-  font-size:11px;
-  color:#94a3b8;
-}
-
-.soni-contact{
-  display:flex;
-  gap:8px;
-}
-
-.soni-contact a{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:36px;
-  padding:0 13px;
-  border-radius:8px;
-  text-decoration:none;
-  font-size:12px;
-  font-weight:650;
-  transition:.15s ease;
-}
-
-.soni-contact a:hover{
-  transform:translateY(-1px);
-}
-
-.soni-btn-primary{
-  color:#fff;
-  background:#0f766e;
-}
-
-.soni-btn-secondary{
-  color:#334155;
-  background:#fff;
-  border:1px solid #d9e0e6;
-}
-
-
-/* =========================
-   MOBILE
-   ========================= */
-
-@media(max-width:760px){
-
-  #payLock{
-    padding:12px;
-    align-items:flex-start;
-  }
-
-  .soni-payment-card{
-    margin:10px 0;
-    border-radius:14px;
-  }
-
-  .soni-header{
-    padding:18px;
-  }
-
-  .soni-content{
-    grid-template-columns:1fr;
-  }
-
-  .soni-info{
-    padding:25px 20px;
-    border-right:0;
-    border-bottom:1px solid #e8edf1;
-  }
-
-  .soni-payment{
-    padding:25px 20px;
-  }
-
-  .soni-title{
-    font-size:27px;
-  }
-
-  .soni-total{
-    font-size:36px;
-  }
-
-  .soni-footer{
-    flex-direction:column;
-    align-items:stretch;
-    padding:18px;
-  }
-
-  .soni-contact{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-  }
-
-  .soni-status{
-    font-size:10px;
-  }
-}
-
-@media(max-width:420px){
-
-  .soni-brand-sub{
-    display:none;
-  }
-
-  .soni-status{
-    padding:7px 8px;
-  }
-
-  .soni-contact{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(prefers-reduced-motion:reduce){
-  .soni-payment-card{
-    animation:none;
-  }
-}
+#pwx,#pwx *{box-sizing:border-box}
+#pwx{font-family:"IBM Plex Sans",system-ui,sans-serif;--a:#f59e0b;--a2:#ef4444;--ac:var(--a)}
+#pwx.urgent{--ac:#ef4444}
+#pwx.over{--ac:#991b1b}
+
+/* ---------- popup ---------- */
+#pwPop{position:fixed;inset:0;z-index:400;display:none;place-items:center;padding:16px;background:rgba(3,7,14,.72);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+#pwPop.on{display:grid;animation:pwFade .25s ease both}
+.pw-m{position:relative;width:100%;max-width:470px;border-radius:26px;padding:30px 26px 24px;color:#f4f6fb;text-align:center;overflow:hidden;
+ background:radial-gradient(420px 220px at 50% -10%,color-mix(in srgb,var(--ac) 38%,transparent),transparent),linear-gradient(160deg,#101a2b,#080e19);
+ border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 40px 90px rgba(0,0,0,.6),0 0 60px color-mix(in srgb,var(--ac) 25%,transparent);animation:pwUp .45s cubic-bezier(.2,.9,.3,1.2) both}
+.pw-m:before{content:"";position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(-45deg,var(--ac) 0 12px,#111 12px 24px);background-size:34px 34px;animation:pwStripe 1.2s linear infinite}
+.pw-tag{display:inline-flex;align-items:center;gap:7px;margin-top:8px;padding:5px 13px;border-radius:99px;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);background:color-mix(in srgb,var(--ac) 14%,transparent);border:1px solid color-mix(in srgb,var(--ac) 40%,transparent)}
+.pw-dot{width:7px;height:7px;border-radius:50%;background:var(--ac);animation:pwBlink 1s infinite}
+.pw-m h2{font:600 28px/1.15 Newsreader,Georgia,serif;margin:14px 0 6px}
+.pw-m p{margin:0 auto;max-width:340px;color:#aeb9cb;font-size:14px}
+.pw-m p b{color:#fff}
+.pw-ringw{position:relative;width:176px;height:176px;margin:20px auto 6px}
+.pw-ringw svg{width:100%;height:100%;transform:rotate(-90deg)}
+.pw-ringw circle{fill:none;stroke-width:9;stroke-linecap:round}
+.pw-bg{stroke:rgba(255,255,255,.09)}
+.pw-fg{stroke:var(--ac);filter:drop-shadow(0 0 7px var(--ac));transition:stroke-dashoffset 1s linear,stroke .4s}
+.pw-ct{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.pw-ct b{font:600 40px/1 Newsreader,Georgia,serif;font-variant-numeric:tabular-nums}
+.pw-ct small{margin-top:5px;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#93a1b5}
+.pw-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:16px 0 14px}
+.pw-tile{padding:11px 0 8px;border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.09)}
+.pw-tile b{display:block;font:600 28px/1 Newsreader,Georgia,serif;font-variant-numeric:tabular-nums}
+.pw-tile b.tick{animation:pwTick .35s ease}
+.pw-tile small{display:block;margin-top:5px;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8190a6}
+.pw-amt{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.18);margin-bottom:16px;text-align:left}
+.pw-amt span{font-size:12px;color:#93a1b5}.pw-amt b{font:600 24px Newsreader,Georgia,serif;color:var(--ac)}
+.pw-btn{width:100%;border:0;border-radius:13px;padding:13px;font:600 14px "IBM Plex Sans",system-ui,sans-serif;color:#1a1204;cursor:pointer;background:linear-gradient(135deg,#fbbf24,var(--ac));box-shadow:0 10px 24px color-mix(in srgb,var(--ac) 40%,transparent);transition:.15s}
+#pwx.urgent .pw-btn,#pwx.over .pw-btn{color:#fff}
+.pw-btn:hover{filter:brightness(1.08)}.pw-btn:active{transform:scale(.98)}
+
+/* ---------- corner card ---------- */
+#pwCard{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:300;display:none;align-items:center;gap:12px;max-width:calc(100vw - 32px);padding:10px 16px 10px 10px;border-radius:18px;cursor:pointer;color:#f4f6fb;
+ background:linear-gradient(135deg,#101a2b,#0a111d);border:1px solid color-mix(in srgb,var(--ac) 55%,transparent);box-shadow:0 14px 36px rgba(0,0,0,.45),0 0 26px color-mix(in srgb,var(--ac) 28%,transparent);overflow:hidden;animation:pwUp .4s ease both}
+#pwCard.on{display:flex}
+#pwCard:before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.1) 50%,transparent 65%);transform:translateX(-120%);animation:pwShine 3.6s ease-in-out infinite}
+.pw-ico{position:relative;width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-size:21px;flex:none;color:#1a1204;background:linear-gradient(135deg,#fbbf24,var(--ac))}
+#pwx.urgent .pw-ico,#pwx.over .pw-ico{color:#fff}
+.pw-ico:after{content:"";position:absolute;inset:-4px;border-radius:16px;border:2px solid var(--ac);animation:pwRipple 1.8s ease-out infinite}
+.pw-cx{position:relative;line-height:1.25}
+.pw-cx small{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ac);font-weight:600}
+.pw-cx b{font:600 20px Newsreader,Georgia,serif;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.pw-cx span{display:block;font-size:11px;color:#93a1b5}
+
+@keyframes pwFade{from{opacity:0}}
+@keyframes pwUp{from{opacity:0;transform:translateY(22px) scale(.96)}}
+@keyframes pwStripe{to{background-position:34px 0}}
+@keyframes pwBlink{50%{opacity:.25}}
+@keyframes pwTick{0%{transform:translateY(-6px);opacity:.3}100%{transform:none;opacity:1}}
+@keyframes pwShine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+@keyframes pwRipple{0%{opacity:.8;transform:scale(.9)}100%{opacity:0;transform:scale(1.35)}}
+@media(max-width:480px){.pw-m{padding:26px 16px 20px}.pw-m h2{font-size:23px}.pw-ringw{width:150px;height:150px}.pw-ct b{font-size:34px}.pw-tile b{font-size:23px}}
+@media(prefers-reduced-motion:reduce){#pwx *,#pwx *:before,#pwx *:after{animation:none!important;transition:none!important}}
+@media print{#pwx{display:none!important}}
 </style>
 
-
-<!-- =========================================================
-     PAYMENT LOCK UI
-     ========================================================= -->
-
-<div id="payLock"
-     role="alertdialog"
-     aria-modal="true"
-     aria-labelledby="soniPaymentTitle">
-
-  <div class="soni-payment-card">
-
-    <!-- HEADER -->
-    <header class="soni-header">
-
-      <div class="soni-brand">
-
-        <div class="soni-logo">S</div>
-
-        <div>
-          <div class="soni-brand-name">SONAINFO</div>
-          <div class="soni-brand-sub">
-            PORTAL MANAGEMENT SYSTEM
-          </div>
-        </div>
-
+<div id="pwx">
+  <div id="pwPop" role="alertdialog" aria-modal="true" aria-labelledby="pwH2">
+    <div class="pw-m">
+      <span class="pw-tag"><i class="pw-dot"></i><span id="pwTag">Payment warning</span></span>
+      <h2 id="pwH2">Server will go down</h2>
+      <p id="pwMsg">If the payment of <b>₹4,050</b> is not made within <b>3 days</b>, the server will go down.</p>
+      <div class="pw-ringw">
+        <svg viewBox="0 0 120 120"><circle class="pw-bg" cx="60" cy="60" r="52"/><circle class="pw-fg" id="pwRing" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="0"/></svg>
+        <div class="pw-ct"><b id="pwBig">3d</b><small id="pwBigS">remaining</small></div>
       </div>
-
-      <div class="soni-status">
-        <span class="soni-status-dot"></span>
-        PAYMENT PENDING
+      <div class="pw-tiles">
+        <div class="pw-tile"><b id="pwD">00</b><small>Days</small></div>
+        <div class="pw-tile"><b id="pwH">00</b><small>Hours</small></div>
+        <div class="pw-tile"><b id="pwM">00</b><small>Min</small></div>
+        <div class="pw-tile"><b id="pwS">00</b><small>Sec</small></div>
       </div>
-
-    </header>
-
-
-    <!-- MAIN CONTENT -->
-    <div class="soni-content">
-
-      <!-- LEFT -->
-      <section class="soni-info">
-
-        <div class="soni-info-label">
-          Portal Access
-        </div>
-
-        <h1 class="soni-title" id="soniPaymentTitle">
-          Service temporarily suspended
-        </h1>
-
-        <p class="soni-description">
-          Access to the Sonainfo Portal is temporarily restricted
-          while the outstanding settlement amount is pending.
-          Portal services will be restored after the payment has
-          been successfully verified.
-        </p>
-
-        <div class="soni-notice">
-          <strong>Action required:</strong>
-          Please complete the settlement payment shown on this
-          notice and submit the payment confirmation through the
-          authorised channel.
-        </div>
-
-
-        <!-- STEPS -->
-        <div class="soni-steps">
-
-          <div class="soni-step">
-            <div class="soni-step-number">1</div>
-            <div class="soni-step-text">
-              Confirm the settlement amount with the authorised
-              office or IT Cell.
-            </div>
-          </div>
-
-          <div class="soni-step">
-            <div class="soni-step-number">2</div>
-            <div class="soni-step-text">
-              Complete the total settlement payment of
-              <strong>₹4,050</strong>.
-            </div>
-          </div>
-
-          <div class="soni-step">
-            <div class="soni-step-number">3</div>
-            <div class="soni-step-text">
-              Submit the payment receipt for verification.
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- RIGHT -->
-      <section class="soni-payment">
-
-        <div class="soni-payment-heading">
-          Settlement Summary
-        </div>
-
-
-        <!-- TOTAL -->
-        <div class="soni-total-box">
-
-          <div class="soni-total-label">
-            Total amount payable
-          </div>
-
-          <div class="soni-total" id="plAmt">
-            ₹4,050
-          </div>
-
-          <div class="soni-total-note">
-            Payment required to restore portal access
-          </div>
-
-        </div>
-
-
-        <!-- BREAKDOWN -->
-        <div class="soni-breakdown">
-
-          <div class="soni-row">
-            <span class="soni-row-label">
-              Settlement amount
-            </span>
-
-            <span class="soni-row-value">
-              ₹3,600
-            </span>
-          </div>
-
-          <div class="soni-row">
-            <span class="soni-row-label">
-              Additional settlement
-            </span>
-
-            <span class="soni-row-value">
-              ₹450
-            </span>
-          </div>
-
-          <div class="soni-row total">
-            <span class="soni-row-label">
-              Total settlement
-            </span>
-
-            <span class="soni-row-value" id="plAmt2">
-              ₹4,050
-            </span>
-          </div>
-
-        </div>
-
-
-        <!-- REFERENCE -->
-        <div class="soni-reference">
-
-          <span class="soni-reference-label">
-            Reference
-          </span>
-
-          <span class="soni-reference-value" id="plRef">
-            —
-          </span>
-
-        </div>
-
-      </section>
-
+      <div class="pw-amt"><span>Payment pending</span><b id="pwAmt">₹4,050</b></div>
+      <button class="pw-btn" onclick="pwClose()">I understand</button>
     </div>
-
-
-    <!-- FOOTER -->
-    <footer class="soni-footer">
-
-      <div class="soni-footer-text">
-        Sonainfo Portal · Settlement Notice ·
-        <span id="plNow">—</span>
-      </div>
-
-      <div class="soni-contact">
-
-        <a
-          class="soni-btn-primary"
-          href="mailto:it@sonainfo.com?subject=Sonainfo%20Settlement%20Payment">
-          Contact IT
-        </a>
-
-        <a
-          class="soni-btn-secondary"
-          href="mailto:chairman@sonainfo.com?subject=Sonainfo%20Settlement%20Payment">
-          Office
-        </a>
-
-      </div>
-
-    </footer>
-
   </div>
 
+  <div id="pwCard" role="status" onclick="pwOpen()" title="Click for details">
+    <div class="pw-ico">⚠</div>
+    <div class="pw-cx"><small id="pwCT">Payment due</small><b id="pwCB">00d 00:00:00</b><span id="pwCS">₹4,050 · server will go down</span></div>
+  </div>
 </div>
-
 
 <script>
 (function(){
-
-  /* =========================================
-     SONINFO PAYMENT CONFIGURATION
-     ========================================= */
-
-  var PAYMENT_PENDING = true;
-
-  /*
-     Settlement calculation:
-     ₹3,600 + ₹450 = ₹4,050
-  */
-
-  var SETTLEMENT_AMOUNT = 3600;
-  var ADDITIONAL_AMOUNT = 450;
-
-  var TOTAL_AMOUNT =
-      SETTLEMENT_AMOUNT +
-      ADDITIONAL_AMOUNT;
-
-  var initialized = false;
-
-
-  /* =========================================
-     INITIALIZE NOTICE
-     ========================================= */
-
-  function setupPaymentNotice(){
-
-    var amountText =
-      '₹' + TOTAL_AMOUNT.toLocaleString('en-IN');
-
-
-    /* Total amount */
-    var amount =
-      document.getElementById('plAmt');
-
-    if(amount){
-      amount.textContent = amountText;
-    }
-
-
-    /* Total breakdown */
-    var amount2 =
-      document.getElementById('plAmt2');
-
-    if(amount2){
-      amount2.textContent = amountText;
-    }
-
-
-    /* Reference number */
-    var now = new Date();
-
-    var pad = function(value){
-      return String(value).padStart(2,'0');
-    };
-
-    var reference =
-      'SNI-' +
-      now.getFullYear() +
-      pad(now.getMonth()+1) +
-      pad(now.getDate()) +
-      '-SET' +
-      TOTAL_AMOUNT;
-
-    var ref =
-      document.getElementById('plRef');
-
-    if(ref){
-      ref.textContent = reference;
-    }
-
-
-    /* Suspension timestamp */
-    var timestamp =
-      document.getElementById('plNow');
-
-    if(timestamp){
-
-      timestamp.textContent =
-        now.toLocaleString('en-GB',{
-          day:'2-digit',
-          month:'short',
-          year:'numeric',
-          hour:'2-digit',
-          minute:'2-digit'
-        });
-
-    }
-
-    initialized = true;
-  }
-
-
-  /* =========================================
-     APPLY PAYMENT LOCK
-     ========================================= */
-
-  function applyPaymentLock(){
-
-    var lock =
-      document.getElementById('payLock');
-
-    if(!lock) return;
-
-
-    /*
-       If payment is cleared,
-       remove the lock.
-    */
-
-    if(!PAYMENT_PENDING){
-
-      lock.style.display = 'none';
-
-      document.body.style.overflow = '';
-
+  /* ---- Settings: yahan se badlo ---- */
+  var AMOUNT = 4050;                                              // payment (₹)
+  var DEADLINE = new Date('2026-10-15T20:02:00+05:30').getTime(); // 12 Oct 20:02 + 3 din
+  var TOTAL = 3*24*60*60*1000;
+  var POPUP_ONCE_PER_SESSION = true;                              // false = har baar page khulne par popup
+  /* ---------------------------------- */
+  var root=document.getElementById('pwx'),pop=document.getElementById('pwPop'),card=document.getElementById('pwCard');
+  var $=function(i){return document.getElementById(i)},p2=function(n){return String(n).padStart(2,'0')};
+  var amt='₹'+AMOUNT.toLocaleString('en-IN'),C=2*Math.PI*52,last={};
+  $('pwAmt').textContent=amt;
+  function setT(id,v){var e=$(id);if(e.textContent!==v){e.textContent=v;e.classList.remove('tick');void e.offsetWidth;e.classList.add('tick')}}
+  window.pwOpen=function(){pop.classList.add('on');card.classList.remove('on')};
+  window.pwClose=function(){pop.classList.remove('on');card.classList.add('on');try{sessionStorage.setItem('pw_seen','1')}catch(e){}};
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pop.classList.contains('on'))pwClose()});
+  pop.addEventListener('click',function(e){if(e.target===pop)pwClose()});
+  var seen=false;try{seen=POPUP_ONCE_PER_SESSION&&sessionStorage.getItem('pw_seen')}catch(e){}
+  seen?card.classList.add('on'):pop.classList.add('on');
+  function tick(){
+    var left=DEADLINE-Date.now(),ring=$('pwRing');
+    if(left<=0){
+      root.classList.remove('urgent');root.classList.add('over');
+      $('pwTag').textContent='Payment overdue';$('pwH2').textContent='Deadline has passed';
+      $('pwMsg').innerHTML='Payment of <b>'+amt+'</b> was not made in time. The server may go down at any moment. Please pay immediately.';
+      $('pwBig').textContent='0';$('pwBigS').textContent='overdue';
+      ['pwD','pwH','pwM','pwS'].forEach(function(i){$(i).textContent='00'});
+      ring.style.strokeDashoffset=C;$('pwCT').textContent='Payment overdue';$('pwCB').textContent='00d 00:00:00';$('pwCS').textContent=amt+' · pay immediately';
       return;
     }
-
-
-    if(!initialized){
-      setupPaymentNotice();
-    }
-
-
-    /* Show payment screen */
-    lock.style.display = 'flex';
-
-    document.body.style.overflow = 'hidden';
-
-
-    /*
-       Hide existing portal screens.
-       These IDs should match your existing website.
-    */
-
-    var app =
-      document.getElementById('app');
-
-    var login =
-      document.getElementById('login');
-
-    var serverDown =
-      document.getElementById('serverDown5PM');
-
-
-    if(app){
-      app.style.display = 'none';
-    }
-
-    if(login){
-      login.style.display = 'none';
-    }
-
-    if(serverDown){
-      serverDown.style.display = 'none';
-    }
-
+    var s=Math.floor(left/1000),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60),sc=s%60;
+    setT('pwD',p2(d));setT('pwH',p2(h));setT('pwM',p2(m));setT('pwS',p2(sc));
+    ring.style.strokeDasharray=C;ring.style.strokeDashoffset=C*(1-Math.max(0,Math.min(1,left/TOTAL)));
+    var urgent=left<864e5;root.classList.toggle('urgent',urgent);
+    $('pwBig').textContent=urgent?(h+'h'):(d+'d');$('pwBigS').textContent=urgent?'last 24 hours':'remaining';
+    $('pwH2').textContent=urgent?'Last 24 hours!':'Server will go down';
+    $('pwMsg').innerHTML='If the payment of <b>'+amt+'</b> is not made within <b>'+(urgent?'24 hours':'3 days')+'</b>, the server will go down.';
+    $('pwCT').textContent=urgent?'Last 24 hours':'Payment due';
+    $('pwCB').textContent=p2(d)+'d '+p2(h)+':'+p2(m)+':'+p2(sc);
+    $('pwCS').textContent=amt+' · server will go down';
   }
-
-
-  /* Initial load */
-  applyPaymentLock();
-
-
-  /*
-     Keep the payment lock active
-     while payment is pending.
-  */
-
-  setInterval(
-    applyPaymentLock,
-    1000
-  );
-
+  tick();setInterval(tick,1000);
 })();
 </script>
