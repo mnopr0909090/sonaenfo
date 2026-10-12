@@ -1,128 +1,907 @@
-<!-- ===== Sonainfo: Premium "Service Suspended – Payment Pending" screen (v2) =====
-     Paste just before </body>, after the existing scripts.
-     Unlock: set PAYMENT_PENDING = false. Remove the older payLock snippet if you pasted it. -->
+<!-- =========================================================
+     SONINFO — PROFESSIONAL SETTLEMENT PAYMENT LOCK
+     Total Settlement: ₹3,600 + ₹450 = ₹4,050
+     
+     IMPORTANT:
+     PAYMENT_PENDING = true  -> Portal locked
+     PAYMENT_PENDING = false -> Portal unlocked
+     ========================================================= -->
+
 <style>
-#payLock{display:none;position:fixed;inset:0;z-index:2147483000;overflow:auto;padding:28px 18px;
- align-items:center;justify-content:center;font-family:"IBM Plex Sans",system-ui,sans-serif;color:#e9eef5;
- background:#050b14}
-#payLock:before{content:"";position:fixed;inset:-20%;pointer-events:none;
- background:radial-gradient(600px 420px at 15% 20%,rgba(15,118,110,.55),transparent 70%),
-            radial-gradient(620px 440px at 88% 85%,rgba(184,134,43,.45),transparent 70%),
-            radial-gradient(500px 360px at 70% 10%,rgba(79,70,229,.18),transparent 70%);
- animation:plDrift 16s ease-in-out infinite alternate}
-#payLock:after{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;
- background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
- background-size:44px 44px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%)}
-@keyframes plDrift{to{transform:translate3d(3%,-3%,0) scale(1.08)}}
-#payLock *{box-sizing:border-box}
-.pl-wrap{position:relative;z-index:2;width:100%;max-width:980px;display:grid;grid-template-columns:1fr 1.08fr;
- border-radius:26px;overflow:hidden;border:1px solid rgba(230,194,110,.28);
- box-shadow:0 50px 120px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.04) inset;animation:plIn .6s cubic-bezier(.2,.8,.2,1) both}
-@keyframes plIn{from{opacity:0;transform:translateY(22px) scale(.98)}}
-.pl-left{padding:44px 38px;background:linear-gradient(165deg,rgba(15,58,56,.92),rgba(8,24,38,.96));display:flex;flex-direction:column;gap:22px}
-.pl-brand{display:flex;align-items:center;gap:12px}
-.pl-logo{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font:600 24px Newsreader,Georgia,serif;color:#fff;
- background:linear-gradient(135deg,#0f766e,#0b3a38);box-shadow:0 8px 20px rgba(15,118,110,.45)}
-.pl-bt{font:600 15px Newsreader,Georgia,serif;letter-spacing:.34em;color:#cfd9e6}.pl-bt b{color:#e6c26e}
-.pl-bt small{display:block;font:500 10px "IBM Plex Sans",sans-serif;letter-spacing:.18em;color:#7f92a8;margin-top:2px}
-.pl-badge{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.14em;
- padding:7px 14px;border-radius:99px;background:rgba(196,43,43,.16);color:#ff9a9a;border:1px solid rgba(196,43,43,.5)}
-.pl-badge i{width:8px;height:8px;border-radius:50%;background:#ef4444;animation:plPulse 1.5s infinite}
-@keyframes plPulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.65)}100%{box-shadow:0 0 0 10px rgba(239,68,68,0)}}
-.pl-left h1{font:600 46px/1.05 Newsreader,Georgia,serif;margin:0;color:#fff;letter-spacing:-.01em}
-.pl-left h1 span{display:block;font-size:20px;font-weight:500;color:#e6c26e;margin-top:10px;letter-spacing:0}
-.pl-left p{margin:0;color:#b6c4d4;line-height:1.7;font-size:14.5px}
-.pl-tl{margin-top:auto;border-left:2px solid rgba(255,255,255,.12);padding-left:18px;display:grid;gap:16px}
-.pl-tl div{position:relative;font-size:13px;color:#93a4b8}
-.pl-tl div b{display:block;color:#e9eef5;font-weight:600;font-size:13.5px}
-.pl-tl div:before{content:"";position:absolute;left:-25px;top:4px;width:12px;height:12px;border-radius:50%;background:#0b1d2e;border:2px solid #4b5b70}
-.pl-tl .done:before{background:#12803f;border-color:#12803f}
-.pl-tl .now:before{background:#c42b2b;border-color:#c42b2b;box-shadow:0 0 0 5px rgba(196,43,43,.22)}
-.pl-tl .now b{color:#ffb4b4}
-.pl-right{padding:44px 38px;background:linear-gradient(180deg,#ffffff,#f3f6fa);color:#131f2e;display:flex;flex-direction:column;gap:18px}
-.pl-rh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.pl-rh small{font-size:11px;font-weight:700;letter-spacing:.16em;color:#637085}
-.pl-rh h2{font:600 24px Newsreader,Georgia,serif;margin:2px 0 0;color:#0b1d2e}
-.pl-stamp{font-size:11px;font-weight:800;letter-spacing:.14em;color:#c42b2b;border:2px solid #c42b2b;border-radius:8px;padding:5px 10px;transform:rotate(-5deg);background:rgba(196,43,43,.06)}
-.pl-amt{position:relative;padding:22px;border-radius:18px;color:#fff;overflow:hidden;
- background:linear-gradient(135deg,#0b1d2e,#0f4a46);box-shadow:0 16px 36px rgba(11,29,46,.28)}
-.pl-amt:after{content:"₹";position:absolute;right:14px;top:-26px;font:600 150px Newsreader,serif;color:rgba(230,194,110,.12);line-height:1}
-.pl-amt small{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a9c7c2}
-.pl-amt b{display:block;font:600 52px/1.1 Newsreader,Georgia,serif;color:#e6c26e;margin-top:4px}
-.pl-amt span{font-size:12px;color:#a9c7c2}
-.pl-tbl{border:1px solid #dfe4ec;border-radius:14px;background:#fff;overflow:hidden}
-.pl-tbl div{display:flex;justify-content:space-between;gap:12px;padding:11px 16px;font-size:13px;border-bottom:1px solid #edf0f5}
-.pl-tbl div:last-child{border:0}.pl-tbl span{color:#637085}.pl-tbl b{color:#131f2e;text-align:right}
-.pl-tbl .due b{color:#c42b2b}
-.pl-steps{display:grid;gap:10px}
-.pl-steps div{display:flex;gap:12px;align-items:flex-start;font-size:13px;color:#3a4a5e;line-height:1.5}
-.pl-steps em{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font:700 12px "IBM Plex Sans";font-style:normal;color:#fff;background:#0f766e}
-.pl-cta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:2px}
-.pl-cta a{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;padding:13px 10px;border-radius:12px;font-weight:600;font-size:13.5px;transition:.15s}
-.pl-cta a.p{background:linear-gradient(135deg,#0f766e,#0b3a38);color:#fff;box-shadow:0 8px 20px rgba(15,118,110,.32)}
-.pl-cta a.s{background:#fff;color:#0b1d2e;border:1px solid #cfd8e3}
-.pl-cta a:hover{transform:translateY(-2px)}
-.pl-ft{text-align:center;font-size:11px;color:#8a95a7;margin-top:auto}
-@media(max-width:820px){.pl-wrap{grid-template-columns:1fr;max-width:520px}.pl-left{padding:30px 24px;gap:16px}.pl-left h1{font-size:36px}.pl-tl{display:none}.pl-right{padding:28px 22px}.pl-amt b{font-size:42px}.pl-cta{grid-template-columns:1fr}}
-@media(prefers-reduced-motion:reduce){#payLock:before,.pl-wrap,.pl-badge i{animation:none}}
+/* =========================
+   SONINFO PAYMENT SCREEN
+   ========================= */
+
+#payLock{
+  position:fixed;
+  inset:0;
+  z-index:2147483000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+  padding:24px;
+  background:#f4f6f8;
+  font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;
+  color:#17202a;
+}
+
+#payLock *,
+#payLock *::before,
+#payLock *::after{
+  box-sizing:border-box;
+}
+
+/* Soft professional background */
+#payLock::before{
+  content:"";
+  position:fixed;
+  width:620px;
+  height:620px;
+  top:-260px;
+  right:-180px;
+  border-radius:50%;
+  background:rgba(15,118,110,.07);
+  pointer-events:none;
+}
+
+#payLock::after{
+  content:"";
+  position:fixed;
+  width:500px;
+  height:500px;
+  bottom:-280px;
+  left:-180px;
+  border-radius:50%;
+  background:rgba(37,99,235,.045);
+  pointer-events:none;
+}
+
+
+/* =========================
+   MAIN CARD
+   ========================= */
+
+.soni-payment-card{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:900px;
+  background:#fff;
+  border:1px solid #e1e6eb;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:
+    0 20px 60px rgba(15,23,42,.10),
+    0 2px 8px rgba(15,23,42,.04);
+
+  animation:soniCardIn .35s ease-out both;
+}
+
+@keyframes soniCardIn{
+  from{
+    opacity:0;
+    transform:translateY(12px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =========================
+   HEADER
+   ========================= */
+
+.soni-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding:22px 28px;
+  border-bottom:1px solid #e8edf1;
+  background:#fff;
+}
+
+.soni-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.soni-logo{
+  width:42px;
+  height:42px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#0f766e;
+  color:#fff;
+  font-size:20px;
+  font-weight:700;
+}
+
+.soni-brand-name{
+  font-size:16px;
+  font-weight:750;
+  letter-spacing:.08em;
+  color:#18212b;
+}
+
+.soni-brand-sub{
+  margin-top:2px;
+  font-size:10px;
+  letter-spacing:.08em;
+  color:#8994a0;
+}
+
+.soni-status{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 12px;
+  border-radius:8px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#c2410c;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.05em;
+}
+
+.soni-status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#ea580c;
+}
+
+
+/* =========================
+   CONTENT
+   ========================= */
+
+.soni-content{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+}
+
+.soni-info{
+  padding:36px 32px;
+  border-right:1px solid #e8edf1;
+}
+
+.soni-info-label{
+  margin-bottom:9px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:#64748b;
+}
+
+.soni-title{
+  margin:0;
+  font-size:32px;
+  line-height:1.15;
+  font-weight:750;
+  letter-spacing:-.025em;
+  color:#111827;
+}
+
+.soni-description{
+  margin:15px 0 0;
+  max-width:470px;
+  font-size:14px;
+  line-height:1.7;
+  color:#64748b;
+}
+
+.soni-notice{
+  margin-top:28px;
+  padding:15px 16px;
+  border-left:3px solid #0f766e;
+  border-radius:7px;
+  background:#f0fdfa;
+  color:#36505a;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.soni-notice strong{
+  color:#115e59;
+}
+
+
+/* =========================
+   PAYMENT PANEL
+   ========================= */
+
+.soni-payment{
+  padding:36px 32px;
+  background:#fafbfc;
+}
+
+.soni-payment-heading{
+  margin-bottom:18px;
+  font-size:12px;
+  font-weight:750;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:#64748b;
+}
+
+.soni-total-box{
+  padding:22px;
+  border-radius:13px;
+  background:#122c35;
+  color:#fff;
+}
+
+.soni-total-label{
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#9fb5bb;
+}
+
+.soni-total{
+  margin-top:4px;
+  font-size:42px;
+  line-height:1.1;
+  font-weight:750;
+  letter-spacing:-.025em;
+  color:#fff;
+}
+
+.soni-total-note{
+  margin-top:7px;
+  font-size:12px;
+  color:#b8c9cd;
+}
+
+
+/* =========================
+   BREAKDOWN
+   ========================= */
+
+.soni-breakdown{
+  margin-top:16px;
+  border:1px solid #e1e7eb;
+  border-radius:12px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.soni-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:13px 15px;
+  border-bottom:1px solid #edf1f4;
+  font-size:13px;
+}
+
+.soni-row:last-child{
+  border-bottom:0;
+}
+
+.soni-row-label{
+  color:#64748b;
+}
+
+.soni-row-value{
+  font-weight:700;
+  color:#1e293b;
+}
+
+.soni-row.total{
+  background:#f8fafc;
+}
+
+.soni-row.total .soni-row-label{
+  color:#334155;
+  font-weight:700;
+}
+
+.soni-row.total .soni-row-value{
+  color:#0f766e;
+  font-size:15px;
+}
+
+
+/* =========================
+   REFERENCE
+   ========================= */
+
+.soni-reference{
+  margin-top:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  padding:13px 15px;
+  border:1px solid #e1e7eb;
+  border-radius:10px;
+  background:#fff;
+}
+
+.soni-reference-label{
+  font-size:11px;
+  color:#94a3b8;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+
+.soni-reference-value{
+  font-size:12px;
+  font-weight:700;
+  color:#334155;
+}
+
+
+/* =========================
+   STEPS
+   ========================= */
+
+.soni-steps{
+  margin-top:28px;
+}
+
+.soni-step{
+  display:flex;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.soni-step:last-child{
+  margin-bottom:0;
+}
+
+.soni-step-number{
+  flex:0 0 25px;
+  width:25px;
+  height:25px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:#e6f4f2;
+  color:#0f766e;
+  font-size:11px;
+  font-weight:800;
+}
+
+.soni-step-text{
+  padding-top:3px;
+  font-size:12.5px;
+  line-height:1.55;
+  color:#64748b;
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+.soni-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:18px 28px;
+  border-top:1px solid #e8edf1;
+  background:#fff;
+}
+
+.soni-footer-text{
+  font-size:11px;
+  color:#94a3b8;
+}
+
+.soni-contact{
+  display:flex;
+  gap:8px;
+}
+
+.soni-contact a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:36px;
+  padding:0 13px;
+  border-radius:8px;
+  text-decoration:none;
+  font-size:12px;
+  font-weight:650;
+  transition:.15s ease;
+}
+
+.soni-contact a:hover{
+  transform:translateY(-1px);
+}
+
+.soni-btn-primary{
+  color:#fff;
+  background:#0f766e;
+}
+
+.soni-btn-secondary{
+  color:#334155;
+  background:#fff;
+  border:1px solid #d9e0e6;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media(max-width:760px){
+
+  #payLock{
+    padding:12px;
+    align-items:flex-start;
+  }
+
+  .soni-payment-card{
+    margin:10px 0;
+    border-radius:14px;
+  }
+
+  .soni-header{
+    padding:18px;
+  }
+
+  .soni-content{
+    grid-template-columns:1fr;
+  }
+
+  .soni-info{
+    padding:25px 20px;
+    border-right:0;
+    border-bottom:1px solid #e8edf1;
+  }
+
+  .soni-payment{
+    padding:25px 20px;
+  }
+
+  .soni-title{
+    font-size:27px;
+  }
+
+  .soni-total{
+    font-size:36px;
+  }
+
+  .soni-footer{
+    flex-direction:column;
+    align-items:stretch;
+    padding:18px;
+  }
+
+  .soni-contact{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .soni-status{
+    font-size:10px;
+  }
+}
+
+@media(max-width:420px){
+
+  .soni-brand-sub{
+    display:none;
+  }
+
+  .soni-status{
+    padding:7px 8px;
+  }
+
+  .soni-contact{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .soni-payment-card{
+    animation:none;
+  }
+}
 </style>
 
-<div id="payLock" role="alertdialog" aria-modal="true" aria-labelledby="plTitle">
- <div class="pl-wrap">
-  <section class="pl-left">
-   <div class="pl-brand"><div class="pl-logo">S</div><div class="pl-bt">SONA<b>INFO</b><small>PEOPLE · IDEAS · IMPACT</small></div></div>
-   <span class="pl-badge"><i></i> SERVICE SUSPENDED</span>
-   <h1 id="plTitle">Server Down<span>Payment pending to restore access</span></h1>
-   <p>The Sonainfo Portal is temporarily unavailable for all employees. All modules, including cases, finance, exams and chat, are paused until the outstanding payment is cleared.</p>
-   <div class="pl-tl">
-    <div class="done"><b>Account active</b>Portal running normally</div>
-    <div class="now"><b>Service suspended</b>Awaiting payment of <span id="plAmtS">₹21,500</span></div>
-    <div><b>Access restored</b>Automatically after payment is confirmed</div>
-   </div>
-  </section>
-  <section class="pl-right">
-   <div class="pl-rh"><div><small>PAYMENT NOTICE</small><h2>Outstanding Balance</h2></div><span class="pl-stamp">UNPAID</span></div>
-   <div class="pl-amt"><small>Amount due</small><b id="plAmt">₹21,500</b><span>Pay in full to reactivate the portal for all employees</span></div>
-   <div class="pl-tbl">
-    <div><span>Reference No.</span><b id="plRef">—</b></div>
-    <div><span>Service</span><b>Sonainfo Portal · All users</b></div>
-    <div><span>Suspended on</span><b id="plNow">—</b></div>
-    <div class="due"><span>Status</span><b>Payment pending</b></div>
-   </div>
-   <div class="pl-steps">
-    <div><em>1</em><span>Contact the Chairman's Office or IT Cell and confirm the amount.</span></div>
-    <div><em>2</em><span>Complete the payment of <b id="plAmt2">₹21,500</b> and share the receipt.</span></div>
-    <div><em>3</em><span>Access is restored for every employee once payment is verified.</span></div>
-   </div>
-   <div class="pl-cta">
-    <a class="p" href="mailto:it@sonainfo.com?subject=Payment%20for%20Sonainfo%20Portal">✉ Contact IT Cell</a>
-    <a class="s" href="mailto:chairman@sonainfo.com?subject=Portal%20payment%20pending">☎ Chairman's Office</a>
-   </div>
-   <div class="pl-ft">🔒 Sonainfo Portal · Authorised persons only · All activity is logged</div>
-  </section>
- </div>
+
+<!-- =========================================================
+     PAYMENT LOCK UI
+     ========================================================= -->
+
+<div id="payLock"
+     role="alertdialog"
+     aria-modal="true"
+     aria-labelledby="soniPaymentTitle">
+
+  <div class="soni-payment-card">
+
+    <!-- HEADER -->
+    <header class="soni-header">
+
+      <div class="soni-brand">
+
+        <div class="soni-logo">S</div>
+
+        <div>
+          <div class="soni-brand-name">SONAINFO</div>
+          <div class="soni-brand-sub">
+            PORTAL MANAGEMENT SYSTEM
+          </div>
+        </div>
+
+      </div>
+
+      <div class="soni-status">
+        <span class="soni-status-dot"></span>
+        PAYMENT PENDING
+      </div>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <div class="soni-content">
+
+      <!-- LEFT -->
+      <section class="soni-info">
+
+        <div class="soni-info-label">
+          Portal Access
+        </div>
+
+        <h1 class="soni-title" id="soniPaymentTitle">
+          Service temporarily suspended
+        </h1>
+
+        <p class="soni-description">
+          Access to the Sonainfo Portal is temporarily restricted
+          while the outstanding settlement amount is pending.
+          Portal services will be restored after the payment has
+          been successfully verified.
+        </p>
+
+        <div class="soni-notice">
+          <strong>Action required:</strong>
+          Please complete the settlement payment shown on this
+          notice and submit the payment confirmation through the
+          authorised channel.
+        </div>
+
+
+        <!-- STEPS -->
+        <div class="soni-steps">
+
+          <div class="soni-step">
+            <div class="soni-step-number">1</div>
+            <div class="soni-step-text">
+              Confirm the settlement amount with the authorised
+              office or IT Cell.
+            </div>
+          </div>
+
+          <div class="soni-step">
+            <div class="soni-step-number">2</div>
+            <div class="soni-step-text">
+              Complete the total settlement payment of
+              <strong>₹4,050</strong>.
+            </div>
+          </div>
+
+          <div class="soni-step">
+            <div class="soni-step-number">3</div>
+            <div class="soni-step-text">
+              Submit the payment receipt for verification.
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- RIGHT -->
+      <section class="soni-payment">
+
+        <div class="soni-payment-heading">
+          Settlement Summary
+        </div>
+
+
+        <!-- TOTAL -->
+        <div class="soni-total-box">
+
+          <div class="soni-total-label">
+            Total amount payable
+          </div>
+
+          <div class="soni-total" id="plAmt">
+            ₹4,050
+          </div>
+
+          <div class="soni-total-note">
+            Payment required to restore portal access
+          </div>
+
+        </div>
+
+
+        <!-- BREAKDOWN -->
+        <div class="soni-breakdown">
+
+          <div class="soni-row">
+            <span class="soni-row-label">
+              Settlement amount
+            </span>
+
+            <span class="soni-row-value">
+              ₹3,600
+            </span>
+          </div>
+
+          <div class="soni-row">
+            <span class="soni-row-label">
+              Additional settlement
+            </span>
+
+            <span class="soni-row-value">
+              ₹450
+            </span>
+          </div>
+
+          <div class="soni-row total">
+            <span class="soni-row-label">
+              Total settlement
+            </span>
+
+            <span class="soni-row-value" id="plAmt2">
+              ₹4,050
+            </span>
+          </div>
+
+        </div>
+
+
+        <!-- REFERENCE -->
+        <div class="soni-reference">
+
+          <span class="soni-reference-label">
+            Reference
+          </span>
+
+          <span class="soni-reference-value" id="plRef">
+            —
+          </span>
+
+        </div>
+
+      </section>
+
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="soni-footer">
+
+      <div class="soni-footer-text">
+        Sonainfo Portal · Settlement Notice ·
+        <span id="plNow">—</span>
+      </div>
+
+      <div class="soni-contact">
+
+        <a
+          class="soni-btn-primary"
+          href="mailto:it@sonainfo.com?subject=Sonainfo%20Settlement%20Payment">
+          Contact IT
+        </a>
+
+        <a
+          class="soni-btn-secondary"
+          href="mailto:chairman@sonainfo.com?subject=Sonainfo%20Settlement%20Payment">
+          Office
+        </a>
+
+      </div>
+
+    </footer>
+
+  </div>
+
 </div>
+
 
 <script>
 (function(){
-  var PAYMENT_PENDING = true;   // set to false once ₹21,500 is received
-  var AMOUNT = 21500;
-  var done=false;
-  function setup(){
-    var f='₹'+AMOUNT.toLocaleString('en-IN'),d=new Date(),p=function(n){return String(n).padStart(2,'0')};
-    ['plAmt','plAmt2','plAmtS'].forEach(function(i){var e=document.getElementById(i);if(e)e.textContent=f});
-    var r=document.getElementById('plRef');if(r)r.textContent='SNI-'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-PAY'+AMOUNT;
-    var n=document.getElementById('plNow');if(n)n.textContent=d.toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-    done=true;
+
+  /* =========================================
+     SONINFO PAYMENT CONFIGURATION
+     ========================================= */
+
+  var PAYMENT_PENDING = true;
+
+  /*
+     Settlement calculation:
+     ₹3,600 + ₹450 = ₹4,050
+  */
+
+  var SETTLEMENT_AMOUNT = 3600;
+  var ADDITIONAL_AMOUNT = 450;
+
+  var TOTAL_AMOUNT =
+      SETTLEMENT_AMOUNT +
+      ADDITIONAL_AMOUNT;
+
+  var initialized = false;
+
+
+  /* =========================================
+     INITIALIZE NOTICE
+     ========================================= */
+
+  function setupPaymentNotice(){
+
+    var amountText =
+      '₹' + TOTAL_AMOUNT.toLocaleString('en-IN');
+
+
+    /* Total amount */
+    var amount =
+      document.getElementById('plAmt');
+
+    if(amount){
+      amount.textContent = amountText;
+    }
+
+
+    /* Total breakdown */
+    var amount2 =
+      document.getElementById('plAmt2');
+
+    if(amount2){
+      amount2.textContent = amountText;
+    }
+
+
+    /* Reference number */
+    var now = new Date();
+
+    var pad = function(value){
+      return String(value).padStart(2,'0');
+    };
+
+    var reference =
+      'SNI-' +
+      now.getFullYear() +
+      pad(now.getMonth()+1) +
+      pad(now.getDate()) +
+      '-SET' +
+      TOTAL_AMOUNT;
+
+    var ref =
+      document.getElementById('plRef');
+
+    if(ref){
+      ref.textContent = reference;
+    }
+
+
+    /* Suspension timestamp */
+    var timestamp =
+      document.getElementById('plNow');
+
+    if(timestamp){
+
+      timestamp.textContent =
+        now.toLocaleString('en-GB',{
+          day:'2-digit',
+          month:'short',
+          year:'numeric',
+          hour:'2-digit',
+          minute:'2-digit'
+        });
+
+    }
+
+    initialized = true;
   }
-  function lock(){
-    var o=document.getElementById('payLock');if(!o)return;
-    if(!PAYMENT_PENDING){o.style.display='none';return;}
-    if(!done)setup();
-    o.style.display='flex';document.body.style.overflow='hidden';
-    var a=document.getElementById('app'),l=document.getElementById('login'),s=document.getElementById('serverDown5PM');
-    if(a)a.style.display='none';if(l)l.style.display='none';if(s)s.style.display='none';
+
+
+  /* =========================================
+     APPLY PAYMENT LOCK
+     ========================================= */
+
+  function applyPaymentLock(){
+
+    var lock =
+      document.getElementById('payLock');
+
+    if(!lock) return;
+
+
+    /*
+       If payment is cleared,
+       remove the lock.
+    */
+
+    if(!PAYMENT_PENDING){
+
+      lock.style.display = 'none';
+
+      document.body.style.overflow = '';
+
+      return;
+    }
+
+
+    if(!initialized){
+      setupPaymentNotice();
+    }
+
+
+    /* Show payment screen */
+    lock.style.display = 'flex';
+
+    document.body.style.overflow = 'hidden';
+
+
+    /*
+       Hide existing portal screens.
+       These IDs should match your existing website.
+    */
+
+    var app =
+      document.getElementById('app');
+
+    var login =
+      document.getElementById('login');
+
+    var serverDown =
+      document.getElementById('serverDown5PM');
+
+
+    if(app){
+      app.style.display = 'none';
+    }
+
+    if(login){
+      login.style.display = 'none';
+    }
+
+    if(serverDown){
+      serverDown.style.display = 'none';
+    }
+
   }
-  lock();setInterval(lock,1000);
+
+
+  /* Initial load */
+  applyPaymentLock();
+
+
+  /*
+     Keep the payment lock active
+     while payment is pending.
+  */
+
+  setInterval(
+    applyPaymentLock,
+    1000
+  );
+
 })();
 </script>
