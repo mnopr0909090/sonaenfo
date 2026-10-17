@@ -458,7 +458,7 @@ const now=()=>new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',yea
 const today=()=>new Date().toISOString().slice(0,10);
 const dd=d=>new Date(d+'T00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 const KEY='sonainfo_v4';
-const VW=[['dashboard','Dashboard','⌂'],['cases','Cases','⚖'],['complaint','Register complaint','⚑'],['penalties','Penalty list','⚠'],['finance','Finance','₹'],['employees','Employees','♙'],['departments','Departments','▦'],['announcements','Announcements','◉'],['sec','SEC Committee','◈'],['dc','Disciplinary Committee','◈'],['hod','HOD Office','◈'],['exam','Exam Cell','✎'],['election','Election','🗳'],['chat','Chat','✉'],['pages','Website builder','＋'],['leave','Leave & Holidays','☀'],['reports','Reports','▤'],['tickets','Help desk','☎'],['audit','Audit log','☰'],['access','Access control','🔑'],['tokenbuyer','Token Buyer','🪙']];
+const VW=[['dashboard','Dashboard','⌂'],['cases','Cases','⚖'],['complaint','Register complaint','⚑'],['penalties','Penalty list','⚠'],['finance','Finance','₹'],['wallet','Sonainfo Wallet','◉'],['employees','Employees','♙'],['departments','Departments','▦'],['announcements','Announcements','◉'],['sec','SEC Committee','◈'],['dc','Disciplinary Committee','◈'],['hod','HOD Office','◈'],['exam','Exam Cell','✎'],['election','Election','🗳'],['chat','Chat','✉'],['pages','Website builder','＋'],['leave','Leave & Holidays','☀'],['reports','Reports','▤'],['tickets','Help desk','☎'],['audit','Audit log','☰'],['access','Access control','🔑'],['tokenbuyer','Token Buyer','🪙']];
 const AC=[['complaint','Register complaint'],['enquiry','Do enquiry'],['review','Review & take action'],['forward','Forward case'],['announce','Announce'],['penedit','Manage penalties'],['finedit','Edit finance'],['examedit','Manage exam cell'],['comment','Comment on cases'],['close','Close / reopen cases'],['propose','Propose decision'],['decide','Announce case decision'],['electionedit','Update election'],['accedit','Edit access'],['pgedit','Add website sections'],['tktedit','Resolve help-desk tickets'],['lvedit','Approve leave']];
 const D=[['SEC Committee','Rahul Kumar',60,4000000,2650000],['Disciplinary Committee','Ashish',45,2500000,1400000],['Financial Team','Neha Gupta',120,8000000,5100000],['Script','Shivani',420,12000000,7900000],['CEO Office','CEO',25,5000000,3200000],['HOD','Akaya',80,6000000,3800000],['Client Department','Client Dept Head',380,11000000,6700000],['IT','Shivani',670,11500000,7300000]];
 const DN=D.map(d=>d[0]);
@@ -1550,6 +1550,55 @@ document.addEventListener('keydown',function(e){
 });
 $('#proKeys').addEventListener('click',function(e){if(e.target.id==='proKeys')this.classList.remove('on')});
 addEventListener('scroll',function(){var b=$('#proTop');if(b)b.classList.toggle('on',scrollY>600)},{passive:true});
+/* ===== Sonainfo Wallet & profile balances =====
+   Initial entries are clearly marked illustrative and must be verified before use as financial records. */
+function initSonainfoWallet(){
+  S.wallets=S.wallets||{};
+  S.users.forEach(u=>{if(!S.wallets[u.id])S.wallets[u.id]={balance:0,openingBalance:0,transactions:[]};});
+  if(!S.walletDemoSeeded){
+    const chairman=S.users.find(u=>u.name==='Rahul Kumar'&&(u.role==='Chairman'||u.office==='Chairman'));
+    if(chairman){
+      S.wallets[chairman.id]={openingBalance:0,balance:0,transactions:[
+        {id:'DEMO-W001',date:'2026-10-14',type:'Withdrawal',amount:500000,note:'Illustrative entry — ₹5,00,000 withdrawal',status:'Demo / verify'},
+        {id:'DEMO-W002',date:'2026-10-15',type:'Withdrawal',amount:214000,note:'Illustrative entry — ₹2,14,000 withdrawal',status:'Demo / verify'},
+        {id:'DEMO-W003',date:'2026-10-16',type:'Withdrawal',amount:100000,note:'Illustrative entry — ₹1,00,000 withdrawal',status:'Demo / verify'}
+      ]};
+    }
+    S.walletDemoSeeded=true;
+  }
+  const chairmanNow=S.users.find(u=>u.name==='Rahul Kumar'&&(u.role==='Chairman'||u.office==='Chairman'));
+  if(chairmanNow && S.wallets[chairmanNow.id]){S.wallets[chairmanNow.id].balance=0;S.wallets[chairmanNow.id].openingBalance=0;}
+  S.users.forEach(u=>{u.perm=u.perm||{};u.perm.wallet=1;});
+}
+function walletBalance(u){const w=(S.wallets||{})[u.id];return w?Number(w.balance)||0:0;}
+function walletShare(u){const total=S.users.reduce((a,x)=>a+walletBalance(x),0);return total>0?walletBalance(u)/total*100:0;}
+function requestWalletWithdrawal(userId){
+ const u=S.users.find(x=>String(x.id)===String(userId)); if(!u){toast('Member not found');return;}
+ const bal=walletBalance(u);
+ if(bal<=0){toast('Your current wallet balance is ₹0. There is no amount available to withdraw.');return;}
+ form('Withdraw from Sonainfo Wallet',[{k:'amount',l:'Withdrawal amount (₹)',t:'number',v:''},{k:'holder',l:'Bank account holder name'},{k:'bank',l:'Bank name'},{k:'account',l:'Bank account number',t:'text'},{k:'ifsc',l:'IFSC code'},{k:'branch',l:'Branch (optional)'},{k:'confirm',l:'Confirm account number',t:'text'}],v=>{
+   const amount=Number(v.amount), account=String(v.account||'').trim(), confirm=String(v.confirm||'').trim(), ifsc=String(v.ifsc||'').trim().toUpperCase();
+   if(!Number.isFinite(amount)||amount<=0){toast('Enter a valid withdrawal amount');return;}
+   if(amount>bal){toast('Requested amount exceeds your available wallet balance');return;}
+   if(!v.holder||!v.bank||!account||!ifsc){toast('Please complete all required bank details');return;}
+   if(account!==confirm){toast('Bank account numbers do not match');return;}
+   if(!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)){toast('Enter a valid IFSC code');return;}
+   S.withdrawalRequests=S.withdrawalRequests||[];
+   S.withdrawalRequests.push({id:'WR-'+Date.now(),userId:u.id,userName:u.name,amount,date:today(),status:'Pending approval',bankHolder:v.holder,bankName:v.bank,accountNumber:account,ifsc,branch:v.branch||'',note:'Withdrawal request submitted by member'});
+   log('Wallet withdrawal request submitted for '+u.name+' ('+inr(amount)+')');save();cm();go('wallet');toast('Withdrawal request submitted for approval. No money has been transferred.');
+ },'Submit withdrawal request');
+ const note=document.createElement('p'); note.className='hint'; note.textContent='Available balance: '+inr(bal)+'. Your request will remain pending until an authorised reviewer approves it; this form does not transfer money.'; $('#mb').prepend(note);
+}
+function walletHTML(u,adminView=false){
+ const w=(S.wallets||{})[u.id]||{openingBalance:0,balance:0,transactions:[]};
+ const tx=[...(w.transactions||[])].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+ const totalTransactionAmount=tx.reduce((sum,t)=>sum+Number(t.amount||0),0);
+ return `<div class="cd" style="margin:12px 0;border:1px solid #cbd5e1"><h3>◉ Sonainfo Wallet ${adminView?'· '+esc(u.name):''}</h3><div class="cb"><div class="g3"><div class="kp"><small>Current wallet balance</small><div>${inr(walletBalance(u))}</div></div><div class="kp"><small>Total transaction amount</small><div>${inr(totalTransactionAmount)}</div></div><div class="kp"><small>Total transactions</small><div>${tx.length}</div></div><div class="kp"><small>Share of all member wallets</small><div>${walletShare(u).toFixed(2)}%</div></div></div><p class="hint">Wallet balance is a portal-recorded figure, not a bank balance. Demo/verify entries are not proof of actual payments.</p>${!adminView&&ME&&String(ME.id)===String(u.id)?`<p><button class="btn p" onclick="requestWalletWithdrawal('${String(u.id).replace(/'/g, '')}')">Withdraw wallet balance</button></p>`:''}<div class="tw"><table><thead><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th><th>Status</th></tr></thead><tbody>${tx.map(t=>`<tr><td>${esc(t.date||'—')}</td><td>${esc(t.type||'—')}</td><td>${esc(t.note||'—')}</td><td>${inr(t.amount||0)}</td><td><span class="tg y">${esc(t.status||'Recorded')}</span></td></tr>`).join('')||'<tr><td colspan="5" class="empty">No wallet transactions recorded.</td></tr>'}</tbody></table></div></div></div>`;
+}
+V.profile=()=>{initSonainfoWallet();return ph('My profile','Your account, Sonainfo Wallet and security.')+`<div class="g2"><div class="cd"><h3>Account</h3><div class="cb"><div class="row"><span>Member ID</span><b>${esc(ME.id)}</b></div><div class="row"><span>Name</span><b>${esc(ME.name)}</b></div><div class="row"><span>Email</span><b>${esc(ME.email)}</b></div><div class="row"><span>Role</span><b>${esc(ME.role)}</b></div><div class="row"><span>Office</span><b>${esc(ME.office)}</b></div><p style="margin-top:10px"><b>Your access</b></p><div class="qa" style="margin-top:6px">${[...VW,...AC].filter(k=>can(k[0])).map(k=>`<span class="tg g">${esc(k[1])}</span>`).join('')}</div></div></div><div class="cd"><h3>Change password</h3><div class="cb"><div class="fg"><label for="p0">Current password</label><input id="p0" type="password" autocomplete="current-password"></div><div class="fg"><label for="p1">New password (min 5 characters)</label><input id="p1" type="password" autocomplete="new-password"></div><div class="fg"><label for="p2">Confirm new password</label><input id="p2" type="password" autocomplete="new-password"></div><button class="btn p" onclick="chPw()">Update password</button><p class="hint">Forgot your password? Raise a ticket in Help desk or contact the IT Cell.</p></div></div></div>${walletHTML(ME)}`};
+V.wallet=()=>{initSonainfoWallet();const chair=ME&&(ME.role==='Chairman'||ME.office==='Chairman');const list=chair?S.users:[ME];return ph('Sonainfo Wallet',chair?'Chairman view · member balances and transaction records':'Your personal wallet balance and transaction records')+(chair?`<div class="cd"><h3>Member wallet overview</h3><div class="cb"><div class="g3"><div class="kp"><small>Members with wallet profiles</small><div>${S.users.length}</div></div><div class="kp"><small>Total current wallet balance</small><div>${inr(S.users.reduce((a,u)=>a+walletBalance(u),0))}</div></div><div class="kp"><small>Total transaction amount</small><div>${inr(S.users.reduce((a,u)=>a+((((S.wallets||{})[u.id]||{}).transactions)||[]).reduce((sum,t)=>sum+Number(t.amount||0),0),0))}</div></div><div class="kp"><small>Total transaction records</small><div>${S.users.reduce((a,u)=>a+(((S.wallets||{})[u.id]||{}).transactions||[]).length,0)}</div></div></div><p class="hint">Demo withdrawal rows for Rahul Kumar are illustrative placeholders; verify against authorised financial records before relying on them.</p></div></div>`:'')+list.map(u=>walletHTML(u,chair)).join('')};
+const _walletEnsure=window.ensure;
+window.ensure=function(){if(typeof _walletEnsure==='function')_walletEnsure.apply(this,arguments);initSonainfoWallet()};
 // login polish: remember email, remove demo hint exposure behind a clear label
 try{var em2=$('#em'),rm=$('#rememberLogin');
   if(em2&&localStorage.getItem('sona_last_email')){em2.value=localStorage.getItem('sona_last_email')}
