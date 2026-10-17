@@ -1558,20 +1558,22 @@ function initSonainfoWallet(){
   if(chairmanIdentity){chairmanIdentity.name='Rahul Kumar';chairmanIdentity.role='Chairman';chairmanIdentity.office='Chairman';chairmanIdentity.email=chairmanIdentity.email||'chairman@sonainfo.com';}
   S.wallets=S.wallets||{};
   S.users.forEach(u=>{if(!S.wallets[u.id])S.wallets[u.id]={balance:0,openingBalance:0,transactions:[]};});
-  if(!S.walletDemoSeeded){
-    const chairman=S.users.find(u=>u.name==='Rahul Kumar'&&(u.role==='Chairman'||u.office==='Chairman'));
-    if(chairman){
-      S.wallets[chairman.id]={openingBalance:0,balance:0,transactions:[
+  const chairmanNow=S.users.find(u=>u.name==='Rahul Kumar'&&(u.role==='Chairman'||u.office==='Chairman'));
+  /* Repair older locally saved versions that had the seed flag but no Chairman transactions. */
+  if(chairmanNow){
+    const cw=S.wallets[chairmanNow.id]||(S.wallets[chairmanNow.id]={balance:0,openingBalance:0,transactions:[]});
+    if(!Array.isArray(cw.transactions)||cw.transactions.length===0){
+      cw.transactions=[
         {id:'DEMO-W001',date:'2026-10-14',type:'Withdrawal',amount:500000,note:'Illustrative entry — ₹5,00,000 withdrawal',status:'Demo / verify'},
         {id:'DEMO-W002',date:'2026-10-15',type:'Withdrawal',amount:214000,note:'Illustrative entry — ₹2,14,000 withdrawal',status:'Demo / verify'},
         {id:'DEMO-W003',date:'2026-10-16',type:'Withdrawal',amount:100000,note:'Illustrative entry — ₹1,00,000 withdrawal',status:'Demo / verify'}
-      ]};
+      ];
     }
-    S.walletDemoSeeded=true;
+    cw.balance=0;cw.openingBalance=0;
   }
-  const chairmanNow=S.users.find(u=>u.name==='Rahul Kumar'&&(u.role==='Chairman'||u.office==='Chairman'));
-  if(chairmanNow && S.wallets[chairmanNow.id]){S.wallets[chairmanNow.id].balance=0;S.wallets[chairmanNow.id].openingBalance=0;}
+  S.walletDemoSeeded=true;
   S.users.forEach(u=>{u.perm=u.perm||{};u.perm.wallet=1;});
+  save();
 }
 function walletBalance(u){const w=(S.wallets||{})[u.id];return w?Number(w.balance)||0:0;}
 function walletShare(u){const total=S.users.reduce((a,x)=>a+walletBalance(x),0);return total>0?walletBalance(u)/total*100:0;}
