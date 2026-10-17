@@ -290,45 +290,30 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 <body>
 <!-- ===== Sonainfo Intro Splash (additive) ===== -->
 <style id="sonaSplashCss">
-#sonaSplash{position:fixed;inset:0;z-index:2000000;overflow:hidden;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 0%,#1b1464 0%,#0b0b3b 45%,#050521 100%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;transition:opacity .9s ease,transform .9s cubic-bezier(.7,0,.2,1),filter .9s}
-#sonaSplash.out{opacity:0;transform:scale(1.12);filter:blur(10px);pointer-events:none}
-#sonaSplash .aur{position:absolute;inset:-20%;filter:blur(70px);opacity:.75;background:
- radial-gradient(38% 38% at 20% 25%,#ff2d95aa,transparent 70%),radial-gradient(34% 34% at 80% 20%,#00e5ffaa,transparent 70%),
- radial-gradient(40% 40% at 70% 85%,#ffb300aa,transparent 70%),radial-gradient(36% 36% at 15% 80%,#7c4dffaa,transparent 70%);animation:sAur 12s ease-in-out infinite alternate}
-@keyframes sAur{to{transform:rotate(25deg) scale(1.18) translate(3%,-3%)}}
-#sonaSplash svg.zz{position:absolute;inset:0;width:100%;height:100%}
-#sonaSplash .zz path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:sDraw 2.2s cubic-bezier(.6,0,.2,1) forwards,sFloat 6s ease-in-out infinite alternate;animation-delay:var(--d),calc(var(--d) + 2.2s)}
-@keyframes sDraw{to{stroke-dashoffset:0}}
-@keyframes sFloat{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
-#sonaSplash .tri{position:absolute;width:0;height:0;opacity:0;animation:sPop .8s forwards,sSpin 9s linear infinite;animation-delay:var(--d),var(--d)}
-@keyframes sPop{to{opacity:.85}}@keyframes sSpin{to{transform:rotate(360deg)}}
-#sonaSplash .core{position:relative;z-index:2;text-align:center;padding:24px}
-#sonaSplash .mark{display:inline-flex;gap:7px;align-items:flex-end;height:62px;margin-bottom:18px}
-#sonaSplash .mark i{width:14px;border-radius:7px;animation:sBar 1.1s ease-in-out infinite alternate;box-shadow:0 0 28px currentColor}
-#sonaSplash .mark i:nth-child(1){height:30px;color:#00e5ff;background:#00e5ff}
-#sonaSplash .mark i:nth-child(2){height:50px;color:#ff2d95;background:#ff2d95;animation-delay:.18s}
-#sonaSplash .mark i:nth-child(3){height:38px;color:#ffc400;background:#ffc400;animation-delay:.36s}
-#sonaSplash .mark i:nth-child(4){height:58px;color:#7cff6b;background:#7cff6b;animation-delay:.54s}
-@keyframes sBar{to{transform:scaleY(.55)}}
-#sonaSplash h1{font:800 clamp(46px,11vw,128px)/1 "Newsreader",Georgia,serif;letter-spacing:.02em;display:flex;justify-content:center;flex-wrap:wrap;margin:0}
-#sonaSplash h1 span{display:inline-block;opacity:0;transform:translateY(60px) rotate(-8deg) scale(.6);background:linear-gradient(120deg,#00e5ff,#ff2d95,#ffc400,#7cff6b,#00e5ff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sLet .8s cubic-bezier(.2,1.4,.4,1) forwards,sShine 4s linear infinite;animation-delay:calc(1.4s + var(--i)*.09s),0s;filter:drop-shadow(0 8px 30px rgba(255,45,149,.35))}
-@keyframes sLet{to{opacity:1;transform:none}}@keyframes sShine{to{background-position:300% 0}}
-#sonaSplash .tag{margin-top:18px;font-weight:700;font-size:clamp(11px,1.6vw,15px);letter-spacing:.38em;opacity:0;animation:sUp .8s 2.6s forwards;color:#dbe4ff}
-#sonaSplash .tag b{color:#ffc400;margin:0 .5em}
-#sonaSplash .bar{margin:34px auto 0;width:min(320px,70vw);height:5px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;opacity:0;animation:sUp .6s 2.8s forwards}
-#sonaSplash .bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#00e5ff,#ff2d95,#ffc400,#7cff6b);animation:sLoad 1.9s 2.9s cubic-bezier(.5,0,.2,1) forwards}
-@keyframes sLoad{to{width:100%}}@keyframes sUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-#sonaSplash .st{margin-top:12px;font-size:12px;color:#b6c2ee;opacity:0;animation:sUp .6s 3s forwards}
-#sonaSplash .skip{position:absolute;right:18px;top:16px;z-index:3;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:99px;padding:8px 16px;font:700 12px Inter,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
-#sonaSplash .skip:hover{background:rgba(255,255,255,.22)}
-@media(prefers-reduced-motion:reduce){#sonaSplash *{animation-duration:.01s!important;animation-delay:0s!important}}
+#sonaSplash{position:fixed;inset:0;z-index:2000000;overflow:hidden;background:#050816;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;transition:opacity 1s ease,transform 1s cubic-bezier(.7,0,.2,1),filter 1s}
+#sonaSplash.out{opacity:0;transform:scale(1.06);filter:blur(8px);pointer-events:none}
+#sonaSplash .aur{position:absolute;inset:-25%;filter:blur(90px);opacity:.9;background:
+ radial-gradient(34% 34% at 22% 30%,#0e7490aa,transparent 70%),radial-gradient(30% 30% at 78% 24%,#4f46e5aa,transparent 70%),
+ radial-gradient(34% 34% at 70% 82%,#a21caf77,transparent 70%),radial-gradient(26% 26% at 20% 80%,#b4530966,transparent 70%);animation:sAur 16s ease-in-out infinite alternate}
+@keyframes sAur{to{transform:rotate(18deg) scale(1.15) translate(3%,-2%)}}
+@keyframes sShine{to{background-position:300% 0}}
+#sonaSplash::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(80% 70% at 50% 50%,transparent 45%,#02030acc 100%)}
+#sonaCv{position:absolute;inset:0;width:100%;height:100%;display:block}
+#sonaSplash .cap{position:absolute;left:0;right:0;bottom:14%;z-index:2;text-align:center;padding:0 16px}
+#sonaSplash .tag{font-weight:600;font-size:clamp(10px,1.4vw,14px);letter-spacing:.5em;color:#cbd5f5;opacity:0;animation:sUp 1s 2.6s forwards}
+#sonaSplash .tag b{color:#fcd34d;margin:0 .6em;font-weight:400}
+#sonaSplash .ln{margin:26px auto 0;width:min(260px,60vw);height:2px;background:rgba(255,255,255,.12);overflow:hidden;border-radius:2px;opacity:0;animation:sUp .6s 2.8s forwards}
+#sonaSplash .ln i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5eead4,#818cf8,#f0abfc,#fcd34d);animation:sLoad 2.2s 2.9s cubic-bezier(.5,0,.2,1) forwards}
+@keyframes sLoad{to{width:100%}}@keyframes sUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+#sonaSplash .skip{position:absolute;right:18px;top:16px;z-index:3;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.07);color:#e2e8f0;border-radius:99px;padding:8px 16px;font:600 12px Inter,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
+#sonaSplash .skip:hover{background:rgba(255,255,255,.18)}
 /* ---- colourful login upgrade ---- */
 #login.sonainfo-login{position:relative;isolation:isolate}
 #login.sonainfo-login::before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none;filter:blur(80px);opacity:.55;background:
  radial-gradient(30% 30% at 12% 18%,#ff2d9566,transparent 70%),radial-gradient(28% 28% at 88% 12%,#00e5ff66,transparent 70%),
  radial-gradient(32% 32% at 82% 88%,#ffc40066,transparent 70%),radial-gradient(30% 30% at 10% 90%,#7c4dff66,transparent 70%);animation:sAur 14s ease-in-out infinite alternate}
 .login-card{position:relative;overflow:hidden;border-radius:22px!important;box-shadow:0 24px 70px rgba(30,20,120,.22),0 2px 0 rgba(255,255,255,.4) inset!important;backdrop-filter:blur(14px)}
-.login-card::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:
+.login-card::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#5eead4,#818cf8,#f0abfc,#fcd34d)}
  linear-gradient(135deg,#00e5ff 25%,transparent 25%) -10px 0,linear-gradient(225deg,#ff2d95 25%,transparent 25%) -10px 0,linear-gradient(315deg,#ffc400 25%,transparent 25%),linear-gradient(45deg,#7cff6b 25%,transparent 25%);background-size:20px 20px;background-color:#fff0}
 .login-card .login-heading h2 span{background:linear-gradient(120deg,#0e7490,#7c3aed,#ec4899,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:sShine 6s linear infinite}
 .login-submit{background:linear-gradient(120deg,#0e7490,#4f46e5 50%,#c026d3)!important;border:0!important;box-shadow:0 12px 30px rgba(79,70,229,.38)!important;transition:transform .15s,box-shadow .15s!important}
@@ -341,44 +326,67 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 </style>
 <div id="sonaSplash" role="presentation" aria-label="Sonainfo welcome" style="display:none">
   <div class="aur"></div>
-  <svg class="zz" id="sonaZZ" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <canvas id="sonaCv" aria-hidden="true"></canvas>
   <button class="skip" type="button" id="sonaSkip">Skip ›</button>
-  <div class="core">
-    <div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <h1 id="sonaWord" aria-label="Sonainfo"></h1>
-    <div class="tag">PEOPLE <b>◆</b> SERVICES <b>◆</b> PROGRESS</div>
-    <div class="bar"><i></i></div>
-    <div class="st">Preparing your secure workspace…</div>
-  </div>
+  <div class="cap"><div class="tag">PEOPLE <b>◆</b> SERVICES <b>◆</b> PROGRESS</div><div class="ln"><i></i></div></div>
 </div>
 <script id="sonaSplashJs">
 (function(){
  var el=document.getElementById('sonaSplash');if(!el)return;
  var seen=false;try{seen=sessionStorage.getItem('sona_splash')==='1'}catch(e){}
  if(seen){el.remove();return}
- el.style.display='grid';document.documentElement.style.overflow='hidden';
- // letters
- var w=document.getElementById('sonaWord');'Sonainfo'.split('').forEach(function(c,i){var s=document.createElement('span');s.textContent=c;s.style.setProperty('--i',i);w.appendChild(s)});
- // zig-zag ribbons
- var svg=document.getElementById('sonaZZ'),W=1200,H=800,cols=['#00e5ff','#ff2d95','#ffc400','#7cff6b','#7c4dff','#ff6b35','#2dd4bf','#f472b6'];
- svg.setAttribute('viewBox','0 0 '+W+' '+H);
- var NS='http://www.w3.org/2000/svg',n=14;
- for(var k=0;k<n;k++){
-   var y0=(k+.5)*H/n,amp=26+(k%4)*14,step=40+(k%3)*18,x=-40,up=1,d='M'+x+' '+y0,len=0,px=x,py=y0;
-   while(x<W+60){x+=step;var y=y0+up*amp;d+=' L'+x+' '+y;len+=Math.hypot(x-px,y-py);px=x;py=y;up=-up}
-   var p=document.createElementNS(NS,'path');p.setAttribute('d',d);
-   p.setAttribute('stroke',cols[k%cols.length]);p.setAttribute('stroke-width',4+(k%3)*2);p.setAttribute('opacity',.55);
-   p.style.setProperty('--len',Math.ceil(len)+10);p.style.setProperty('--d',(k*.09)+'s');svg.appendChild(p);
+ el.style.display='block';document.documentElement.style.overflow='hidden';
+ var cv=document.getElementById('sonaCv'),cx=cv.getContext('2d'),W,H,DPR=Math.min(2,window.devicePixelRatio||1);
+ var P=[],nodes=[],mouse={x:-9e3,y:-9e3},t0=performance.now(),state='form',burstAt=0,raf=0;
+ var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+ var STOPS=[[94,234,212],[129,140,248],[240,171,252],[252,211,77]];
+ function col(u){u=Math.max(0,Math.min(.999,u))*3;var i=u|0,f=u-i,a=STOPS[i],b=STOPS[i+1];return[a[0]+(b[0]-a[0])*f|0,a[1]+(b[1]-a[1])*f|0,a[2]+(b[2]-a[2])*f|0]}
+ function build(){
+   W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;cx.setTransform(DPR,0,0,DPR,0,0);
+   var fs=Math.min(W*.17,H*.3,230),off=document.createElement('canvas');off.width=W;off.height=Math.ceil(fs*1.5);
+   var o=off.getContext('2d');o.fillStyle='#fff';o.textAlign='center';o.textBaseline='middle';
+   o.font='700 '+fs+'px Newsreader,Georgia,"Times New Roman",serif';o.fillText('Sonainfo',W/2,off.height/2);
+   var d=o.getImageData(0,0,off.width,off.height).data,gap=Math.max(3,Math.round(fs/46)),pts=[];
+   for(var y=0;y<off.height;y+=gap)for(var x=0;x<off.width;x+=gap)if(d[(y*off.width+x)*4+3]>128)pts.push([x,y]);
+   var top=H*.46-off.height/2;P=[];nodes=[];
+   var minx=1e9,maxx=-1e9;pts.forEach(function(q){if(q[0]<minx)minx=q[0];if(q[0]>maxx)maxx=q[0]});
+   pts.forEach(function(q,i){
+     var ang=Math.random()*6.283,r=Math.max(W,H)*(.6+Math.random()*.5),u=(q[0]-minx)/(maxx-minx||1);
+     var p={x:W/2+Math.cos(ang)*r,y:H/2+Math.sin(ang)*r,tx:q[0],ty:q[1]+top,vx:0,vy:0,c:col(u),s:1+Math.random()*1.3,dl:Math.random()*.9,ph:Math.random()*6.283};
+     P.push(p);if(i%18===0)nodes.push(p);
+   });
  }
- // floating triangles
- for(var t=0;t<22;t++){var tr=document.createElement('i');tr.className='tri';var s=8+Math.random()*16,c=cols[t%cols.length];
-   tr.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;border-left:'+s+'px solid transparent;border-right:'+s+'px solid transparent;border-bottom:'+s*1.6+'px solid '+c+';--d:'+(1+Math.random()*2)+'s';el.appendChild(tr)}
- var done=false;function close(){if(done)return;done=true;try{sessionStorage.setItem('sona_splash','1')}catch(e){}
-   el.classList.add('out');document.documentElement.style.overflow='';
-   setTimeout(function(){el.remove();var em=document.getElementById('em');if(em&&!em.value)try{em.focus({preventScroll:true})}catch(e){}},950)}
+ build();addEventListener('resize',function(){if(state==='form')build()});
+ el.addEventListener('pointermove',function(e){mouse.x=e.clientX;mouse.y=e.clientY});
+ function frame(now){
+   var t=(now-t0)/1000,fd=Math.min(8,Math.max(.5,(now-(frame.l||now-16.7))/16.7));frame.l=now;var damp=Math.pow(.86,fd);cx.clearRect(0,0,W,H);
+   cx.globalCompositeOperation='lighter';
+   for(var i=0;i<P.length;i++){var p=P[i],c=p.c;
+     if(state==='form'){
+       var k=t<p.dl?0:.05,dx=p.tx+Math.sin(t*1.4+p.ph)*(t>2.6?.7:0)-p.x,dy=p.ty+Math.cos(t*1.2+p.ph)*(t>2.6?.7:0)-p.y;
+       p.vx=(p.vx+dx*k*fd)*damp;p.vy=(p.vy+dy*k*fd)*damp;
+       var mx=p.x-mouse.x,my=p.y-mouse.y,md=mx*mx+my*my;if(md<9000){var f=(1-md/9000)*5;p.vx+=mx/Math.sqrt(md+1)*f*fd;p.vy+=my/Math.sqrt(md+1)*f*fd}
+     }else{p.vx*=1.012;p.vy*=1.012}
+     p.x+=p.vx*fd;p.y+=p.vy*fd;
+     cx.fillStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+(state==='burst'?Math.max(0,.9-(now-burstAt)/900):.85)+')';
+     cx.beginPath();cx.arc(p.x,p.y,p.s,0,6.283);cx.fill();
+   }
+   // constellation lines between a sparse set of nodes
+   if(state==='form'&&t>1.2){var al=Math.min(1,(t-1.2)/1.4);cx.lineWidth=.7;
+     for(var a=0;a<nodes.length;a++)for(var b=a+1;b<nodes.length;b++){var A=nodes[a],B=nodes[b],dx2=A.x-B.x,dy2=A.y-B.y,dd=dx2*dx2+dy2*dy2;
+       if(dd<9000){cx.strokeStyle='rgba('+A.c[0]+','+A.c[1]+','+A.c[2]+','+(1-dd/9000)*.2*al+')';cx.beginPath();cx.moveTo(A.x,A.y);cx.lineTo(B.x,B.y);cx.stroke()}}}
+   cx.globalCompositeOperation='source-over';
+   raf=requestAnimationFrame(frame);
+ }
+ raf=requestAnimationFrame(frame);
+ var done=false;
+ function close(){if(done)return;done=true;try{sessionStorage.setItem('sona_splash','1')}catch(e){}
+   state='burst';burstAt=performance.now();P.forEach(function(p){var a=Math.atan2(p.y-H/2,p.x-W/2),v=2+Math.random()*7;p.vx=Math.cos(a)*v;p.vy=Math.sin(a)*v});
+   setTimeout(function(){el.classList.add('out');document.documentElement.style.overflow=''},250);
+   setTimeout(function(){cancelAnimationFrame(raf);el.remove();var em=document.getElementById('em');if(em&&!em.value)try{em.focus({preventScroll:true})}catch(e){}},1300)}
  document.getElementById('sonaSkip').addEventListener('click',close);
  document.addEventListener('keydown',function(e){if(e.key==='Escape'||e.key==='Enter')close()});
- setTimeout(close,5200);
+ setTimeout(close,reduce?1200:5600);
 })();
 </script>
 
