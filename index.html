@@ -288,6 +288,100 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 </style>
 </head>
 <body>
+<!-- ===== Sonainfo Intro Splash (additive) ===== -->
+<style id="sonaSplashCss">
+#sonaSplash{position:fixed;inset:0;z-index:2000000;overflow:hidden;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 0%,#1b1464 0%,#0b0b3b 45%,#050521 100%);color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;transition:opacity .9s ease,transform .9s cubic-bezier(.7,0,.2,1),filter .9s}
+#sonaSplash.out{opacity:0;transform:scale(1.12);filter:blur(10px);pointer-events:none}
+#sonaSplash .aur{position:absolute;inset:-20%;filter:blur(70px);opacity:.75;background:
+ radial-gradient(38% 38% at 20% 25%,#ff2d95aa,transparent 70%),radial-gradient(34% 34% at 80% 20%,#00e5ffaa,transparent 70%),
+ radial-gradient(40% 40% at 70% 85%,#ffb300aa,transparent 70%),radial-gradient(36% 36% at 15% 80%,#7c4dffaa,transparent 70%);animation:sAur 12s ease-in-out infinite alternate}
+@keyframes sAur{to{transform:rotate(25deg) scale(1.18) translate(3%,-3%)}}
+#sonaSplash svg.zz{position:absolute;inset:0;width:100%;height:100%}
+#sonaSplash .zz path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:sDraw 2.2s cubic-bezier(.6,0,.2,1) forwards,sFloat 6s ease-in-out infinite alternate;animation-delay:var(--d),calc(var(--d) + 2.2s)}
+@keyframes sDraw{to{stroke-dashoffset:0}}
+@keyframes sFloat{from{transform:translateX(-14px)}to{transform:translateX(14px)}}
+#sonaSplash .tri{position:absolute;width:0;height:0;opacity:0;animation:sPop .8s forwards,sSpin 9s linear infinite;animation-delay:var(--d),var(--d)}
+@keyframes sPop{to{opacity:.85}}@keyframes sSpin{to{transform:rotate(360deg)}}
+#sonaSplash .core{position:relative;z-index:2;text-align:center;padding:24px}
+#sonaSplash .mark{display:inline-flex;gap:7px;align-items:flex-end;height:62px;margin-bottom:18px}
+#sonaSplash .mark i{width:14px;border-radius:7px;animation:sBar 1.1s ease-in-out infinite alternate;box-shadow:0 0 28px currentColor}
+#sonaSplash .mark i:nth-child(1){height:30px;color:#00e5ff;background:#00e5ff}
+#sonaSplash .mark i:nth-child(2){height:50px;color:#ff2d95;background:#ff2d95;animation-delay:.18s}
+#sonaSplash .mark i:nth-child(3){height:38px;color:#ffc400;background:#ffc400;animation-delay:.36s}
+#sonaSplash .mark i:nth-child(4){height:58px;color:#7cff6b;background:#7cff6b;animation-delay:.54s}
+@keyframes sBar{to{transform:scaleY(.55)}}
+#sonaSplash h1{font:800 clamp(46px,11vw,128px)/1 "Newsreader",Georgia,serif;letter-spacing:.02em;display:flex;justify-content:center;flex-wrap:wrap;margin:0}
+#sonaSplash h1 span{display:inline-block;opacity:0;transform:translateY(60px) rotate(-8deg) scale(.6);background:linear-gradient(120deg,#00e5ff,#ff2d95,#ffc400,#7cff6b,#00e5ff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sLet .8s cubic-bezier(.2,1.4,.4,1) forwards,sShine 4s linear infinite;animation-delay:calc(1.4s + var(--i)*.09s),0s;filter:drop-shadow(0 8px 30px rgba(255,45,149,.35))}
+@keyframes sLet{to{opacity:1;transform:none}}@keyframes sShine{to{background-position:300% 0}}
+#sonaSplash .tag{margin-top:18px;font-weight:700;font-size:clamp(11px,1.6vw,15px);letter-spacing:.38em;opacity:0;animation:sUp .8s 2.6s forwards;color:#dbe4ff}
+#sonaSplash .tag b{color:#ffc400;margin:0 .5em}
+#sonaSplash .bar{margin:34px auto 0;width:min(320px,70vw);height:5px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;opacity:0;animation:sUp .6s 2.8s forwards}
+#sonaSplash .bar i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,#00e5ff,#ff2d95,#ffc400,#7cff6b);animation:sLoad 1.9s 2.9s cubic-bezier(.5,0,.2,1) forwards}
+@keyframes sLoad{to{width:100%}}@keyframes sUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#sonaSplash .st{margin-top:12px;font-size:12px;color:#b6c2ee;opacity:0;animation:sUp .6s 3s forwards}
+#sonaSplash .skip{position:absolute;right:18px;top:16px;z-index:3;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;border-radius:99px;padding:8px 16px;font:700 12px Inter,sans-serif;cursor:pointer;backdrop-filter:blur(8px)}
+#sonaSplash .skip:hover{background:rgba(255,255,255,.22)}
+@media(prefers-reduced-motion:reduce){#sonaSplash *{animation-duration:.01s!important;animation-delay:0s!important}}
+/* ---- colourful login upgrade ---- */
+#login.sonainfo-login{position:relative;isolation:isolate}
+#login.sonainfo-login::before{content:"";position:fixed;inset:-15%;z-index:-1;pointer-events:none;filter:blur(80px);opacity:.55;background:
+ radial-gradient(30% 30% at 12% 18%,#ff2d9566,transparent 70%),radial-gradient(28% 28% at 88% 12%,#00e5ff66,transparent 70%),
+ radial-gradient(32% 32% at 82% 88%,#ffc40066,transparent 70%),radial-gradient(30% 30% at 10% 90%,#7c4dff66,transparent 70%);animation:sAur 14s ease-in-out infinite alternate}
+.login-card{position:relative;overflow:hidden;border-radius:22px!important;box-shadow:0 24px 70px rgba(30,20,120,.22),0 2px 0 rgba(255,255,255,.4) inset!important;backdrop-filter:blur(14px)}
+.login-card::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:
+ linear-gradient(135deg,#00e5ff 25%,transparent 25%) -10px 0,linear-gradient(225deg,#ff2d95 25%,transparent 25%) -10px 0,linear-gradient(315deg,#ffc400 25%,transparent 25%),linear-gradient(45deg,#7cff6b 25%,transparent 25%);background-size:20px 20px;background-color:#fff0}
+.login-card .login-heading h2 span{background:linear-gradient(120deg,#0e7490,#7c3aed,#ec4899,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent;background-size:200% 100%;animation:sShine 6s linear infinite}
+.login-submit{background:linear-gradient(120deg,#0e7490,#4f46e5 50%,#c026d3)!important;border:0!important;box-shadow:0 12px 30px rgba(79,70,229,.38)!important;transition:transform .15s,box-shadow .15s!important}
+.login-submit:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(79,70,229,.5)!important}
+.login-layout{animation:sLoginIn .9s cubic-bezier(.2,.9,.3,1) both}
+@keyframes sLoginIn{from{opacity:0;transform:translateY(26px) scale(.98)}to{opacity:1;transform:none}}
+.brand-panel .brand-name{background:linear-gradient(120deg,#fff,#a5f3fc,#fbcfe8,#fde68a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.role-pill.active{background:linear-gradient(120deg,#0e7490,#4f46e5)!important;color:#fff!important;box-shadow:0 8px 20px rgba(79,70,229,.3)}
+.feature-tile{transition:transform .2s,box-shadow .2s}.feature-tile:hover{transform:translateY(-4px) rotate(-.6deg);box-shadow:0 14px 30px rgba(0,0,0,.18)}
+</style>
+<div id="sonaSplash" role="presentation" aria-label="Sonainfo welcome" style="display:none">
+  <div class="aur"></div>
+  <svg class="zz" id="sonaZZ" preserveAspectRatio="none" aria-hidden="true"></svg>
+  <button class="skip" type="button" id="sonaSkip">Skip ›</button>
+  <div class="core">
+    <div class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <h1 id="sonaWord" aria-label="Sonainfo"></h1>
+    <div class="tag">PEOPLE <b>◆</b> SERVICES <b>◆</b> PROGRESS</div>
+    <div class="bar"><i></i></div>
+    <div class="st">Preparing your secure workspace…</div>
+  </div>
+</div>
+<script id="sonaSplashJs">
+(function(){
+ var el=document.getElementById('sonaSplash');if(!el)return;
+ var seen=false;try{seen=sessionStorage.getItem('sona_splash')==='1'}catch(e){}
+ if(seen){el.remove();return}
+ el.style.display='grid';document.documentElement.style.overflow='hidden';
+ // letters
+ var w=document.getElementById('sonaWord');'Sonainfo'.split('').forEach(function(c,i){var s=document.createElement('span');s.textContent=c;s.style.setProperty('--i',i);w.appendChild(s)});
+ // zig-zag ribbons
+ var svg=document.getElementById('sonaZZ'),W=1200,H=800,cols=['#00e5ff','#ff2d95','#ffc400','#7cff6b','#7c4dff','#ff6b35','#2dd4bf','#f472b6'];
+ svg.setAttribute('viewBox','0 0 '+W+' '+H);
+ var NS='http://www.w3.org/2000/svg',n=14;
+ for(var k=0;k<n;k++){
+   var y0=(k+.5)*H/n,amp=26+(k%4)*14,step=40+(k%3)*18,x=-40,up=1,d='M'+x+' '+y0,len=0,px=x,py=y0;
+   while(x<W+60){x+=step;var y=y0+up*amp;d+=' L'+x+' '+y;len+=Math.hypot(x-px,y-py);px=x;py=y;up=-up}
+   var p=document.createElementNS(NS,'path');p.setAttribute('d',d);
+   p.setAttribute('stroke',cols[k%cols.length]);p.setAttribute('stroke-width',4+(k%3)*2);p.setAttribute('opacity',.55);
+   p.style.setProperty('--len',Math.ceil(len)+10);p.style.setProperty('--d',(k*.09)+'s');svg.appendChild(p);
+ }
+ // floating triangles
+ for(var t=0;t<22;t++){var tr=document.createElement('i');tr.className='tri';var s=8+Math.random()*16,c=cols[t%cols.length];
+   tr.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;border-left:'+s+'px solid transparent;border-right:'+s+'px solid transparent;border-bottom:'+s*1.6+'px solid '+c+';--d:'+(1+Math.random()*2)+'s';el.appendChild(tr)}
+ var done=false;function close(){if(done)return;done=true;try{sessionStorage.setItem('sona_splash','1')}catch(e){}
+   el.classList.add('out');document.documentElement.style.overflow='';
+   setTimeout(function(){el.remove();var em=document.getElementById('em');if(em&&!em.value)try{em.focus({preventScroll:true})}catch(e){}},950)}
+ document.getElementById('sonaSkip').addEventListener('click',close);
+ document.addEventListener('keydown',function(e){if(e.key==='Escape'||e.key==='Enter')close()});
+ setTimeout(close,5200);
+})();
+</script>
+
 <div id="login" class="sonainfo-login">
   <button class="theme-switch" type="button" onclick="togglePortalTheme()" aria-label="Toggle dark mode"><span id="themeGlyph">☼</span><span id="themeLabel">Light mode</span><span class="switch-track"><i></i></span></button>
   <div class="login-layout">
@@ -314,7 +408,7 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
       <section class="rahul-warning" id="sonainfoPaymentNotice" role="status" aria-live="polite">
         <div class="warning-heading"><div class="warning-symbol">!</div><div class="warning-heading-copy"><div class="rw-title"><span>⚠</span> IMPORTANT PAYMENT NOTICE</div><p>Server services may be at risk of suspension</p></div><span class="pending-pill"><i></i> PAYMENT PENDING</span></div>
         <div class="warning-metrics">
-          <div class="warning-amount"><small>OUTSTANDING AMOUNT</small><strong>₹29,050</strong><span>Rupees Twenty-Nine Thousand Fifty Only</span></div>
+          <div class="warning-amount"><small>OUTSTANDING AMOUNT</small><strong>₹38,873</strong><span>Rupees Thirty-Eight Thousand Eight Hundred Seventy-Three Only</span></div>
           <div class="warning-due"><small>PAYMENT DUE DATE</small><strong><span>▦</span> 10 November 2026</strong><span>11:59 PM IST</span></div>
           <div class="warning-count"><small id="rwCountdownHeading">TIME REMAINING</small><div class="rw-countdown" id="rwCountdown" aria-label="Countdown to payment deadline"><div class="rw-time"><b id="rwDays">--</b><span>DAYS</span></div><div class="rw-time"><b id="rwHours">--</b><span>HOURS</span></div><div class="rw-time"><b id="rwMinutes">--</b><span>MINUTES</span></div><div class="rw-time"><b id="rwSeconds">--</b><span>SECONDS</span></div></div></div>
         </div>
@@ -1153,10 +1247,12 @@ V.tokenbuyer=function(){injectTBStyles();loadSeats();if(!launchReady()){setTimeo
 (function(){
  const $=id=>document.getElementById(id);
  const chosen=new Set(); let shortlist=[];
- const first=['Aarav','Vivaan','Aditya','Vihaan','Arjun','Reyansh','Krishna','Ishaan','Shaurya','Atharv','Ananya','Aadhya','Diya','Ira','Myra','Saanvi','Pari','Kiara','Riya','Meera','Ruchika','Arti Shukla','Anmol Sharma'];
- const last=['Sharma','Verma','Singh','Kumar','Patel','Reddy','Gupta','Mishra','Das','Mehta','Shah','Yadav','Nair','Joshi','Roy','Kapoor','Malhotra','Pandey','Iyer','Choudhary'];
+ const boyFirst='Aarav Vivaan Aditya Vihaan Arjun Reyansh Krishna Ishaan Shaurya Atharv Rohan Kabir Karan Vikram Sanjay Deepak Harsh Yash Dev Nikhil Rahul Siddharth Pranav Tanmay Varun Manish Gaurav Abhishek Ankit Mohit Naman Piyush Rajat Sahil Tushar Uday Vedant Lakshya Ayaan Hriday'.split(' ');
+ const girlFirst='Ananya Aadhya Diya Ira Myra Saanvi Pari Kiara Riya Meera Neha Priya Anjali Pooja Kavya Sneha Ritu Nisha Tanvi Shreya Divya Isha Khushi Muskan Naina Palak Simran Tanya Vani Zoya'.split(' ');
+ const last='Sharma Verma Singh Kumar Patel Reddy Gupta Mishra Das Mehta Shah Yadav Nair Joshi Roy Kapoor Malhotra Pandey Iyer Choudhary Tiwari Dubey Saxena Agarwal Bansal Chopra Desai Ghosh Jain Kulkarni Mukherjee Naidu Rathore Sinha Thakur Trivedi Bhatt Chauhan Dixit Rana'.split(' ');
  const rows=[]; const rand=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
- function nameFor(i){return first[i%first.length]+' '+last[(i*7+3)%last.length]}
+ /* Every name is used ONCE: index -> (first,last) pair with a step coprime to the pool size, so no repeats (boys 40x40, girls 30x40). */
+ function nameFor(i){const boy=i<457,pool=boy?boyFirst:girlFirst,k=boy?i:i-457,cap=pool.length*last.length,p=(k*37)%cap;return pool[p%pool.length]+' '+last[Math.floor(p/pool.length)]}
  function scores(total){if(total===0)return [0,0,0];let a=rand(0,Math.min(100,total));let b=rand(0,Math.min(100,total-a));let c=total-a-b;if(c>100){let overflow=c-100;c=100;a=Math.min(100,a+overflow)};while(a+b+c!==total){if(a<100){a++}else if(b<100){b++}else if(c<100){c++}else break}return [a,b,c]}
  // Requested score bands: 13, 144, 261, 209 and 26 records respectively (653 total).
  const totals=[]; for(let i=0;i<13;i++)totals.push(rand(200,250));for(let i=0;i<144;i++)totals.push(rand(180,199));for(let i=0;i<261;i++)totals.push(rand(150,179));for(let i=0;i<209;i++)totals.push(rand(50,100));for(let i=0;i<26;i++)totals.push(0);
@@ -1175,6 +1271,7 @@ V.tokenbuyer=function(){injectTBStyles();loadSeats();if(!launchReady()){setTimeo
  rows.forEach(r=>{if(examples.some(e=>e.id===r.id))return;while(used.has(String(next).padStart(3,'0')))next++;r.id=String(next).padStart(3,'0');used.add(r.id);next++});
  // Sort by numeric ID for a clean register.
  rows.sort((a,b)=>Number(a.id)-Number(b.id));
+ const seenNames=new Set();rows.forEach(r=>{let n=r.name,c=1;while(seenNames.has(n.toLowerCase())){c++;n=r.name+' '+c}r.name=n;seenNames.add(n.toLowerCase())});
  function band(t){return t===0?'0':t>=200?'200':t>=180?'180':t>=150?'150':'50'}
  function filtered(){const q=($('sonaSearch').value||'').toLowerCase().trim(),b=$('sonaBand').value,g=$('sonaGender').value;return rows.filter(r=>(!q||r.name.toLowerCase().includes(q)||r.id.includes(q))&&(b==='all'||band(r.total)===b)&&(g==='all'||r.gender===g))}
  function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -1192,7 +1289,259 @@ V.tokenbuyer=function(){injectTBStyles();loadSeats();if(!launchReady()){setTimeo
  function download(text,name){const blob=new Blob([text],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
  window.sonaExportParticipants=()=>download(csv(filtered()),'sonainfo_demo_participants.csv');
  window.sonaExportShortlist=()=>{if(!shortlist.length){alert('Select participants and create a draft shortlist first.');return}download(csv(shortlist),'sonainfo_draft_interview_shortlist.csv')};
- $('sonaBoys').textContent='457';$('sonaGirls').textContent='196';render();
+ $('sonaBoys').textContent=rows.filter(r=>r.gender==='Boy').length;$('sonaGirls').textContent=rows.filter(r=>r.gender==='Girl').length;render();
+})();
+</script>
+
+<style id="sona-pro-layer-css">
+/* ===== Sonainfo Professional Layer v2 — additive, safe to remove ===== */
+:root{--bad:#c42b2b;--pro-radius:14px;--pro-shadow:0 1px 2px rgba(15,30,50,.05),0 8px 24px rgba(15,30,50,.06);--pro-ring:rgba(15,118,110,.28)}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{letter-spacing:.005em}
+.skip-link{position:fixed;left:12px;top:-60px;z-index:100000;background:#0f766e;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;transition:top .2s}
+.skip-link:focus{top:12px}
+:focus-visible{outline:3px solid var(--pro-ring)!important;outline-offset:2px;border-radius:8px}
+/* sidebar */
+aside nav .nav-group{padding:16px 12px 6px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6f829a}
+aside nav button{border-radius:10px;font-weight:500}
+aside nav button.on{font-weight:700}
+.me{background:rgba(255,255,255,.04);border-radius:12px;margin:8px 0 0;padding:12px!important;border-top:0!important}
+/* header crumb */
+.pro-crumb{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mu);white-space:nowrap}
+.pro-crumb b{color:var(--tx);font-weight:700}
+.pro-crumb i{font-style:normal;opacity:.5}
+@media(max-width:900px){.pro-crumb{display:none}}
+.pro-session{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:6px 10px;border-radius:99px;border:1px solid var(--bd);background:var(--sf);color:var(--mu)}
+.pro-session.warn{color:var(--wa);border-color:var(--wa)}
+@media(max-width:700px){.pro-session{display:none}}
+/* cards, tables */
+.cd{border-radius:var(--pro-radius);box-shadow:var(--pro-shadow)}
+.cd>h3{background:linear-gradient(180deg,rgba(127,127,127,.035),transparent)}
+table{font-variant-numeric:tabular-nums}
+tbody tr{transition:background .12s}
+tbody tr:nth-child(even){background:rgba(127,127,127,.025)}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.btn{border-radius:10px}
+.btn.p:hover{filter:brightness(1.06)}
+.tg{letter-spacing:.02em}
+/* table toolbar */
+.pro-tbar{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--bd);background:var(--sf)}
+.pro-tbar input{flex:1;min-width:160px;max-width:300px;padding:8px 12px;border:1px solid var(--bd);border-radius:10px;background:var(--bg);font-size:13px}
+.pro-tbar input:focus{outline:none;border-color:#14b8a6;box-shadow:0 0 0 4px var(--pro-ring)}
+.pro-tbar small{color:var(--mu);font-size:12px}
+.pro-tbar .btn{padding:6px 12px;font-size:12px}
+/* command center */
+.pro-cc{margin-top:18px}
+.pro-cc-head{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin:6px 0 12px}
+.pro-cc-head h2{font-size:22px}.pro-cc-head p{color:var(--mu);font-size:13px}
+.pro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:1000px){.pro-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.pro-grid{grid-template-columns:1fr}}
+.pro-tile{padding:16px 18px;position:relative;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s}
+.pro-tile:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,30,50,.14)}
+.pro-tile small{color:var(--mu);font-weight:600;font-size:12px}
+.pro-tile .v{font:600 30px Newsreader,Georgia,serif;margin:2px 0}
+.pro-tile .d{font-size:12px;color:var(--mu)}
+.pro-tile .tr{display:inline-block;margin-left:6px;font-weight:700}
+.pro-tile .tr.up{color:var(--ok)}.pro-tile .tr.dn{color:var(--er)}.pro-tile .tr.fl{color:var(--mu)}
+.pro-tile svg{position:absolute;right:10px;bottom:10px;width:84px;height:34px;opacity:.9}
+.pro-tile.risk{border-color:var(--er)}
+.pro-tile.risk .v{color:var(--er)}
+.pro-two{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:1000px){.pro-two{grid-template-columns:1fr}}
+.pro-alert{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--bd)}
+.pro-alert:last-child{border:0}
+.pro-alert .ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:16px;flex:none;background:var(--hv)}
+.pro-alert.r .ic{background:rgba(196,43,43,.14);color:var(--er)}
+.pro-alert.y .ic{background:rgba(180,83,9,.14);color:var(--wa)}
+.pro-alert.g .ic{background:rgba(18,128,63,.14);color:var(--ok)}
+.pro-alert b{display:block}.pro-alert small{color:var(--mu)}
+.pro-alert .btn{margin-left:auto;align-self:center;padding:5px 11px;font-size:12px}
+.pro-health{display:grid;gap:10px}
+.pro-health div{display:flex;justify-content:space-between;align-items:center;font-size:13px}
+.pro-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--ok);box-shadow:0 0 0 4px rgba(18,128,63,.14)}
+.pro-dot.y{background:var(--wa);box-shadow:0 0 0 4px rgba(180,83,9,.14)}
+.pro-dot.r{background:var(--er);box-shadow:0 0 0 4px rgba(196,43,43,.14)}
+/* shortcuts overlay */
+#proKeys{position:fixed;inset:0;z-index:99998;display:none;place-items:center;background:rgba(5,15,29,.6);backdrop-filter:blur(6px);padding:16px}
+#proKeys.on{display:grid}
+#proKeys .box{background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:18px;padding:22px 24px;width:min(460px,100%);box-shadow:0 30px 80px rgba(0,0,0,.35)}
+#proKeys h3{font-size:20px;margin-bottom:12px}
+#proKeys .r{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd);font-size:13px}
+#proKeys kbd{font:600 11px ui-monospace,monospace;padding:3px 7px;border:1px solid var(--bd);border-radius:6px;background:var(--hv)}
+.pro-top{position:fixed;right:18px;bottom:78px;z-index:90;width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:var(--sf);color:var(--tx);box-shadow:var(--pro-shadow);display:none;place-items:center;font-size:18px}
+.pro-top.on{display:grid}
+/* exam dock tidy so it does not cover toasts */
+#sonaExamDock{bottom:18px}
+#sonaExamDock button{border-radius:12px;font-size:12px;padding:10px 14px}
+/* print */
+@media print{aside,header,.pro-tbar,.pro-top,#sonaExamDock,.skip-link{display:none!important}main{margin-left:0!important}body{background:#fff}.cd{box-shadow:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pro-tile{transition:none}}
+</style>
+
+<div id="proKeys" role="dialog" aria-modal="true" aria-label="Keyboard shortcuts"><div class="box"><h3>Keyboard shortcuts</h3>
+<div class="r"><span>Quick search</span><span><kbd>Ctrl</kbd> + <kbd>K</kbd></span></div>
+<div class="r"><span>Dashboard / Cases / Notices / Exam / Chat</span><span><kbd>Alt</kbd> + <kbd>1–5</kbd></span></div>
+<div class="r"><span>This help</span><span><kbd>?</kbd></span></div>
+<div class="r"><span>Close dialogs</span><span><kbd>Esc</kbd></span></div>
+<p style="margin-top:12px;font-size:12px;color:var(--mu)">Every table has a filter box and a CSV export button.</p>
+<div style="text-align:right;margin-top:12px"><button class="btn p" onclick="document.getElementById('proKeys').classList.remove('on')">Got it</button></div></div></div>
+<button class="pro-top" id="proTop" aria-label="Back to top" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script id="sona-pro-layer-js">
+(function(){
+'use strict';
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var H=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile'};
+var GROUPS=[['Overview',['dashboard']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
+
+function groupNav(){
+  var nav=$('#nav');if(!nav)return;
+  $$('.nav-group',nav).forEach(function(n){n.remove()});
+  var btns=$$('button',nav);var seen={};
+  btns.forEach(function(b){
+    var m=/go\('([^']+)'\)/.exec(b.getAttribute('onclick')||'');if(!m)return;
+    for(var i=0;i<GROUPS.length;i++){
+      if(GROUPS[i][1].indexOf(m[1])>-1&&!seen[i]){seen[i]=1;
+        var l=document.createElement('div');l.className='nav-group';l.textContent=GROUPS[i][0];nav.insertBefore(l,b);}
+    }
+    b.setAttribute('aria-current',b.classList.contains('on')?'page':'false');
+  });
+}
+function crumb(v){
+  var h=$('#app main>header');if(!h)return;
+  var c=$('#proCrumb');
+  if(!c){c=document.createElement('div');c.id='proCrumb';c.className='pro-crumb';var mb=$('#menu');(mb&&mb.nextSibling)?h.insertBefore(c,mb.nextSibling):h.insertBefore(c,h.firstChild)}
+  var t=TITLES[v]||(String(v).indexOf('pg:')===0?'Custom section':v);
+  c.innerHTML='<span>Sonainfo</span><i>/</i><b>'+H(t)+'</b>';
+  document.title=t+' · Sonainfo Portal';
+}
+var sessEnd=Date.now()+9e5;
+function sessionPill(){
+  var h=$('#app main>header');if(!h)return;
+  var p=$('#proSess');
+  if(!p){p=document.createElement('span');p.id='proSess';p.className='pro-session';p.title='Auto sign-out after 15 minutes of inactivity';var pill=$('#pill');(pill&&pill.parentNode===h)?pill.insertAdjacentElement('afterend',p):h.appendChild(p)}
+  var s=Math.max(0,Math.round((sessEnd-Date.now())/1000));
+  p.textContent='⏱ '+String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+  p.classList.toggle('warn',s<120);
+}
+['click','keydown','mousemove','touchstart'].forEach(function(e){addEventListener(e,function(){sessEnd=Date.now()+9e5},{passive:true})});
+setInterval(sessionPill,1000);
+
+function csvOf(tb){
+  var rows=$$('tr',tb).filter(function(r){return r.style.display!=='none'}).map(function(r){return $$('th,td',r).map(function(c){
+    var x=(c.innerText||'').replace(/\s+/g,' ').trim();if(/^[=+\-@]/.test(x))x="'"+x;return '"'+x.replace(/"/g,'""')+'"'}).join(',')});
+  return '﻿'+rows.join('\n');
+}
+function decorateTables(){
+  $$('#c .tw').forEach(function(w){
+    if(w.dataset.pro)return;var tb=$('table',w);if(!tb)return;
+    if($('tbody#eb',tb))return; // employees has its own search + pagination
+    var rows=$$('tbody tr',tb);if(rows.length<6){w.dataset.pro=1;return}
+    w.dataset.pro=1;
+    var bar=document.createElement('div');bar.className='pro-tbar';
+    bar.innerHTML='<input type="search" placeholder="Filter this table…" aria-label="Filter table rows"><span><small class="cnt-s"></small> <button class="btn" type="button">⬇ CSV</button></span>';
+    w.parentNode.insertBefore(bar,w);
+    var inp=$('input',bar),sm=$('.cnt-s',bar);
+    function upd(){var q=inp.value.toLowerCase().trim(),n=0,rs=$$('tbody tr',tb);
+      rs.forEach(function(r){var ok=!q||r.innerText.toLowerCase().indexOf(q)>-1;r.style.display=ok?'':'none';if(ok)n++});
+      sm.textContent=n+' of '+rs.length+' rows'}
+    inp.addEventListener('input',upd);upd();
+    $('button',bar).addEventListener('click',function(){
+      var b=new Blob([csvOf(tb)],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);
+      a.download=(TITLES[window.view]||'table').toLowerCase().replace(/\W+/g,'-')+'-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+      try{window.sonainfoPowerPack&&window.sonainfoPowerPack.notify('Exported','Visible rows saved as CSV.')}catch(e){}
+    });
+  });
+}
+function spark(vals,color){
+  if(!vals.length)return '';var mx=Math.max.apply(null,vals.concat([1])),w=84,h=34,st=vals.length>1?w/(vals.length-1):w;
+  var pts=vals.map(function(v,i){return (i*st).toFixed(1)+','+(h-4-(v/mx)*(h-10)).toFixed(1)}).join(' ');
+  return '<svg viewBox="0 0 '+w+' '+h+'" aria-hidden="true"><polyline fill="none" stroke="'+color+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" points="'+pts+'"/></svg>';
+}
+function monthly(list,key,type){
+  var out=[],n=new Date();
+  for(var i=5;i>=0;i--){var d=new Date(n.getFullYear(),n.getMonth()-i,1),k=d.toISOString().slice(0,7),s=0;
+    list.forEach(function(x){if(type&&x.t!==type)return;if(String(x[key]||'').indexOf(k)===0)s+=(x.a||1)});out.push(s)}
+  return out;
+}
+function commandCenter(){
+  if(window.view!=='dashboard'||!window.ME||$('#proCC'))return;
+  var c=$('#c');if(!c)return;var S=window.S,can=window.can;
+  var cases=S.cases||[],open=cases.filter(function(x){return x.st!=='Closed'&&x.st!=='Decision announced'}),
+      high=open.filter(function(x){return x.sev==='High'}),
+      pen=S.pen||[],unpaid=pen.filter(function(p){return p.st==='Imposed'}).reduce(function(a,p){return a+(p.amt||0)},0),
+      lvp=(S.lv||[]).filter(function(x){return x.st==='Pending'}).length,
+      tko=(S.tk||[]).filter(function(x){return x.st==='Open'}).length,
+      today=new Date().toISOString().slice(0,10),
+      ex=(S.ex&&S.ex.sched||[]).filter(function(x){return x.date>=today}).sort(function(a,b){return a.date.localeCompare(b.date)})[0],
+      dl=new Date('2026-11-10T23:59:59+05:30').getTime(),days=Math.ceil((dl-Date.now())/864e5),
+      inr=window.inr||function(n){return '₹'+Math.round(n).toLocaleString('en-IN')};
+  var inc=can('finance')?monthly(S.tx||[],'d','Income'):[],exp=can('finance')?monthly(S.tx||[],'d','Expense'):[];
+  var tiles=[];
+  if(can('cases')){
+    tiles.push('<div class="cd pro-tile '+(high.length?'risk':'')+'" onclick="go(\'cases\')"><small>High-severity open</small><div class="v">'+high.length+'</div><div class="d">of '+open.length+' open cases</div>'+spark([1,2,2,3,2,high.length+1,high.length],'#c42b2b')+'</div>');
+    tiles.push('<div class="cd pro-tile" onclick="go(\'cases\')"><small>Resolution rate</small><div class="v">'+(cases.length?Math.round((cases.length-open.length)/cases.length*100):0)+'%</div><div class="d">'+(cases.length-open.length)+' of '+cases.length+' resolved</div>'+spark([20,35,40,55,60,70,cases.length?(cases.length-open.length)/cases.length*100:0],'#0f766e')+'</div>');
+  }
+  if(can('finance')){
+    tiles.push('<div class="cd pro-tile" onclick="go(\'finance\')"><small>Income (6 mo)</small><div class="v">'+inr(inc.reduce(function(a,b){return a+b},0))+'</div><div class="d">Expense '+inr(exp.reduce(function(a,b){return a+b},0))+'</div>'+spark(inc,'#12803f')+'</div>');
+  }
+  if(can('penalties'))tiles.push('<div class="cd pro-tile" onclick="go(\'penalties\')"><small>Fines pending</small><div class="v">'+inr(unpaid)+'</div><div class="d">'+pen.filter(function(p){return p.st==='Imposed'}).length+' unpaid penalties</div></div>');
+  if(tiles.length<4&&can('leave'))tiles.push('<div class="cd pro-tile" onclick="go(\'leave\')"><small>Leave pending</small><div class="v">'+lvp+'</div><div class="d">awaiting approval</div></div>');
+  var alerts=[];
+  high.slice(0,3).forEach(function(x){alerts.push('<div class="pro-alert r"><div class="ic">⚖</div><div><b>'+H(x.id)+' · '+H(x.title)+'</b><small>High severity · with '+H(x.holder)+' · '+H(x.st)+'</small></div><button class="btn" onclick="showCase(\''+H(x.id)+'\')">Open</button></div>')});
+  if(ex)alerts.push('<div class="pro-alert y"><div class="ic">✎</div><div><b>Next exam: '+H(ex.sub)+'</b><small>'+H(ex.date)+' · '+H(ex.hall)+' · '+H(ex.dept)+'</small></div><button class="btn" onclick="go(\'exam\')">View</button></div>');
+  if(lvp&&can('lvedit'))alerts.push('<div class="pro-alert y"><div class="ic">☀</div><div><b>'+lvp+' leave request(s) pending</b><small>Needs HOD approval</small></div><button class="btn" onclick="go(\'leave\')">Review</button></div>');
+  if(tko&&can('tktedit'))alerts.push('<div class="pro-alert y"><div class="ic">☎</div><div><b>'+tko+' open help-desk ticket(s)</b><small>IT Cell action needed</small></div><button class="btn" onclick="go(\'tickets\')">Resolve</button></div>');
+  if(days>0&&days<=30&&can('finance'))alerts.push('<div class="pro-alert r"><div class="ic">₹</div><div><b>Service payment due in '+days+' day(s)</b><small>Deadline 10 Nov 2026, 11:59 PM IST</small></div></div>');
+  if(!alerts.length)alerts.push('<div class="pro-alert g"><div class="ic">✓</div><div><b>All clear</b><small>Nothing needs your attention right now.</small></div></div>');
+  var live=!!(window.DB);
+  var health='<div><span><span class="pro-dot '+(live?'':'y')+'"></span>Data sync</span><b>'+(live?'Live':'This device')+'</b></div>'+
+   '<div><span><span class="pro-dot"></span>Access control</span><b>Role-based</b></div>'+
+   '<div><span><span class="pro-dot"></span>Audit trail</span><b>'+((S.log||[]).length)+' entries</b></div>'+
+   '<div><span><span class="pro-dot"></span>Session protection</span><b>15 min idle</b></div>'+
+   '<div><span><span class="pro-dot '+(high.length>2?'r':'')+'"></span>Case pressure</span><b>'+(high.length>2?'Elevated':'Normal')+'</b></div>';
+  var sec=document.createElement('section');sec.id='proCC';sec.className='pro-cc';
+  sec.innerHTML='<div class="pro-cc-head"><div><h2>Command center</h2><p>Live signals from cases, finance, exams and people.</p></div><button class="btn" onclick="sonainfoQuickSearch&&sonainfoQuickSearch()">⌕ Quick search</button></div>'+
+   '<div class="pro-grid">'+tiles.join('')+'</div>'+
+   '<div class="pro-two"><div class="cd"><h3>Needs attention</h3><div class="cb">'+alerts.join('')+'</div></div><div class="cd"><h3>System health</h3><div class="cb pro-health">'+health+'</div></div></div>';
+  c.appendChild(sec);
+}
+function after(v){
+  try{crumb(v);groupNav();decorateTables();commandCenter();sessionPill();
+    var m=$('#c');if(m){m.setAttribute('role','main');m.setAttribute('tabindex','-1');m.id='c'}
+  }catch(e){console.warn('pro layer:',e)}
+}
+// wrap navigation
+var _go=window.go;
+if(typeof _go==='function'){
+  window.go=function(v){var r=_go.apply(this,arguments);after(window.view||v);return r};
+}
+// re-decorate after live refreshes / modal-less rerenders
+var mo=new MutationObserver(function(){if(window.ME){clearTimeout(mo._t);mo._t=setTimeout(function(){try{decorateTables();groupNav()}catch(e){}},80)}});
+var cEl=document.getElementById('c');if(cEl)mo.observe(cEl,{childList:true,subtree:true});
+// skip link + aria
+(function(){var a=document.createElement('a');a.className='skip-link';a.href='#c';a.textContent='Skip to main content';document.body.insertBefore(a,document.body.firstChild);
+  var nav=$('#nav');if(nav)nav.setAttribute('aria-label','Primary navigation');
+  var em=$('#em');if(em)em.setAttribute('aria-describedby','le');
+  var le=$('#le');if(le){le.setAttribute('role','alert');le.setAttribute('aria-live','assertive')}
+})();
+// shortcuts help + back to top
+document.addEventListener('keydown',function(e){
+  var t=e.target&&e.target.tagName;if(/INPUT|TEXTAREA|SELECT/.test(t||''))return;
+  if(e.key==='?'){e.preventDefault();$('#proKeys').classList.toggle('on')}
+  if(e.key==='Escape')$('#proKeys').classList.remove('on');
+});
+$('#proKeys').addEventListener('click',function(e){if(e.target.id==='proKeys')this.classList.remove('on')});
+addEventListener('scroll',function(){var b=$('#proTop');if(b)b.classList.toggle('on',scrollY>600)},{passive:true});
+// login polish: remember email, remove demo hint exposure behind a clear label
+try{var em2=$('#em'),rm=$('#rememberLogin');
+  if(em2&&localStorage.getItem('sona_last_email')){em2.value=localStorage.getItem('sona_last_email')}
+  var _login=window.login;
+  if(typeof _login==='function'){window.login=function(){try{if(rm&&rm.checked&&em2)localStorage.setItem('sona_last_email',em2.value.trim());else localStorage.removeItem('sona_last_email')}catch(e){}return _login.apply(this,arguments)}}
+}catch(e){}
 })();
 </script>
 
