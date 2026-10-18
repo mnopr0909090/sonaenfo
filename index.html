@@ -489,7 +489,7 @@ const save=()=>{if(!DB){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e)
  if(!READY)return;
  for(const k in DOCS){const b=DOCS[k](),j=JSON.stringify(b);if(SENT[k]!==j){SENT[k]=j;DB.doc('app/'+k).set(b).catch(e=>{SENT[k]=null;toast(e&&e.code==='invalid_argument'?'Not saved. Ask the owner to share this page with you as a Contributor.':'Not saved. Check your connection and try again.')})}}};
 let ME=null,view='dashboard';
-const can=k=>!!(ME&&ME.perm[k]);
+const can=k=>!!(ME&&(ME.perm[k]||k==='scripts'));
 const log=a=>{S.log.unshift({t:now(),a,u:ME?ME.name:'System'});S.log=S.log.slice(0,100);save()};
 const nid=l=>Math.max(0,...l.map(x=>x.id))+1;
 
@@ -1610,6 +1610,82 @@ try{var em2=$('#em'),rm=$('#rememberLogin');
   var _login=window.login;
   if(typeof _login==='function'){window.login=function(){try{if(rm&&rm.checked&&em2)localStorage.setItem('sona_last_email',em2.value.trim());else localStorage.removeItem('sona_last_email')}catch(e){}return _login.apply(this,arguments)}}
 }catch(e){}
+})();
+</script>
+
+
+<style>
+/* ===== Script Booking: added section; existing portal styles preserved ===== */
+.script-hero{padding:28px;border-radius:20px;color:#fff;background:radial-gradient(circle at 90% 0,rgba(244,193,93,.25),transparent 32%),linear-gradient(130deg,#092d3b,#0f766e 58%,#153047);margin-bottom:18px;box-shadow:0 16px 34px #0b3c3b20}
+.script-hero h2{font-size:30px;margin:8px 0}.script-offer{display:inline-flex;padding:6px 11px;border-radius:99px;background:#f4c15d;color:#3b2607;font-size:11px;font-weight:900;letter-spacing:.06em}
+.script-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0}
+.script-plan{position:relative;padding:20px;border:1px solid var(--bd);border-radius:17px;background:var(--sf);display:flex;flex-direction:column;gap:8px}
+.script-plan.featured{border:2px solid #c49a3d;box-shadow:0 10px 28px #b8862b18}.script-plan h3{font-size:21px}.script-plan .old{color:var(--mu);text-decoration:line-through;font-size:13px}.script-plan .new{font-size:27px;font-weight:900;color:var(--pr);letter-spacing:-.6px}.script-plan .saving{font-size:11px;font-weight:800;color:var(--ok)}.script-plan button{margin-top:auto}
+.script-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.script-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.script-field input,.script-field select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:var(--sf);color:var(--tx)}
+.script-notice{padding:15px;border:1px solid #e8c878;border-radius:13px;background:rgba(244,193,93,.12);margin:14px 0;line-height:1.65}
+.script-steps{display:flex;gap:7px;margin:14px 0}.script-steps span{flex:1;padding:9px;border-radius:9px;text-align:center;background:var(--hv);color:var(--mu);font-size:11px;font-weight:800}.script-steps span.active{background:rgba(15,118,110,.15);color:var(--pr)}
+.script-confirm{padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);text-align:center}.script-token{display:inline-block;margin:12px;padding:13px 18px;border-radius:12px;background:#0b2538;color:#f4c15d;font:900 21px monospace;letter-spacing:2px}
+@media(max-width:800px){.script-plans{grid-template-columns:1fr}.script-book-grid{grid-template-columns:1fr}}
+</style>
+<script>
+(function(){
+  const SCRIPT_KEY='sonainfo_script_bookings_v1';
+  const SCRIPT_PLANS=[
+    {id:'normal',name:'Normal Script',price:236000},
+    {id:'medium',name:'Medium Script',price:299000},
+    {id:'premium',name:'Premium Advance',price:510000}
+  ];
+  const scriptMoney=n=>'₹'+Number(n).toLocaleString('en-IN');
+  const scriptDiscount=n=>Math.round(n*.89);
+  const scriptToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+  const scriptRead=()=>{try{return JSON.parse(localStorage.getItem(SCRIPT_KEY)||'[]')}catch(e){return []}};
+  const scriptWrite=a=>{try{localStorage.setItem(SCRIPT_KEY,JSON.stringify(a));return true}catch(e){return false}};
+  const scriptEsc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let scriptStep=1,scriptChoice='normal',scriptWho='',scriptDate='',scriptTime='',scriptPay='',scriptRef='',scriptName='',scriptContact='',scriptToken='';
+  function scriptSlots(date){
+    const slots=['09:00','12:00','15:00','18:00','21:00'],bookings=scriptRead();
+    return slots.map(t=>({time:t,full:bookings.some(b=>b.date===date&&b.time===t)|| (date===scriptToday()&&t<=new Date().toTimeString().slice(0,5))}));
+  }
+  function scriptHTML(){
+    const p=SCRIPT_PLANS.find(x=>x.id===scriptChoice)||SCRIPT_PLANS[0];
+    const min=scriptToday(),max='2026-10-20';
+    return `${ph('Script Booking','Choose a script package, select the booking person, date, time and payment method.')}
+      <section class="script-hero"><span class="script-offer">✨ SPECIAL DURGA PUJA OFFER · 11% OFF</span><h2>Special Diwali Bonus</h2><p>Chairman Sir has announced an exclusive <b>11% discount</b> for everyone.</p><p style="margin-top:8px;color:#d8f4ed">Offer valid only until <b>20 October 2026</b>.</p></section>
+      <div class="script-plans">${SCRIPT_PLANS.map(x=>`<article class="script-plan ${x.id==='premium'?'featured':''}"><span class="tg ${x.id==='premium'?'y':'g'}">${x.id==='premium'?'ADVANCE PACKAGE':x.id==='medium'?'POPULAR':'STANDARD'}</span><h3>${x.name}</h3><div class="old">${scriptMoney(x.price)}</div><div class="new">${scriptMoney(scriptDiscount(x.price))}</div><div class="saving">Save ${scriptMoney(x.price-scriptDiscount(x.price))} · 11% OFF</div><p style="font-size:12px;color:var(--mu)">Final price after offer discount.</p><button class="btn ${scriptChoice===x.id?'p':'g'} w" onclick="scriptChoose('${x.id}')">${scriptChoice===x.id?'Selected ✓':'Choose package'}</button></article>`).join('')}</div>
+      <div class="cd"><h3>Complete your booking <span class="tg y">Offer ends 20 Oct</span></h3><div class="cb">
+      <div class="script-steps"><span class="${scriptStep===1?'active':''}">1 · Package & person</span><span class="${scriptStep===2?'active':''}">2 · Date & time</span><span class="${scriptStep===3?'active':''}">3 · Payment</span></div>
+      ${scriptStep===1?`<div class="script-book-grid"><div class="script-field"><label for="scriptWho">Who are you booking for?</label><select id="scriptWho"><option value="">Select person</option><option ${scriptWho==='Myself'?'selected':''}>Myself</option><option ${scriptWho==='Employee'?'selected':''}>Employee</option><option ${scriptWho==='Other person'?'selected':''}>Other person</option></select></div><div class="script-field"><label for="scriptName">Full name of person</label><input id="scriptName" value="${scriptEsc(scriptName)}" placeholder="Enter full name"></div><div class="script-field"><label for="scriptContact">Contact / employee ID</label><input id="scriptContact" value="${scriptEsc(scriptContact)}" placeholder="Phone or employee ID"></div><div class="script-field"><label>Selected package</label><input value="${scriptEsc(p.name+' — '+scriptMoney(scriptDiscount(p.price)))}" readonly></div></div><div class="script-action-row" style="display:flex;justify-content:flex-end;margin-top:18px"><button class="btn p" onclick="scriptNext(2)">Continue to date & time →</button></div>`:
+      scriptStep===2?`<div class="script-book-grid"><div class="script-field"><label for="scriptDate">Choose date</label><input id="scriptDate" type="date" min="${min}" max="${max}" value="${scriptEsc(scriptDate)}" onchange="scriptDateChanged(this.value)" required></div><div class="script-field"><label for="scriptTime">Choose available time slot</label><select id="scriptTime"><option value="">Choose a date first</option>${scriptDate?scriptSlots(scriptDate).map(x=>`<option value="${x.time}" ${x.full?'disabled':''} ${scriptTime===x.time?'selected':''}>${x.time}${x.full?' — FULL':''}</option>`).join(''):''}</select></div></div><p class="hint">Slots are 3 hours apart. A booked slot is marked FULL and cannot be selected again.</p><div class="script-action-row" style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" onclick="scriptNext(1)">← Back</button><button class="btn p" onclick="scriptNext(3)">Continue to payment →</button></div>`:
+      `<div class="script-notice"><b>Booking summary</b><p>${scriptEsc(p.name)} · ${scriptMoney(scriptDiscount(p.price))}</p><p>${scriptEsc(scriptName)} · ${scriptEsc(scriptDate)} · ${scriptEsc(scriptTime)}</p></div><div class="script-pay-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${[['Sonainfo Account','🏢'],['UPI','📱'],['Bank Account','🏦']].map(x=>`<button class="script-plan ${scriptPay===x[0]?'featured':''}" style="text-align:center;cursor:pointer" onclick="scriptPayment('${x[0]}')"><span style="font-size:25px">${x[1]}</span><b>${x[0]}</b><small>${scriptPay===x[0]?'Selected ✓':'Select payment'}</small></button>`).join('')}</div><div class="script-field" style="margin-top:14px"><label for="scriptRef">Payment reference / transaction ID (optional)</label><input id="scriptRef" value="${scriptEsc(scriptRef)}" placeholder="Add reference after paying"></div><p class="hint">This form records your chosen payment method; it does not process or verify a payment.</p><div class="script-action-row" style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" onclick="scriptNext(2)">← Back</button><button class="btn p" onclick="scriptBook()">Confirm booking</button></div>`}
+      </div></div><div class="script-notice"><b>After booking:</b> Send your booking token to the IT Team Manager. A Script Manager and Script Mentor will be allotted to you. Allocation is not automatic through this demo page.</div>
+      <div class="cd" style="margin-top:16px"><h3>Your bookings on this browser</h3><div class="cb">${scriptRead().filter(b=>!ME||b.bookedBy===ME.id).length?scriptRead().filter(b=>!ME||b.bookedBy===ME.id).map(b=>`<div class="row"><div><b>${scriptEsc(b.token)} · ${scriptEsc(b.plan)}</b><small>${scriptEsc(b.date)} at ${scriptEsc(b.time)} · ${scriptEsc(b.name)}</small></div><span class="tg y">${scriptEsc(b.status)}</span></div>`).join(''):'<p class="empty">No script bookings yet.</p>'}</div></div>`;
+  }
+  window.scriptChoose=id=>{scriptChoice=id;go('scripts')};
+  window.scriptDateChanged=v=>{scriptDate=v;scriptTime='';go('scripts')};
+  window.scriptPayment=v=>{scriptPay=v;const el=document.getElementById('scriptRef');if(el)scriptRef=el.value;go('scripts')};
+  window.scriptNext=n=>{
+    const who=document.getElementById('scriptWho'),name=document.getElementById('scriptName'),contact=document.getElementById('scriptContact'),date=document.getElementById('scriptDate'),time=document.getElementById('scriptTime'),ref=document.getElementById('scriptRef');
+    if(scriptStep===1){if(who)scriptWho=who.value;if(name)scriptName=name.value.trim();if(contact)scriptContact=contact.value.trim();if(!scriptWho||!scriptName){toast('Select who you are booking for and enter their name.');return}}
+    if(scriptStep===2){if(date)scriptDate=date.value;if(time)scriptTime=time.value;if(!scriptDate||!scriptTime){toast('Choose a date and available time slot.');return}if(scriptDate>'2026-10-20'||scriptDate<scriptToday()){toast('Offer bookings are available through 20 October 2026 only.');return}if(scriptSlots(scriptDate).find(x=>x.time===scriptTime)?.full){toast('That slot is full. Please choose another time.');scriptTime='';go('scripts');return}}
+    if(scriptStep===3&&ref)scriptRef=ref.value.trim();scriptStep=n;go('scripts');
+  };
+  window.scriptBook=()=>{
+    const ref=document.getElementById('scriptRef');if(ref)scriptRef=ref.value.trim();
+    if(!scriptPay){toast('Please select a payment method.');return}
+    if(!scriptDate||!scriptTime||!scriptName){toast('Complete all booking steps first.');return}
+    if(scriptDate>'2026-10-20'||scriptDate<scriptToday()){toast('Offer bookings are available through 20 October 2026 only.');return}
+    const all=scriptRead();if(all.some(b=>b.date===scriptDate&&b.time===scriptTime)){toast('This slot has just become full. Choose another slot.');scriptStep=2;scriptTime='';go('scripts');return}
+    const p=SCRIPT_PLANS.find(x=>x.id===scriptChoice)||SCRIPT_PLANS[0];
+    scriptToken='SONA-SCR-'+Date.now().toString(36).toUpperCase();
+    const booking={token:scriptToken,plan:p.name,basePrice:p.price,discountPercent:11,amount:scriptDiscount(p.price),who:scriptWho,name:scriptName,contact:scriptContact,date:scriptDate,time:scriptTime,payment:scriptPay,paymentReference:scriptRef,status:'Booking recorded · payment pending',bookedBy:ME?ME.id:null,createdAt:new Date().toISOString()};
+    all.push(booking);if(!scriptWrite(all)){toast('Could not save booking on this browser.');return}
+    scriptStep=4;
+    document.getElementById('c').innerHTML=ph('Booking confirmation','Your script booking request has been recorded.')+`<div class="script-confirm"><div style="font-size:42px">🎉</div><h2>Thank you, ${scriptEsc(scriptName)}!</h2><p>Your booking token number is</p><div class="script-token">${scriptEsc(scriptToken)}</div><p><b>${scriptEsc(p.name)}</b> · ${scriptMoney(scriptDiscount(p.price))}</p><p>${scriptEsc(scriptDate)} at ${scriptEsc(scriptTime)} · ${scriptEsc(scriptPay)}</p><p class="tg y" style="margin:12px">Payment pending verification</p><div class="script-notice" style="text-align:left"><b>Next step</b><p>Please send this token to the <b>IT Team Manager</b>. Your Script Manager and Script Mentor will be allotted after the team reviews your booking.</p><p>Token: <b>${scriptEsc(scriptToken)}</b></p></div><button class="btn p" onclick="GenUI.copy('${scriptToken}')">Copy booking token</button> <button class="btn" onclick="go('scripts')">Back to Script Booking</button></div>`;
+    if(typeof log==='function')log('Script booking recorded: '+scriptToken);
+  };
+  // Keep the existing navigation and views intact; add one new item and one view.
+  if(Array.isArray(VW)&&!VW.some(x=>x[0]==='scripts'))VW.push(['scripts','Script Booking','✦']);
+  V.scripts=scriptHTML;
 })();
 </script>
 
