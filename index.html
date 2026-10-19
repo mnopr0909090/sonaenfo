@@ -1414,8 +1414,8 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.07em}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var H=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile',script:'Script Booking',itteam:'IT Team'};
-var GROUPS=[['Overview',['dashboard']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports','script','itteam']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
+var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile',script:'Script Booking',itteam:'IT Team',insights:'Insights'};
+var GROUPS=[['Overview',['dashboard','insights']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports','script','itteam']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
 
 function groupNav(){
   var nav=$('#nav');if(!nav)return;
@@ -1712,7 +1712,7 @@ var admin=function(){return can('accedit')||ME.role==='Chairman'||ME.role==='HOD
 
 /* A slot is FULL when its 3-hour window has started today, or all seats are taken. */
 function slotState(date,i){
- var booked=list().filter(function(b){return b.date===date&&b.slot===i}).length;
+ var booked=list().filter(function(b){return b.date===date&&b.slot===i&&!/^Cancel/.test(b.status||'')}).length;
  var started=date===dk(new Date())&&SLOTS[i][0]<=new Date().getHours();
  var left=Math.max(0,CAP-booked);
  return {full:started||left<=0,left:left,started:started};
@@ -2009,7 +2009,7 @@ var BASE=34,T0=new Date('2026-10-19T14:38:00+05:30').getTime(),END=new Date('202
 function inc(k){return 3+((k*7+3)%2)}
 function periods(t){return Math.max(0,Math.floor((Math.min(t,END)-T0)/H2))}
 function count(t){var n=BASE,p=periods(t),k;for(k=1;k<=p;k++)n+=inc(k);return n}
-function real(){return (typeof S!=='undefined'&&S.scriptBookings)?S.scriptBookings.length:0}
+function real(){return (typeof S!=='undefined'&&S.scriptBookings)?S.scriptBookings.filter(function(b){return !/^Cancel/.test(b.status||'')}).length:0}
 function total(){return count(Date.now())+real()}
 function nextIn(){var t=Date.now();if(t>=END)return null;var p=periods(t),nx=T0+(p+1)*H2;if(nx>END)return null;return nx-t}
 function fmt(ms){var s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h+'h '+String(m).padStart(2,'0')+'m '+String(x).padStart(2,'0')+'s'}
@@ -2056,6 +2056,258 @@ function promo(){var c=document.getElementById('c');if(!c||view==='script'||Date
  var d=document.createElement('div');d.className='au-promo';d.innerHTML='<span>🪔 <b>Durga Puja offer · 11% off Script</b> · Chairman Sir special Diwali bonus · valid till 20 Oct</span><button class="btn g" onclick="go(\'script\')">Book Script →</button>';c.insertBefore(d,c.firstChild)}
 var _go=window.go;
 window.go=function(){var r=_go.apply(this,arguments);try{promo();if(!matchMedia('(prefers-reduced-motion:reduce)').matches)requestAnimationFrame(function(){countUp(document.getElementById('c'))})}catch(e){}return r};
+})();
+</script>
+
+<style id="cstatus-css">
+.cst{position:relative;overflow:hidden;margin-bottom:16px;border-radius:20px;border:1px solid color-mix(in srgb,var(--er) 35%,var(--bd));background:radial-gradient(520px 220px at 100% 0,rgba(220,38,38,.10),transparent),var(--sf);box-shadow:0 14px 36px rgba(196,43,43,.10)}
+.cst-h{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;padding:18px 22px 4px}
+.cst-h h3{font:600 21px Newsreader,Georgia,serif;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cst-h p{color:var(--mu);font-size:12.5px;margin-top:3px;max-width:560px}
+.cst-live{display:inline-flex;align-items:center;gap:6px;font:800 10px "IBM Plex Sans",sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#fff;background:linear-gradient(120deg,#b91c1c,#ef4444);padding:4px 10px;border-radius:99px}
+.cst-live i{width:7px;height:7px;border-radius:50%;background:#fff;animation:cstBlink 1.2s infinite}
+@keyframes cstBlink{50%{opacity:.25}}
+.cst-reason{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:12px;background:rgba(196,43,43,.09);border:1px solid rgba(196,43,43,.35);color:var(--er);font-weight:700;font-size:13px}
+.cst-reason b{font-size:15px}
+.cst-kp{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:10px 22px}
+@media(max-width:760px){.cst-kp{grid-template-columns:1fr 1fr}}
+.cst-k{padding:11px 13px;border-radius:13px;background:var(--hv);border:1px solid var(--bd)}
+.cst-k small{display:block;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.cst-k b{display:block;font:700 26px Newsreader,serif;margin-top:2px;font-variant-numeric:tabular-nums;color:var(--er)}
+.cst-k em{font-style:normal;font-size:12px;font-weight:700;color:var(--er)}
+.cst-k.cond b{font-size:19px}
+.cst-chart{padding:4px 14px 6px;position:relative}
+.cst-chart svg{width:100%;height:auto;display:block;overflow:visible}
+.cst-line{fill:none;stroke:url(#cstStroke);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:cstDraw 1.8s .15s cubic-bezier(.3,.7,.2,1) forwards}
+@keyframes cstDraw{to{stroke-dashoffset:0}}
+.cst-area{opacity:0;animation:cstFade .9s 1.2s forwards}@keyframes cstFade{to{opacity:1}}
+.cst-dot{fill:var(--sf);stroke:#dc2626;stroke-width:2.5;cursor:pointer;transition:r .15s}.cst-dot:hover{r:7}
+.cst-now{animation:cstPulse 1.6s infinite}@keyframes cstPulse{0%{r:7;opacity:1}100%{r:20;opacity:0}}
+.cst-grid{stroke:var(--bd);stroke-dasharray:3 5}
+.cst-ax{fill:var(--mu);font:600 11px "IBM Plex Sans",sans-serif}
+.cst-call rect{fill:#b91c1c}.cst-call text{fill:#fff;font:700 12.5px "IBM Plex Sans",sans-serif}
+.cst-zone{fill:rgba(196,43,43,.06)}
+.cst-sub{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:2px 22px 18px}
+@media(max-width:760px){.cst-sub{grid-template-columns:1fr}}
+.cst-s{display:flex;align-items:center;gap:12px;padding:10px 13px;border:1px solid var(--bd);border-radius:13px}
+.cst-s div:first-child{flex:1;min-width:0}.cst-s small{color:var(--mu);display:block;font-size:11px}.cst-s b{font:700 17px Newsreader,serif}
+.cst-s svg{width:84px;height:30px}
+.cst-s em{font-style:normal;color:var(--er);font-weight:700;font-size:12px}
+.cst-note{padding:0 22px 16px;font-size:12px;color:var(--mu)}
+</style>
+<script id="cstatus-js">
+(function(){
+'use strict';
+/* Company Status Index: falls every day because of the protest.
+   Day 0 = 12 Oct 2026 at 94. Each new calendar day lowers it by 3-5 points (floor 8).
+   Computed from the date, so a new, lower point appears automatically every day. */
+var START=new Date(2026,9,12),START_V=94,FLOOR=8,REASON='Due to protest';
+function drop(d){return 3+((d*7+1)%3)}
+function dayIdx(){var n=new Date(),m=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.max(0,Math.round((m-START)/864e5))}
+function series(scale){var o=[],v=START_V,d,idx=dayIdx();for(d=0;d<=idx;d++){if(d>0)v-=drop(d)*(scale||1);o.push(Math.max(FLOOR,Math.round(v*10)/10))}return o}
+function label(d){var x=new Date(START.getFullYear(),START.getMonth(),START.getDate()+d);return x.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})}
+function level(v){return v>=75?['Stable','#12803f']:v>=50?['Under pressure','#b45309']:v>=25?['Severe','#c42b2b']:['Critical','#991b1b']}
+function chart(s){
+ var W=820,H=300,L=44,R=24,T=26,B=38,n=s.length,w=W-L-R,h=H-T-B,
+  X=function(i){return L+(n===1?w/2:i*w/(n-1))},Y=function(v){return T+h-(v/100)*h},
+  pts=s.map(function(v,i){return [X(i),Y(v)]}),p='M'+pts[0][0]+','+pts[0][1],i;
+ for(i=1;i<n;i++){var a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;p+=' C'+cx+','+a[1]+' '+cx+','+b[1]+' '+b[0]+','+b[1]}
+ var area=p+' L'+pts[n-1][0]+','+(T+h)+' L'+pts[0][0]+','+(T+h)+' Z';
+ var g='',ax='',step=Math.max(1,Math.ceil(n/9));
+ [0,25,50,75,100].forEach(function(t){g+='<line class="cst-grid" x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(t)+'" y2="'+Y(t)+'"/><text class="cst-ax" x="'+(L-8)+'" y="'+(Y(t)+4)+'" text-anchor="end">'+t+'</text>'});
+ for(i=0;i<n;i+=step)ax+='<text class="cst-ax" x="'+X(i)+'" y="'+(H-12)+'" text-anchor="middle">'+label(i)+'</text>';
+ if((n-1)%step)ax+='<text class="cst-ax" x="'+X(n-1)+'" y="'+(H-12)+'" text-anchor="middle" style="font-weight:800">'+label(n-1)+'</text>';
+ var dots=pts.map(function(q,k){return '<circle class="cst-dot" cx="'+q[0]+'" cy="'+q[1]+'" r="4.5"><title>'+label(k)+' · Status '+s[k]+(k?' (▼ '+(s[k-1]-s[k]).toFixed(1)+')':'')+'</title></circle>'}).join('');
+ var e=pts[n-1],bx=Math.min(e[0]-70,W-R-150),by=Math.max(T-4,e[1]-58);
+ return '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Company status falling every day due to protest"><defs>'+
+  '<linearGradient id="cstArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ef4444" stop-opacity=".38"/><stop offset="1" stop-color="#ef4444" stop-opacity="0"/></linearGradient>'+
+  '<linearGradient id="cstStroke" x1="0" x2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset=".5" stop-color="#ef4444"/><stop offset="1" stop-color="#991b1b"/></linearGradient></defs>'+
+  '<rect class="cst-zone" x="'+L+'" y="'+Y(25)+'" width="'+w+'" height="'+(T+h-Y(25))+'"/>'+g+
+  '<path class="cst-area" d="'+area+'" fill="url(#cstArea)"/>'+
+  '<path class="cst-line" pathLength="1" d="'+p+'"/>'+dots+
+  '<circle class="cst-now" cx="'+e[0]+'" cy="'+e[1]+'" r="7" fill="#ef4444"/>'+
+  '<g class="cst-call"><rect x="'+bx+'" y="'+by+'" width="150" height="30" rx="10"/><text x="'+(bx+75)+'" y="'+(by+20)+'" text-anchor="middle">▼ '+REASON+'</text>'+
+  '<path d="M'+(e[0])+','+(by+30)+' l-6,-1 l6,10 l6,-10 z" fill="#b91c1c" transform="translate(0,0)"/></g>'+ax+'</svg>';
+}
+function spark(s){var w=84,h=30,n=s.length,mx=Math.max.apply(null,s),mn=Math.min.apply(null,s),r=(mx-mn)||1,
+ d=s.map(function(v,i){return (n===1?w/2:i*w/(n-1)).toFixed(1)+','+(h-3-(v-mn)/r*(h-6)).toFixed(1)}).join(' ');
+ return '<svg viewBox="0 0 '+w+' '+h+'"><polyline points="'+d+'" fill="none" stroke="#dc2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
+function card(){
+ var s=series(1),n=s.length,cur=s[n-1],prev=n>1?s[n-2]:cur,tot=START_V-cur,lv=level(cur),idx=dayIdx();
+ var subs=[['Productivity',1.15],['Operations',.95],['Revenue',1.3]].map(function(m){var q=series(m[1]).map(function(v){return Math.min(100,v)});var c=q[q.length-1],p=q.length>1?q[q.length-2]:c;
+  return '<div class="cst-s"><div><small>'+m[0]+' index</small><b>'+Math.round(c)+'</b> <em>▼ '+Math.round(p-c)+'</em></div>'+spark(q)+'</div>'}).join('');
+ return '<section class="cst" aria-label="Company status"><div class="cst-h"><div><h3>Company Status <span class="cst-live"><i></i>Live</span></h3>'+
+  '<p>Overall company health index (0-100). It has been falling every single day since the protest began on '+label(0)+'.</p></div>'+
+  '<div class="cst-reason">⚠ Reason: <b>'+REASON+'</b></div></div>'+
+  '<div class="cst-kp"><div class="cst-k"><small>Status today</small><b>'+cur+'</b><em>of 100</em></div>'+
+  '<div class="cst-k"><small>Change today</small><b>▼ '+(prev-cur).toFixed(1)+'</b><em>vs yesterday</em></div>'+
+  '<div class="cst-k"><small>Down since '+label(0)+'</small><b>▼ '+tot.toFixed(0)+'</b><em>'+idx+' day'+(idx===1?'':'s')+' of decline</em></div>'+
+  '<div class="cst-k cond"><small>Condition</small><b style="color:'+lv[1]+'">'+lv[0]+'</b><em style="color:'+lv[1]+'">'+REASON+'</em></div></div>'+
+  '<div class="cst-chart">'+chart(s)+'</div><div class="cst-sub">'+subs+'</div>'+
+  '<div class="cst-note">Status falls a little more every day while the protest continues. The graph updates automatically each day.</div></section>';
+}
+var _d=V.dashboard;
+V.dashboard=function(){
+ var h=_d.apply(this,arguments),i=h.indexOf('<div class="g4">');
+ return i<0?card()+h:h.slice(0,i)+card()+h.slice(i);
+};
+})();
+</script>
+
+<style id="nova-css">
+/* ===== Nova layer: allotment desk, insights, accessibility, mobile, print ===== */
+.nv-sec{margin-top:18px}
+.nv-kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.nv-k{padding:12px 14px;border-radius:14px;background:var(--hv);border:1px solid var(--bd)}
+.nv-k small{display:block;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.07em}
+.nv-k b{display:block;font:700 24px Newsreader,serif;margin-top:2px;font-variant-numeric:tabular-nums}
+.nv-sel{padding:7px 9px;border:1px solid var(--bd);border-radius:10px;background:var(--sf);max-width:210px}
+.nv-bk{border:1px solid var(--bd);border-radius:16px;padding:14px 16px;margin-bottom:12px;background:var(--sf);box-shadow:var(--au-sh,0 6px 20px rgba(15,30,50,.07))}
+.nv-bk-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.nv-tok{font:800 15px ui-monospace,monospace;letter-spacing:.08em}
+.nv-tl{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 0 6px;position:relative}
+.nv-st{text-align:center;font-size:11.5px;color:var(--mu);position:relative}
+.nv-st i{display:grid;place-items:center;width:26px;height:26px;margin:0 auto 5px;border-radius:50%;background:var(--hv);border:2px solid var(--bd);font-style:normal;font-weight:800;position:relative;z-index:1}
+.nv-st:before{content:"";position:absolute;top:12px;left:-50%;width:100%;height:2px;background:var(--bd)}
+.nv-st:first-child:before{display:none}
+.nv-st.ok{color:var(--tx);font-weight:600}.nv-st.ok i{background:var(--ok);border-color:var(--ok);color:#fff}.nv-st.ok:before{background:var(--ok)}
+.nv-st.cur i{border-color:#14b8a6;color:#0f766e;box-shadow:0 0 0 4px rgba(20,184,166,.2)}
+.nv-who{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+@media(max-width:560px){.nv-who{grid-template-columns:1fr}}
+.nv-w{padding:9px 12px;border-radius:12px;background:var(--hv);font-size:12.5px}.nv-w small{display:block;color:var(--mu);font-size:10.5px;text-transform:uppercase;letter-spacing:.07em}
+.nv-g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-bottom:16px}
+.nv-donut{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.nv-donut svg{width:150px;height:150px;flex:none}
+.nv-lg{flex:1;min-width:150px;font-size:12.5px}.nv-lg div{display:flex;align-items:center;gap:8px;padding:3px 0}.nv-lg i{width:10px;height:10px;border-radius:3px;flex:none}.nv-lg b{margin-left:auto;font-variant-numeric:tabular-nums}
+.nv-hb{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;padding:6px 0;font-size:12.5px}
+.nv-hb span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nv-tr{height:10px;border-radius:99px;background:var(--hv);overflow:hidden}.nv-tr i{display:block;height:100%;border-radius:99px;animation:nvGrow .9s cubic-bezier(.2,.7,.2,1) both;transform-origin:left}
+@keyframes nvGrow{from{transform:scaleX(0)}}
+.nv-hb b{font-variant-numeric:tabular-nums;font-size:12px}
+.nv-warn{padding:10px 12px;border-radius:12px;background:rgba(180,83,9,.1);color:var(--wa);font-size:12.5px;margin:10px 0}
+.nv-kb{display:grid;grid-template-columns:auto 1fr;gap:8px 16px;align-items:center}
+.nv-kb kbd{padding:3px 8px;border-radius:7px;border:1px solid var(--bd);background:var(--hv);font:700 12px ui-monospace,monospace;white-space:nowrap}
+@media(max-width:700px){
+ header{gap:6px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
+ header .srch,#sonaLiveClock,#proSess,#proCrumb i,header .btn[onclick="exportM()"],.sona-command-btn kbd{display:none!important}
+ #proCrumb{min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1}
+ #pill{font-size:10px;padding:2px 8px;white-space:nowrap}
+ #c{padding:16px 14px 90px}
+ #sonaExamDock{right:10px!important;bottom:10px!important}#sonaExamDock button{padding:8px 12px!important;font-size:12px!important}
+ .ap-n b{font-size:44px}.ap-bars div i{font-size:8px}.ap-bars div.gh i{display:none}.ap-ax span{font-size:8px}
+ .nv-hb{grid-template-columns:90px 1fr auto}
+}
+@media(max-width:900px){.g2,.g3{grid-template-columns:minmax(0,1fr)!important}.g4{grid-template-columns:repeat(2,minmax(0,1fr))!important}.cd,.g2>*,.g3>*,.g4>*{min-width:0}.tw{overflow-x:auto}}
+@media print{
+ aside,header,.au-promo,#sonaExamDock,#stack,.btn,.sb-act{display:none!important}
+ main{margin-left:0!important}body{background:#fff!important}.cd,.nv-bk{box-shadow:none!important;break-inside:avoid}
+}
+</style>
+<script id="nova-js">
+(function(){
+'use strict';
+var ACTIVE=function(b){return !/^Cancel/.test(b.status||'')};
+var lst=function(){return S.scriptBookings||(S.scriptBookings=[])};
+var DESK=function(){return !!ME&&(can('accedit')||ME.role==='Chairman'||ME.role==='HOD')};
+var COLORS=['#0f766e','#4f46e5','#d97706','#e11d48','#0284c7','#64748b','#7c3aed'];
+var slotStartH=function(b){var m=/^(\d{2})/.exec(b.slotLabel||'');return m?Number(m[1]):0};
+var started=function(b){return new Date(b.date+'T'+String(slotStartH(b)).padStart(2,'0')+':00:00').getTime()<=Date.now()};
+
+/* ---------- allotment logic ---------- */
+function load(name){return lst().filter(function(b){return ACTIVE(b)&&(b.manager===name||b.mentor===name)}).length}
+function pool(rx,not){return IT_TEAM.filter(function(m){return rx.test(m.post)&&!(not&&not.test(m.post))})}
+function pick(p){return p.slice().sort(function(a,b){return load(a.name)-load(b.name)||a.num-b.num})[0]}
+function sugg(){var mg=pick(pool(/Manager/)),mn=pick(pool(/Lead|Coordinator|Administrator|Officer/,/Manager/).filter(function(m){return !mg||m.name!==mg.name}));return {mg:mg.name,mn:mn.name}}
+function doAllot(t,mg,mn,silent){
+ var b=lst().filter(function(x){return x.token===t})[0];if(!b||!ACTIVE(b))return false;
+ b.manager=mg;b.mentor=mn;b.allotBy=ME.name;b.allotAt=now();b.status='Allotted';
+ var tk=(S.tk||[]).filter(function(x){return (x.title||'').indexOf(t)>-1})[0];if(tk){tk.reply='Allotted: Script Manager '+mg+', Script Mentor '+mn;tk.st='Resolved'}
+ log('Script allotted '+t+': '+mg+' / '+mn);if(!silent){save();toast('Allotted to '+mg+' and '+mn);go('script')}return true}
+window.nvAllot=function(t){var a=document.getElementById('nvM_'+t),c=document.getElementById('nvN_'+t);if(!a||!c)return;
+ if(a.value===c.value){toast('Script Manager and Script Mentor must be different people.');return}doAllot(t,a.value,c.value)};
+window.nvAuto=function(){var n=0;lst().filter(function(b){return ACTIVE(b)&&!b.manager}).forEach(function(b){var s=sugg();if(doAllot(b.token,s.mg,s.mn,true))n++});save();toast(n?n+' booking(s) auto-allotted':'Nothing pending');go('script')};
+window.nvCancel=function(t){var b=lst().filter(function(x){return x.token===t})[0];if(!b||!ACTIVE(b))return;
+ if(!(DESK()||b.uid===ME.id)){toast('You can cancel only your own booking.');return}
+ if(started(b)){toast('This slot has already started. It cannot be cancelled.');return}
+ if(!confirm('Cancel booking '+t+'? The seat will be released.'))return;
+ b.status='Cancelled';b.cancelBy=ME.name;b.cancelAt=now();log('Script booking cancelled: '+t);save();toast('Booking cancelled');go('script')};
+window.nvCsv=function(){var rows=lst().map(function(b){return [b.token,b.name,b.planName,b.date,b.slotLabel,b.amount,b.method,b.status,b.manager||'',b.mentor||'']});
+ csv('script-bookings',['Token','Booked by','Plan','Date','Time','Amount','Payment','Status','Script Manager','Script Mentor'],rows)};
+
+/* ---------- script page panels ---------- */
+function journey(b){
+ var allotted=!!b.manager,can_=ACTIVE(b),done=started(b)&&allotted;
+ var steps=[['Booked',1],['Sent to IT Team',1],['Manager & Mentor allotted',allotted],['Session',done]];
+ var cur=steps.findIndex(function(s){return !s[1]});
+ return '<div class="nv-bk"><div class="nv-bk-h"><div><span class="nv-tok">'+esc(b.token)+'</span> <span class="tg '+(can_?'g':'r')+'">'+esc(can_?b.status:'Cancelled')+'</span></div><div><b>'+esc(b.planName)+'</b> · '+esc(dLbl2(b.date))+' · '+esc(b.slotLabel)+' · '+inr(b.amount)+'</div></div>'+
+  (can_?'<div class="nv-tl">'+steps.map(function(s,i){return '<div class="nv-st '+(s[1]?'ok ':'')+(i===cur?'cur':'')+'"><i>'+(s[1]?'✓':i+1)+'</i>'+s[0]+'</div>'}).join('')+'</div>'+
+  '<div class="nv-who"><div class="nv-w"><small>Script Manager</small><b>'+(b.manager?esc(b.manager):'Will be allotted by IT Team Manager')+'</b></div><div class="nv-w"><small>Script Mentor</small><b>'+(b.mentor?esc(b.mentor):'Will be allotted by IT Team Manager')+'</b></div></div>'+
+  (started(b)?'':'<div style="margin-top:10px"><button class="btn no" onclick="nvCancel(\''+esc(b.token)+'\')">Cancel booking</button></div>'):'')+'</div>';
+}
+function dLbl2(k){return new Date(k+'T00:00').toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short'})}
+function opts(sel){return IT_TEAM.map(function(m){return '<option value="'+esc(m.name)+'"'+(m.name===sel?' selected':'')+'>'+esc(m.name)+' · '+esc(m.post)+'</option>'}).join('')}
+function desk(){
+ var all=lst(),act=all.filter(ACTIVE),pend=act.filter(function(b){return !b.manager}),alt=act.filter(function(b){return b.manager}),can2=all.length-act.length;
+ var rev=act.reduce(function(a,b){return a+b.amount},0);
+ var rows=pend.map(function(b){var s=sugg();return '<tr><td><b>'+esc(b.token)+'</b></td><td>'+esc(b.name)+'</td><td>'+esc(b.planName)+'</td><td>'+esc(dLbl2(b.date))+'<small>'+esc(b.slotLabel)+'</small></td>'+
+  '<td><select class="nv-sel" id="nvM_'+esc(b.token)+'" aria-label="Script Manager">'+opts(s.mg)+'</select></td><td><select class="nv-sel" id="nvN_'+esc(b.token)+'" aria-label="Script Mentor">'+opts(s.mn)+'</select></td>'+
+  '<td style="white-space:nowrap"><button class="btn p" onclick="nvAllot(\''+esc(b.token)+'\')">Allot</button> <button class="btn no" onclick="nvCancel(\''+esc(b.token)+'\')">Cancel</button></td></tr>'}).join('');
+ return '<div class="cd nv-sec"><h3><span>Allotment desk · IT Team Manager</span><span><button class="btn" onclick="nvAuto()">⚡ Auto-allot all pending</button> <button class="btn" onclick="nvCsv()">⬇ Export CSV</button></span></h3><div class="cb">'+
+  '<div class="nv-kp"><div class="nv-k"><small>Pending allotment</small><b>'+pend.length+'</b></div><div class="nv-k"><small>Allotted</small><b>'+alt.length+'</b></div><div class="nv-k"><small>Cancelled</small><b>'+can2+'</b></div><div class="nv-k"><small>Booking value</small><b>'+inr(rev)+'</b></div></div>'+
+  '<div class="tw"><table><thead><tr><th>Token</th><th>Booked by</th><th>Script</th><th>Date &amp; time</th><th>Script Manager</th><th>Script Mentor</th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="7" class="empty">No bookings waiting for allotment.</td></tr>')+'</tbody></table></div>'+
+  '<p class="hint">Suggested names are picked by the lightest workload. You can change them before allotting.</p></div></div>';
+}
+function mine(){var m=lst().filter(function(b){return b.uid===ME.id}).slice().reverse();
+ if(!m.length)return '';return '<div class="cd nv-sec"><h3>My script status</h3><div class="cb">'+m.map(journey).join('')+'</div></div>'}
+var _s=V.script;
+V.script=function(){var h=_s.apply(this,arguments);return h+(DESK()?desk():'')+mine()};
+
+/* ---------- Insights ---------- */
+function donut(items){var tot=items.reduce(function(a,x){return a+x.v},0)||1,r=52,C=2*Math.PI*r,off=0,seg='';
+ items.forEach(function(x){if(!x.v)return;var l=x.v/tot*C;seg+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+x.c+'" stroke-width="18" stroke-dasharray="'+l+' '+(C-l)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 70 70)"><title>'+esc(x.l)+': '+x.v+'</title></circle>';off+=l});
+ return '<div class="nv-donut"><svg viewBox="0 0 140 140" role="img" aria-label="Donut chart"><circle cx="70" cy="70" r="'+r+'" fill="none" stroke="var(--hv)" stroke-width="18"/>'+seg+'<text x="70" y="68" text-anchor="middle" font-size="24" font-weight="700" fill="var(--tx)" font-family="Newsreader,serif">'+items.reduce(function(a,x){return a+x.v},0)+'</text><text x="70" y="86" text-anchor="middle" font-size="10" fill="var(--mu)">total</text></svg>'+
+ '<div class="nv-lg">'+items.map(function(x){return '<div><i style="background:'+x.c+'"></i>'+esc(x.l)+'<b>'+x.v+'</b></div>'}).join('')+'</div></div>'}
+function hbars(items,fmt){var mx=Math.max.apply(null,items.map(function(x){return x.v}).concat([1]));
+ return items.map(function(x){return '<div class="nv-hb"><span title="'+esc(x.l)+'">'+esc(x.l)+'</span><div class="nv-tr"><i style="width:'+(x.v/mx*100)+'%;background:'+(x.c||COLORS[0])+'"></i></div><b>'+(fmt?fmt(x.v):x.v)+'</b></div>'}).join('')}
+function cnt(arr,key){var o={};arr.forEach(function(x){o[x[key]]=(o[x[key]]||0)+1});return o}
+V.insights=function(){
+ var cs=S.cases||[],open=cs.filter(function(c){return c.st!=='Closed'}).length,bud=D.reduce(function(a,d){return a+d[3]},0),used=D.reduce(function(a,d){return a+d[4]},0),
+  sb=lst().filter(ACTIVE),rev=sb.reduce(function(a,b){return a+b.amount},0),pay=IT_TEAM.reduce(function(a,m){return a+m.sal},0);
+ var byStage=cnt(cs,'st'),bySev=cnt(cs,'sev'),lv=cnt(S.lv||[],'st'),byPlan=cnt(sb,'planName');
+ var sevC={High:'#e11d48',Medium:'#d97706',Low:'#0f766e',Critical:'#7f1d1d'};
+ var h='<div class="ph"><div><h1>Insights</h1><p>Live analytics from cases, finance, people and script bookings.</p></div><div><button class="btn" onclick="window.print()">🖨 Print report</button></div></div>'+
+ '<div class="nv-kp"><div class="nv-k"><small>Total cases</small><b>'+cs.length+'</b></div><div class="nv-k"><small>Open cases</small><b>'+open+'</b></div><div class="nv-k"><small>Employees</small><b>'+EMP.length.toLocaleString('en-IN')+'</b></div><div class="nv-k"><small>Budget used</small><b>'+Math.round(used/bud*100)+'%</b></div><div class="nv-k"><small>Script bookings</small><b>'+sb.length+'</b></div><div class="nv-k"><small>Script revenue</small><b>'+inr(rev)+'</b></div><div class="nv-k"><small>IT payroll / month</small><b>'+inr(pay)+'</b></div></div>'+
+ '<div class="nv-g2"><div class="cd"><h3>Cases by stage</h3><div class="cb">'+donut(ST.map(function(s,i){return {l:s,v:byStage[s]||0,c:COLORS[i%COLORS.length]}}))+'</div></div>'+
+ '<div class="cd"><h3>Cases by severity</h3><div class="cb">'+hbars(Object.keys(bySev).map(function(k){return {l:k,v:bySev[k],c:sevC[k]||'#64748b'}}))+'</div></div></div>'+
+ '<div class="nv-g2"><div class="cd"><h3>Department budget used</h3><div class="cb">'+hbars(D.map(function(d,i){return {l:d[0],v:Math.round(d[4]/d[3]*100),c:d[4]/d[3]>.8?'#e11d48':d[4]/d[3]>.6?'#d97706':'#0f766e'}}),function(v){return v+'%'})+'</div></div>'+
+ '<div class="cd"><h3>Headcount by department</h3><div class="cb">'+hbars(D.map(function(d,i){return {l:d[0],v:d[2],c:COLORS[i%COLORS.length]}}))+'</div></div></div>'+
+ '<div class="nv-g2"><div class="cd"><h3>Leave requests</h3><div class="cb">'+donut(Object.keys(lv).map(function(k,i){return {l:k,v:lv[k],c:COLORS[i%COLORS.length]}}))+'</div></div>'+
+ '<div class="cd"><h3>Script bookings by plan</h3><div class="cb">'+(sb.length?hbars(Object.keys(byPlan).map(function(k,i){return {l:k,v:byPlan[k],c:COLORS[i%COLORS.length]}})):'<p class="empty">No bookings yet.</p>')+'</div></div></div>'+
+ '<div class="cd"><h3>IT Team payroll by post</h3><div class="cb">'+hbars(IT_TEAM.map(function(m){return {l:m.post+' · '+m.name,v:m.sal,c:'#4f46e5'}}),inr)+'</div></div>';
+ if(ME.role==='Chairman')h+=backup();
+ return h};
+function backup(){return '<div class="cd nv-sec"><h3>Data backup &amp; restore</h3><div class="cb"><p style="color:var(--mu);font-size:13px">Your portal data is saved on this device. Download a backup regularly and keep it safe.</p><div class="nv-warn">⚠ The backup file contains user passwords in plain text. Store it privately and never share it.</div><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn p" onclick="nvBackup()">⬇ Download backup</button><button class="btn" onclick="document.getElementById(\'nvFile\').click()">⬆ Restore from file</button><input id="nvFile" type="file" accept="application/json,.json" class="hide" onchange="nvRestore(this)"></div></div></div>'}
+window.nvBackup=function(){var b=new Blob([JSON.stringify(S,null,1)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sonainfo-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();log('Backup downloaded');toast('Backup downloaded')};
+window.nvRestore=function(inp){var f=inp.files&&inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.users)||!Array.isArray(d.cases))throw 0;
+ if(!confirm('Restore this backup? Current data on this device will be replaced.'))return;Object.assign(S,d);save();toast('Backup restored. Reloading...');setTimeout(function(){location.reload()},700)}catch(e){toast('This file is not a valid Sonainfo backup.')}};r.readAsText(f);inp.value=''};
+
+/* ---------- navigation, permissions, titles ---------- */
+if(!VW.some(function(v){return v[0]==='insights'}))VW.splice(1,0,['insights','Insights','▥']);
+var _ens=window.ensure;
+window.ensure=function(){if(typeof _ens==='function')_ens.apply(this,arguments);
+ (S.users||[]).forEach(function(u){u.perm=u.perm||{};if(['Chairman','HOD','Financial Team','SEC Committee'].indexOf(u.role)>-1)u.perm.insights=1})};
+var _go=window.go;
+window.go=function(v){var r=_go.apply(this,arguments);
+ if(view==='insights'){var c=document.querySelector('#proCrumb b');if(c)c.textContent='Insights';document.title='Insights · Sonainfo Portal'}
+ [].forEach.call(document.querySelectorAll('button:not([aria-label])'),function(b){if(!b.textContent.trim()||b.textContent.trim().length<2)b.setAttribute('aria-label',b.title||'Button')});
+ var c=document.getElementById('c');if(c&&!c.hasAttribute('tabindex'))c.setAttribute('tabindex','-1');return r};
+
+/* ---------- shortcuts + skip link ---------- */
+document.addEventListener('keydown',function(e){
+ var t=e.target,typing=t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)||(t&&t.isContentEditable);
+ if(e.key==='?'&&!typing&&ME){e.preventDefault();modal('Keyboard shortcuts','<div class="nv-kb"><kbd>Ctrl + K</kbd><span>Quick search and jump to any page</span><kbd>Alt + 1</kbd><span>Dashboard</span><kbd>Alt + 2</kbd><span>Cases</span><kbd>Alt + 3</kbd><span>Announcements</span><kbd>Alt + 4</kbd><span>Exam Cell</span><kbd>Alt + 5</kbd><span>Chat</span><kbd>Alt + 6</kbd><span>Script Booking</span><kbd>Alt + 7</kbd><span>Insights</span><kbd>Alt + 8</kbd><span>IT Team</span><kbd>?</kbd><span>Show this help</span><kbd>Esc</kbd><span>Close dialogs</span></div>','<button class="btn p" onclick="cm()">Close</button>');return}
+ if(e.altKey&&!e.ctrlKey&&!e.metaKey&&ME){var m={'6':'script','7':'insights','8':'itteam'}[e.key];if(m&&can(m)){e.preventDefault();go(m)}}
+});
 })();
 </script>
 
