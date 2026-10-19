@@ -458,7 +458,7 @@ const now=()=>new Date().toLocaleString('en-GB',{day:'2-digit',month:'short',yea
 const today=()=>new Date().toISOString().slice(0,10);
 const dd=d=>new Date(d+'T00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
 const KEY='sonainfo_v4';
-const VW=[['dashboard','Dashboard','⌂'],['cases','Cases','⚖'],['complaint','Register complaint','⚑'],['penalties','Penalty list','⚠'],['finance','Finance','₹'],['wallet','Sonainfo Wallet','◉'],['employees','Employees','♙'],['departments','Departments','▦'],['announcements','Announcements','◉'],['sec','SEC Committee','◈'],['dc','Disciplinary Committee','◈'],['hod','HOD Office','◈'],['exam','Exam Cell','✎'],['election','Election','🗳'],['chat','Chat','✉'],['pages','Website builder','＋'],['leave','Leave & Holidays','☀'],['reports','Reports','▤'],['tickets','Help desk','☎'],['audit','Audit log','☰'],['access','Access control','🔑'],['tokenbuyer','Token Buyer','🪙']];
+const VW=[['dashboard','Dashboard','⌂'],['cases','Cases','⚖'],['complaint','Register complaint','⚑'],['penalties','Penalty list','⚠'],['finance','Finance','₹'],['wallet','Sonainfo Wallet','◉'],['employees','Employees','♙'],['departments','Departments','▦'],['announcements','Announcements','◉'],['sec','SEC Committee','◈'],['dc','Disciplinary Committee','◈'],['hod','HOD Office','◈'],['exam','Exam Cell','✎'],['election','Election','🗳'],['chat','Chat','✉'],['pages','Website builder','＋'],['leave','Leave & Holidays','☀'],['reports','Reports','▤'],['tickets','Help desk','☎'],['audit','Audit log','☰'],['access','Access control','🔑'],['tokenbuyer','Token Buyer','🪙'],['itteam','IT Team','💻']];
 const AC=[['complaint','Register complaint'],['enquiry','Do enquiry'],['review','Review & take action'],['forward','Forward case'],['announce','Announce'],['penedit','Manage penalties'],['finedit','Edit finance'],['examedit','Manage exam cell'],['comment','Comment on cases'],['close','Close / reopen cases'],['propose','Propose decision'],['decide','Announce case decision'],['electionedit','Update election'],['accedit','Edit access'],['pgedit','Add website sections'],['tktedit','Resolve help-desk tickets'],['lvedit','Approve leave']];
 const D=[['SEC Committee','Rahul Kumar',60,4000000,2650000],['Disciplinary Committee','Ashish',45,2500000,1400000],['Financial Team','Neha Gupta',120,8000000,5100000],['Script','Shivani',420,12000000,7900000],['CEO Office','CEO',25,5000000,3200000],['HOD','Akaya',80,6000000,3800000],['Client Department','Client Dept Head',380,11000000,6700000],['IT','Shivani',670,11500000,7300000]];
 const DN=D.map(d=>d[0]);
@@ -489,13 +489,16 @@ const save=()=>{if(!DB){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e)
  if(!READY)return;
  for(const k in DOCS){const b=DOCS[k](),j=JSON.stringify(b);if(SENT[k]!==j){SENT[k]=j;DB.doc('app/'+k).set(b).catch(e=>{SENT[k]=null;toast(e&&e.code==='invalid_argument'?'Not saved. Ask the owner to share this page with you as a Contributor.':'Not saved. Check your connection and try again.')})}}};
 let ME=null,view='dashboard';
-const can=k=>!!(ME&&(ME.perm[k]||k==='scripts'));
+const can=k=>!!(ME&&ME.perm[k]);
 const log=a=>{S.log.unshift({t:now(),a,u:ME?ME.name:'System'});S.log=S.log.slice(0,100);save()};
 const nid=l=>Math.max(0,...l.map(x=>x.id))+1;
 
 const EMP=(()=>{let s=7;const r=()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
  const F='Aarav Vivaan Aditya Rohan Ishaan Kabir Arjun Neha Priya Anjali Pooja Kavya Riya Sneha Meera Ritu Karan Vikram Sanjay Deepak Nisha Tanvi Harsh Yash'.split(' '),L='Sharma Verma Singh Gupta Kumar Yadav Mishra Patel Reddy Nair Joshi Mehta Das Khan Rao Iyer'.split(' '),R=['Executive','Analyst','Associate','Senior Associate','Team Lead','Coordinator'];
  const o=[];let n=1;D.forEach(d=>{for(let i=0;i<d[2];i++){o.push({id:'EMP'+String(n).padStart(4,'0'),name:F[r()*F.length|0]+' '+L[r()*L.length|0],dept:d[0],role:R[r()*R.length|0]});n++}});return o})();
+/* IT Team (15 members): overrides the generated employee records with the same ID numbers */
+const IT_TEAM=[[337,'Rajat Mukherjee','IT Team Lead',120000],[599,'Tanya Joshi','Deputy IT Team Lead',110000],[302,'Yash Dixit','IT Operations Manager',100000],[608,'Ananya Chopra','Assistant IT Operations Manager',90000],[621,'Aadhya Verma','Software Development Lead',85000],[598,'Divya Nair','Frontend Development Coordinator',80000],[652,'Riya Rana','Backend Development Coordinator',75000],[572,'Tanvi Tiwari','Database Administrator',70000],[584,'Anjali Trivedi','Cybersecurity Coordinator',65000],[629,'Tanya Shah','IT Support Manager',60000],[649,'Nisha Trivedi','Quality Assurance Lead',55000],[482,'Tanvi Kulkarni','UI/UX Design Coordinator',50000],[563,'Sneha Mehta','Network Administration Coordinator',45000],[514,'Diya Kulkarni','Technical Documentation Officer',42000],[523,'Saanvi Sharma','IT Project Coordinator',40000]].map(m=>({id:'EMP'+String(m[0]).padStart(4,'0'),num:m[0],name:m[1],post:m[2],sal:m[3]}));
+IT_TEAM.forEach(m=>{const e=EMP.find(x=>x.id===m.id);if(e){e.name=m.name;e.role=m.post;e.dept='IT';e.sal=m.sal;e.itteam=1}});
 const who=id=>{const e=EMP.find(x=>x.id===id);return e?`${e.name} (${e.id})`:id};
 
 /* auth */
@@ -527,7 +530,7 @@ function chart(){const o=[],n=new Date();for(let i=5;i>=0;i--){const d=new Date(
 
 const E={q:'',d:'All',p:0,n:20};
 function empBody(){const q=E.q.toLowerCase(),l=EMP.filter(e=>(E.d==='All'||e.dept===E.d)&&(e.name+e.id+e.role).toLowerCase().includes(q)),m=Math.max(0,Math.ceil(l.length/E.n)-1);E.p=Math.min(E.p,m);
- $('#eb').innerHTML=l.slice(E.p*E.n,E.p*E.n+E.n).map(e=>`<tr><td>${e.id}</td><td><b>${esc(e.name)}</b></td><td>${esc(e.role)}</td><td>${esc(e.dept)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No employees match. Clear the search or pick another department.</td></tr>';
+ $('#eb').innerHTML=l.slice(E.p*E.n,E.p*E.n+E.n).map(e=>`<tr><td>${e.id}</td><td><b>${esc(e.name)}</b></td><td>${esc(e.role)}${e.itteam?' <span class="tg g">IT Team</span>':''}</td><td>${esc(e.dept)}</td>${can('finance')?`<td>${e.sal?inr(e.sal):'-'}</td>`:''}</tr>`).join('')||'<tr><td colspan="5" class="empty">No employees match. Clear the search or pick another department.</td></tr>';
  $('#ep').innerHTML=`<span>${l.length.toLocaleString('en-IN')} employees · page ${E.p+1} of ${m+1}</span><span class="ac"><button class="btn" onclick="E.p--;empBody()" ${E.p<1?'disabled':''}>Previous</button><button class="btn" onclick="E.p++;empBody()" ${E.p>=m?'disabled':''}>Next</button></span>`}
 const CF={s:'All',m:0,q:''};
 function caseBody(){const l=S.cases.filter(c=>(CF.s==='All'||c.st===CF.s)&&(!CF.m||c.holder===ME.office)&&(c.id+c.title+c.against+c.dept+JSON.stringify(c.facts||'')).toLowerCase().includes(CF.q));
@@ -557,7 +560,7 @@ finance(){const e=can('finedit');return ph('Finance','Live view of the account, 
  <div class="cd"><h3>Last six months</h3><div class="cb">${chart()}</div></div></div>
  <div class="cd"><h3>Transactions</h3><div class="tw"><table><thead><tr><th>Description</th><th>Department</th><th>Type</th><th>Amount</th><th>Date</th>${e?'<th></th>':''}</tr></thead><tbody>${[...S.tx].sort((a,b)=>b.d.localeCompare(a.d)).map(t=>`<tr><td>${esc(t.n)}</td><td>${esc(t.dept)}</td><td>${tag(t.t)}</td><td>${inr(t.a)}</td><td>${dd(t.d)}</td>${e?`<td>${t.seed?'':`<button class="btn no" style="padding:3px 9px;font-size:12px" onclick="delTx(${t.id})">Delete</button>`}</td>`:''}</tr>`).join('')}</tbody></table></div></div>`},
 employees(){setTimeout(empBody,0);return ph('Employees',`All ${EMP.length.toLocaleString('en-IN')} employees.`)+
- `<div class="cd"><h3><span>Directory</span><span class="ac"><input class="srch" style="max-width:220px" placeholder="Name, ID or role" value="${esc(E.q)}" oninput="E.q=this.value;E.p=0;empBody()"><select class="srch" style="max-width:190px" onchange="E.d=this.value;E.p=0;empBody()">${['All',...DN].map(d=>`<option ${E.d===d?'selected':''}>${d}</option>`).join('')}</select></span></h3><div class="tw"><table><thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th></tr></thead><tbody id="eb"></tbody></table></div><div class="cb ac" id="ep" style="justify-content:space-between;border-top:1px solid var(--bd)"></div></div>`},
+ `<div class="cd"><h3><span>Directory</span><span class="ac"><input class="srch" style="max-width:220px" placeholder="Name, ID or role" value="${esc(E.q)}" oninput="E.q=this.value;E.p=0;empBody()"><select class="srch" style="max-width:190px" onchange="E.d=this.value;E.p=0;empBody()">${['All',...DN].map(d=>`<option ${E.d===d?'selected':''}>${d}</option>`).join('')}</select></span></h3><div class="tw"><table><thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Department</th>${can('finance')?'<th>Monthly salary</th>':''}</tr></thead><tbody id="eb"></tbody></table></div><div class="cb ac" id="ep" style="justify-content:space-between;border-top:1px solid var(--bd)"></div></div>`},
 departments(){return ph('Departments','Heads and strength.')+`<div class="g3">${D.map(d=>`<div class="cd dc"><h3>${d[0]}</h3><small>Head: ${esc(d[1])}</small><div class="row"><span>Employees</span><b>${d[2]}</b></div>${can('finance')?`<div class="row"><span>Budget</span><b>${inr(bud(d[0]))}</b></div><div class="pb"><span style="width:${Math.min(100,spent(d[0])/bud(d[0])*100)}%"></span></div>`:''}</div>`).join('')}</div>`},
 announcements(){return ph('Announcements','Notices and decisions for the organisation.',can('announce')?`<button class="btn p" onclick="annForm()">+ New announcement</button>`:'')+`<div class="cd"><div class="cb">${S.ann.map(a=>`<div class="row"><div><b>${esc(a.title)}</b><small>${esc(a.text)}</small><small>${esc(a.by)} · ${dd(a.date)}</small></div></div>`).join('')}</div></div>`},
 audit(){return ph('Audit log','Who did what, and when.')+`<div class="cd"><div class="cb">${S.log.map(l=>`<div class="row"><div>${esc(l.a)}<small>${esc(l.u)}</small></div><small>${esc(l.t)}</small></div>`).join('')}</div></div>`},
@@ -740,18 +743,21 @@ const EX={t:'sched'},exE=()=>can('examedit'),exTab=t=>{EX.t=t;go('exam')};
 const exDel=(k,id)=>ask('Delete this entry?',()=>{S.ex[k]=S.ex[k].filter(x=>x.id!==id);log('Exam cell: removed an entry');save();go('exam');toast('Deleted')});
 const xb=(k,id)=>exE()?`<td><button class="btn no" onclick="exDel('${k}',${id})">Delete</button></td>`:'';
 V.exam=()=>{const t=today(),up=S.ex.sched.filter(x=>x.date>=t).sort((a,b)=>a.date.localeCompare(b.date)),r=S.ex.res,av=r.length?Math.round(r.reduce((s,x)=>s+x.passed/x.appeared,0)/r.length*100):0,e=exE();
- const tabs=[['sched','Exam schedule'],['res','Results'],['rank','Member Ranking'],['duty','Invigilation duty'],['rules','Rules & guidelines'],['paper','🔒 Question Paper']],ad={sched:['+ Schedule exam','exForm()'],res:['+ Publish result','resForm()'],duty:['+ Assign duty','dutyForm()']}[EX.t];
+ const tabs=[['sched','Exam schedule'],['res','Results'],['rank','Member Ranking'],['duty','Invigilation duty'],['rules','Rules & guidelines'],['paper','🔒 Question Paper'],['itres','IT Team Result']],ad={sched:['+ Schedule exam','exForm()'],res:['+ Publish result','resForm()'],duty:['+ Assign duty','dutyForm()']}[EX.t];
  let b='';
  if(EX.t==='sched')b=`<div class="tw"><table><thead><tr><th>Date</th><th>Subject</th><th>Department</th><th>Time</th><th>Hall</th><th>Type</th>${e?'<th></th>':''}</tr></thead><tbody>${[...S.ex.sched].sort((a,b)=>a.date.localeCompare(b.date)).map(x=>`<tr><td><b>${dd(x.date)}</b>${x.date<t?'<small>Completed</small>':''}</td><td>${esc(x.sub)}</td><td>${esc(x.dept)}</td><td>${esc(x.time)}<small>${esc(x.dur)}</small></td><td>${esc(x.hall)}</td><td><span class="tg">${esc(x.type)}</span></td>${xb('sched',x.id)}</tr>`).join('')||'<tr><td colspan="7" class="empty">No exams scheduled yet.</td></tr>'}</tbody></table></div>`;
  if(EX.t==='res')b=`<div class="tw"><table><thead><tr><th>Exam</th><th>Department</th><th>Appeared</th><th>Passed</th><th>Pass %</th><th>Date</th>${e?'<th></th>':''}</tr></thead><tbody>${r.map(x=>{const p=Math.round(x.passed/x.appeared*100);return`<tr><td><b>${esc(x.exam)}</b></td><td>${esc(x.dept)}</td><td>${x.appeared}</td><td>${x.passed}</td><td style="min-width:140px"><div class="pb"><span style="width:${p}%"></span></div><small>${p}%</small></td><td>${dd(x.date)}</td>${xb('res',x.id)}</tr>`}).join('')||'<tr><td colspan="7" class="empty">No results published.</td></tr>'}</tbody></table></div>`;
  if(EX.t==='rank'){const all=[...(S.ex.ranking||[])].map(x=>({...x,pct:x.total>0?Math.max(0,Math.min(100,x.score/x.total*100)):0})).sort((a,b)=>EX.rankSort==='asc'?a.pct-b.pct:b.pct-a.pct);const pct=Math.max(1,Math.min(100,Number(EX.rankPct)||10));const shown=all.slice(0,Math.max(1,Math.ceil(all.length*pct/100)));b=`<div class="cb"><div class="ac" style="margin-bottom:14px;gap:10px"><label>Order <select class="btn" onchange="rankSortSet(this.value)"><option value="desc" ${EX.rankSort!=='asc'?'selected':''}>Descending — highest first</option><option value="asc" ${EX.rankSort==='asc'?'selected':''}>Ascending — lowest first</option></select></label><label>Show top <input class="btn" type="number" min="1" max="100" value="${pct}" style="width:82px" onchange="rankPctSet(this.value)"> % members</label>${e?'<button class="btn p" onclick="rankForm()">+ Add member score</button>':''}</div><p class="hint" style="margin:0 0 12px">Ranking is calculated from each member’s score divided by total marks. Top percentage is based on the number of recorded members; ties are ordered by score.</p><div class="tw"><table><thead><tr><th>Rank</th><th>Member name</th><th>Exam</th><th>Score</th><th>Percentage</th>${e?'<th></th>':''}</tr></thead><tbody>${shown.map((x,i)=>`<tr><td><b>${i+1}</b>${i===0?'<span class="tg g">Top rank</span>':''}</td><td><b>${esc(x.name)}</b></td><td>${esc(x.exam)}</td><td>${x.score} / ${x.total}</td><td style="min-width:140px"><div class="pb"><span style="width:${x.pct}%"></span></div><small>${x.pct.toFixed(2)}%</small></td>${e?`<td><button class="btn no" onclick="rankDel(${x.id})">Delete</button></td>`:''}</tr>`).join('')||`<tr><td colspan="6" class="empty">No member scores yet. ${e?'Use “Add member score” to begin ranking.':'Ask an authorised Exam Cell member to add scores.'}</td></tr>`}</tbody></table></div><small class="hint">Showing ${shown.length} of ${all.length} recorded members (${pct}% selection).</small></div>`;}
  if(EX.t==='duty')b=`<div class="tw"><table><thead><tr><th>Invigilator</th><th>Exam</th><th>Hall</th><th>Date</th>${e?'<th></th>':''}</tr></thead><tbody>${S.ex.duty.map(x=>`<tr><td><b>${esc(who(x.emp))}</b></td><td>${esc(x.exam)}</td><td>${esc(x.hall)}</td><td>${dd(x.date)}</td>${xb('duty',x.id)}</tr>`).join('')||'<tr><td colspan="5" class="empty">No duties assigned.</td></tr>'}</tbody></table></div>`;
  if(EX.t==='paper')b=`<div class="cb"><div class="cd" style="padding:26px;border:1px solid var(--bd);background:linear-gradient(135deg,rgba(12,45,76,.08),rgba(20,184,166,.10))"><div class="ac" style="justify-content:space-between;align-items:center"><span class="tg y">🔒 CODE-PROTECTED</span><span class="tg">EXAM CELL · IT</span></div><h2 style="margin:18px 0 6px">IT Examination — Programming Questions</h2><p class="hint">15 October 2026 · 67 candidates · Access code: supplied by Exam Cell</p><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0"><span class="tg">2 Questions</span><span class="tg">Binary Trees</span><span class="tg">Problem Solving</span></div><p>Enter the exam access code to view the question set.</p><div class="ac" style="max-width:480px;gap:10px"><input id="paperCode" class="srch" type="password" inputmode="text" maxlength="6" placeholder="Enter access code" style="flex:1"><button class="btn p" onclick="unlockPaper()">Unlock questions</button></div><div id="paperMsg" class="hint" style="margin-top:10px">Questions are locked. Enter the code provided by the Exam Cell.</div><div id="paperContent" style="display:none;margin-top:18px"><div class="cd" style="border:1px solid var(--gd);padding:20px;margin-bottom:16px"><div class="ac" style="justify-content:space-between;align-items:center"><span class="tg">QUESTION 01</span><span class="tg">Binary Tree · Minimum Query</span></div><h3 style="margin:12px 0">Subtree Minimum Query in a Binary Tree</h3><p><b>Problem statement</b></p><p>Given a binary tree whose nodes contain integer values, process the subtree-minimum task described in the supplied problem sheet. For a node, its subtree consists of that node and all nodes reachable below it. Determine the minimum value associated with each requested subtree/query and print the answers in the required order.</p><div style="background:var(--sf,rgba(120,120,120,.07));border-radius:10px;padding:14px;margin:14px 0"><b>What to pay attention to</b><ul><li>Build the binary tree according to the input representation specified in the question.</li><li>Handle leaf nodes and subtrees containing negative or repeated values if allowed by the constraints.</li><li>Return answers in exactly the order required by the problem statement.</li></ul></div><p><b>Input / Output</b></p><p>Follow the input format, constraints, and output order shown in the provided problem sheet. The screenshots supplied for this portal do not render every symbol and sample clearly enough to reproduce those details verbatim, so confirm the exact format against the original sheet before the examination.</p><p class="hint">Topic: tree traversal, subtree aggregation, and minimum queries.</p></div><div class="cd" style="border:1px solid var(--gd);padding:20px;margin-bottom:16px"><div class="ac" style="justify-content:space-between;align-items:center"><span class="tg">QUESTION 02</span><span class="tg">Binary Tree · Symmetry</span></div><h3 style="margin:12px 0">Pronoy’s Mirror of Joy</h3><p><b>Problem statement</b></p><p>Given a binary tree, determine whether the tree is symmetric around its central axis — that is, whether the left and right subtrees are mirror images of each other. Two corresponding nodes must have matching values, and their children must match in mirrored positions: left child to right child, and right child to left child.</p><div style="background:var(--sf,rgba(120,120,120,.07));border-radius:10px;padding:14px;margin:14px 0"><b>Expected result</b><ul><li>Print <code>YES</code> if the binary tree is symmetric.</li><li>Print <code>NO</code> otherwise.</li><li>An empty tree or a tree with a single node is symmetric, subject to the original statement’s conventions.</li></ul></div><p><b>Approach hint</b></p><p>Compare the left subtree with the mirror of the right subtree recursively or iteratively. At each pair, check node values and compare opposite-side children.</p><p class="hint">Topic: binary-tree recursion, mirror comparison, and edge cases.</p></div><div class="cd" style="padding:14px;border:1px dashed var(--bd)"><b>Exam integrity notice</b><p class="hint" style="margin:6px 0 0">This page contains question summaries based on the screenshots provided. Verify exact sample inputs, constraints, and wording against the original problem statements before treating this as the official paper.</p></div></div></div></div>`;
+ if(EX.t==='itres'){const R=S.ex.itRes||{},T=S.ex.itTotal||100,rows=IT_TEAM.map(m=>{const v=R[m.id];return{...m,sc:(v===undefined||v===null||v==='')?null:Number(v)}}),done=rows.filter(x=>x.sc!==null),rk=x=>1+done.filter(y=>y.sc>x.sc).length,avg=done.length?done.reduce((a,x)=>a+x.sc,0)/done.length:0,top=done.length?Math.max(...done.map(x=>x.sc)):0;
+  b=`<div class="cb"><div class="g4"><div class="cd kp hl"><small>IT Team members</small><div>${rows.length}</div></div><div class="cd kp"><small>Results published</small><div>${done.length} / ${rows.length}</div></div><div class="cd kp"><small>Average score</small><div>${done.length?avg.toFixed(1):'-'}</div></div><div class="cd kp"><small>Highest score</small><div>${done.length?top:'-'} <span style="font-size:13px;color:var(--mu)">/ ${T}</span></div></div></div><p class="hint" style="margin:0 0 12px">IT Team examination result. ${e?'Enter marks below; ranks update automatically. Leave blank until the result is ready.':'Only the Exam Cell can enter marks.'}</p><div class="tw"><table><thead><tr><th>Rank</th><th>ID</th><th>Name</th><th>IT Team post</th><th>Marks / ${T}</th><th>Percentage</th><th>Status</th></tr></thead><tbody>${[...rows].sort((a,b)=>(b.sc===null?-1:b.sc)-(a.sc===null?-1:a.sc)||a.num-b.num).map(x=>`<tr><td>${x.sc===null?'-':'<b>'+rk(x)+'</b>'+(rk(x)===1?' <span class="tg g">Top</span>':'')}</td><td>${x.id}</td><td><b>${esc(x.name)}</b></td><td>${esc(x.post)}</td><td>${e?`<input type="number" min="0" max="${T}" value="${x.sc===null?'':x.sc}" style="width:84px;padding:6px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--sf)" aria-label="Marks for ${esc(x.name)}" onchange="itScore('${x.id}',this.value)">`:(x.sc===null?'-':x.sc)}</td><td style="min-width:130px">${x.sc===null?'<small>-</small>':`<div class="pb"><span style="width:${x.sc/T*100}%"></span></div><small>${(x.sc/T*100).toFixed(1)}%</small>`}</td><td><span class="tg ${x.sc===null?'y':'g'}">${x.sc===null?'Pending':'Published'}</span></td></tr>`).join('')}</tbody></table></div></div>`}
  if(EX.t==='rules')b=`<div class="cb"><div class="rl">${[['Hall ticket & ID','Candidates must carry hall ticket and office ID card.'],['Reporting time','Report 30 minutes before the exam. No entry after 15 minutes of start.'],['Electronic devices','Phones, smart watches and notes are not allowed inside the hall.'],['Seating','Seats are allotted by the Exam Cell. No swapping.'],['Malpractice','Any copying is reported as a case to the Disciplinary Committee.'],['Results','Results are published by the Exam Cell within 7 days of the exam.'],['Re-evaluation','Request within 3 days of result to the Exam Cell.'],['Invigilation','At least 1 invigilator per 30 candidates in every hall.']].map(x=>`<div><b>${x[0]}</b><span class="hint" style="margin:0">${x[1]}</span></div>`).join('')}</div></div>`;
  return ph('Exam Cell','Schedules, results, invigilation and exam discipline in one place.',`${can('complaint')?'<button class="btn no" onclick="complaintForm()">Report malpractice</button>':''}${e&&ad?`<button class="btn p" onclick="${ad[1]}">${ad[0]}</button>`:''}`)+
  `<div class="g4"><div class="cd kp hl"><small>Upcoming exams</small><div>${up.length}</div></div><div class="cd kp"><small>Next exam</small><div style="font-size:20px">${up[0]?dd(up[0].date):'None'}</div></div><div class="cd kp"><small>Average pass rate</small><div>${av}%</div></div><div class="cd kp"><small>Invigilators assigned</small><div>${S.ex.duty.length}</div></div></div>
  <div class="cd"><div class="tabs">${tabs.map(x=>`<button class="${EX.t===x[0]?'on':''}" onclick="exTab('${x[0]}')">${x[1]}</button>`).join('')}</div>${b}</div>`};
 EX.rankSort=EX.rankSort||'desc';EX.rankPct=EX.rankPct||10;
+function itScore(id,v){if(!exE())return;S.ex.itRes=S.ex.itRes||{};const T=S.ex.itTotal||100;if(v===''){delete S.ex.itRes[id]}else{const n=Number(v);if(!Number.isFinite(n)||n<0||n>T){toast('Marks must be between 0 and '+T+'.');go('exam');return}S.ex.itRes[id]=n}log('Exam Cell: IT Team result updated for '+id);save();go('exam');toast('Result saved')}
 function rankSortSet(v){EX.rankSort=v==='asc'?'asc':'desc';go('exam')}
 function rankPctSet(v){EX.rankPct=Math.max(1,Math.min(100,Number(v)||10));go('exam')}
 function rankForm(){if(!exE())return;form('Add member score',[{k:'name',l:'Member name'},{k:'exam',l:'Exam name'},{k:'score',l:'Marks obtained',t:'number'},{k:'total',l:'Total marks',t:'number'}],v=>{const score=Number(v.score),total=Number(v.total);if(!v.name.trim()||!v.exam.trim()||!Number.isFinite(score)||!Number.isFinite(total)||total<=0||score<0||score>total){toast('Enter a member, exam, and valid marks (score cannot exceed total).');return}S.ex.ranking=S.ex.ranking||[];S.ex.ranking.push({id:nid(S.ex.ranking),name:v.name.trim(),exam:v.exam.trim(),score,total});log('Exam Cell: member score recorded for '+v.name.trim());save();cm();go('exam');toast('Member score added to ranking')},'Add score')}
@@ -1408,8 +1414,8 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.07em}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var H=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile'};
-var GROUPS=[['Overview',['dashboard']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
+var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile',script:'Script Booking',itteam:'IT Team'};
+var GROUPS=[['Overview',['dashboard']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports','script','itteam']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
 
 function groupNav(){
   var nav=$('#nav');if(!nav)return;
@@ -1465,7 +1471,7 @@ function decorateTables(){
     inp.addEventListener('input',upd);upd();
     $('button',bar).addEventListener('click',function(){
       var b=new Blob([csvOf(tb)],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(b);
-      a.download=(TITLES[window.view]||'table').toLowerCase().replace(/\W+/g,'-')+'-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+      a.download=(TITLES[view]||'table').toLowerCase().replace(/\W+/g,'-')+'-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
       try{window.sonainfoPowerPack&&window.sonainfoPowerPack.notify('Exported','Visible rows saved as CSV.')}catch(e){}
     });
   });
@@ -1482,7 +1488,7 @@ function monthly(list,key,type){
   return out;
 }
 function commandCenter(){
-  if(window.view!=='dashboard'||!window.ME||$('#proCC'))return;
+  if(view!=='dashboard'||!window.ME||$('#proCC'))return;
   var c=$('#c');if(!c)return;var S=window.S,can=window.can;
   var cases=S.cases||[],open=cases.filter(function(x){return x.st!=='Closed'&&x.st!=='Decision announced'}),
       high=open.filter(function(x){return x.sev==='High'}),
@@ -1531,7 +1537,7 @@ function after(v){
 // wrap navigation
 var _go=window.go;
 if(typeof _go==='function'){
-  window.go=function(v){var r=_go.apply(this,arguments);after(window.view||v);return r};
+  window.go=function(v){var r=_go.apply(this,arguments);after(view||v);return r};
 }
 // re-decorate after live refreshes / modal-less rerenders
 var mo=new MutationObserver(function(){if(window.ME){clearTimeout(mo._t);mo._t=setTimeout(function(){try{decorateTables();groupNav()}catch(e){}},80)}});
@@ -1613,79 +1619,443 @@ try{var em2=$('#em'),rm=$('#rememberLogin');
 })();
 </script>
 
-
-<style>
-/* ===== Script Booking: added section; existing portal styles preserved ===== */
-.script-hero{padding:28px;border-radius:20px;color:#fff;background:radial-gradient(circle at 90% 0,rgba(244,193,93,.25),transparent 32%),linear-gradient(130deg,#092d3b,#0f766e 58%,#153047);margin-bottom:18px;box-shadow:0 16px 34px #0b3c3b20}
-.script-hero h2{font-size:30px;margin:8px 0}.script-offer{display:inline-flex;padding:6px 11px;border-radius:99px;background:#f4c15d;color:#3b2607;font-size:11px;font-weight:900;letter-spacing:.06em}
-.script-plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:16px 0}
-.script-plan{position:relative;padding:20px;border:1px solid var(--bd);border-radius:17px;background:var(--sf);display:flex;flex-direction:column;gap:8px}
-.script-plan.featured{border:2px solid #c49a3d;box-shadow:0 10px 28px #b8862b18}.script-plan h3{font-size:21px}.script-plan .old{color:var(--mu);text-decoration:line-through;font-size:13px}.script-plan .new{font-size:27px;font-weight:900;color:var(--pr);letter-spacing:-.6px}.script-plan .saving{font-size:11px;font-weight:800;color:var(--ok)}.script-plan button{margin-top:auto}
-.script-book-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.script-field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px}.script-field input,.script-field select{width:100%;padding:12px;border:1px solid var(--bd);border-radius:10px;background:var(--sf);color:var(--tx)}
-.script-notice{padding:15px;border:1px solid #e8c878;border-radius:13px;background:rgba(244,193,93,.12);margin:14px 0;line-height:1.65}
-.script-steps{display:flex;gap:7px;margin:14px 0}.script-steps span{flex:1;padding:9px;border-radius:9px;text-align:center;background:var(--hv);color:var(--mu);font-size:11px;font-weight:800}.script-steps span.active{background:rgba(15,118,110,.15);color:var(--pr)}
-.script-confirm{padding:24px;border-radius:18px;background:var(--sf);border:1px solid var(--bd);text-align:center}.script-token{display:inline-block;margin:12px;padding:13px 18px;border-radius:12px;background:#0b2538;color:#f4c15d;font:900 21px monospace;letter-spacing:2px}
-@media(max-width:800px){.script-plans{grid-template-columns:1fr}.script-book-grid{grid-template-columns:1fr}}
+<style id="script-booking-css">
+.sb-hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 28px;margin-bottom:18px;color:#fff;
+ background:radial-gradient(520px 240px at 92% -10%,rgba(255,214,102,.55),transparent),radial-gradient(420px 220px at 0% 110%,rgba(236,72,153,.35),transparent),linear-gradient(130deg,#7c2d12 0%,#b45309 38%,#0f766e 100%);
+ box-shadow:0 18px 44px rgba(124,45,18,.32)}
+.sb-hero:after{content:"🪔";position:absolute;right:22px;bottom:-14px;font-size:120px;opacity:.14;pointer-events:none}
+.sb-hero .k{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#fde68a}
+.sb-hero h1{font-size:clamp(26px,4vw,38px);margin:6px 0 4px;letter-spacing:-.02em}
+.sb-hero p{opacity:.92;max-width:640px;font-size:14px}
+.sb-off{display:inline-flex;align-items:center;gap:10px;margin-top:14px;padding:10px 16px;border-radius:14px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px)}
+.sb-off b{font:700 32px Newsreader,Georgia,serif;color:#fde68a;line-height:1}
+.sb-off span{font-size:12px;line-height:1.4}
+.sb-cd{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.sb-cd i{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fde68a;margin-right:4px}
+.sb-cd div{min-width:54px;text-align:center;padding:7px 8px;border-radius:10px;background:rgba(0,0,0,.28);font:700 20px Newsreader,serif;font-variant-numeric:tabular-nums}
+.sb-cd div small{display:block;font:700 8px "IBM Plex Sans",sans-serif;letter-spacing:.1em;color:#fcd9a6}
+.sb-ended{background:linear-gradient(130deg,#374151,#0f766e)}
+.sb-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.sb-st{padding:10px 8px;text-align:center;border-radius:12px;background:var(--hv);color:var(--mu);font-size:12px;font-weight:700;border:1px solid transparent;transition:.2s}
+.sb-st.on{background:linear-gradient(120deg,#0f766e,#0b5267);color:#fff;box-shadow:0 8px 18px rgba(15,118,110,.25)}
+.sb-st.done{color:var(--ok);border-color:var(--ok);background:rgba(18,128,63,.08)}
+.sb-lay{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:16px;align-items:start}
+@media(max-width:900px){.sb-lay{grid-template-columns:1fr}.sb-steps{grid-template-columns:1fr 1fr}}
+.sb-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.sb-plans{grid-template-columns:1fr}}
+.sb-plan{position:relative;padding:22px 18px 18px;border:2px solid var(--bd);border-radius:18px;background:var(--sf);cursor:pointer;transition:.2s;text-align:center}
+.sb-plan:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(15,30,50,.14)}
+.sb-plan.sel{border-color:var(--pr);box-shadow:0 0 0 4px rgba(15,118,110,.14),0 16px 34px rgba(15,118,110,.18)}
+.sb-plan.feat{background:linear-gradient(160deg,rgba(184,134,43,.14),var(--sf) 55%)}
+.sb-rib{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:linear-gradient(120deg,#b8862b,#e6c26e);color:#3b2a05;font-size:10px;font-weight:800;letter-spacing:.1em;padding:4px 12px;border-radius:99px;white-space:nowrap}
+.sb-ic{width:52px;height:52px;margin:0 auto 8px;border-radius:16px;display:grid;place-items:center;font-size:25px;color:#fff;background:linear-gradient(135deg,#0f766e,#0b3a55)}
+.sb-plan.feat .sb-ic{background:linear-gradient(135deg,#b8862b,#7c2d12)}
+.sb-plan h3{font-size:21px;margin-bottom:4px}
+.sb-old{min-height:18px;color:var(--mu);text-decoration:line-through;font-size:13px}
+.sb-price{font:700 29px Newsreader,Georgia,serif;color:var(--pr);margin:2px 0}
+.sb-save{display:inline-block;margin:4px 0 10px;padding:3px 10px;border-radius:99px;background:rgba(18,128,63,.14);color:var(--ok);font-size:11px;font-weight:800}
+.sb-plan ul{list-style:none;text-align:left;font-size:12.5px;color:var(--mu);border-top:1px dashed var(--bd);padding-top:10px}
+.sb-plan li{padding:3px 0}.sb-plan li:before{content:"✓ ";color:var(--ok);font-weight:800}
+.sb-dates{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:10px}
+.sb-date{padding:12px 6px;text-align:center;border:2px solid var(--bd);border-radius:14px;background:var(--sf);cursor:pointer;transition:.15s}
+.sb-date:hover{border-color:var(--gd)}.sb-date.sel{border-color:var(--pr);background:rgba(15,118,110,.1)}
+.sb-date small{display:block;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+.sb-date b{font:700 24px Newsreader,serif;display:block}
+.sb-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.sb-slot{padding:14px;border:2px solid var(--bd);border-radius:14px;background:var(--sf);cursor:pointer;transition:.15s;text-align:center}
+.sb-slot:hover{border-color:var(--gd)}.sb-slot.sel{border-color:var(--pr);background:rgba(15,118,110,.1)}
+.sb-slot b{display:block;font-size:15px}.sb-slot small{display:block;margin-top:4px;font-weight:700;color:var(--ok)}
+.sb-slot.full{opacity:.55;cursor:not-allowed;background:var(--hv);border-style:dashed}.sb-slot.full small{color:var(--er)}
+.sb-slot.full b{text-decoration:line-through}
+.sb-pays{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:600px){.sb-pays{grid-template-columns:1fr}}
+.sb-pay{padding:18px 10px;text-align:center;border:2px solid var(--bd);border-radius:14px;background:var(--sf);cursor:pointer;transition:.15s}
+.sb-pay:hover{border-color:var(--gd)}.sb-pay.sel{border-color:var(--pr);background:rgba(15,118,110,.1)}
+.sb-pay i{font-style:normal;font-size:28px;display:block}.sb-pay b{display:block;margin-top:4px}.sb-pay small{color:var(--mu)}
+.sb-sum{position:sticky;top:84px}
+.sb-sum .row b{text-align:right}.sb-tot{display:flex;justify-content:space-between;align-items:baseline;padding-top:12px;border-top:2px solid var(--bd);margin-top:6px}
+.sb-tot b{font:700 26px Newsreader,serif;color:var(--pr)}
+.sb-act{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.sb-note{margin-top:12px;padding:10px 12px;border-radius:10px;background:rgba(180,83,9,.1);color:var(--wa);font-size:12px}
+.sb-tk{border-radius:20px;overflow:hidden;background:linear-gradient(135deg,#111827,#1f2937 55%,#0b3a38);color:#fff}
+.sb-tk .t{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px dashed rgba(255,255,255,.3)}
+.sb-tk .t b{letter-spacing:.2em}.sb-tk .t span{font-size:10px;border:1px solid rgba(255,255,255,.35);padding:4px 9px;border-radius:99px}
+.sb-tk .bd{padding:20px;text-align:center}.sb-tk small{opacity:.65;letter-spacing:.14em;font-size:10px;text-transform:uppercase}
+.sb-code{display:inline-block;margin:10px 0;padding:12px 18px;border-radius:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);font:800 19px ui-monospace,monospace;letter-spacing:.12em;word-break:break-all}
+.sb-mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:left;margin-top:10px}
+.sb-mg div{background:rgba(255,255,255,.08);padding:9px 11px;border-radius:10px}.sb-mg b{display:block;font-size:13px}
+.sb-ok{margin-top:12px;padding:12px 14px;border-radius:12px;background:rgba(18,128,63,.12);border:1px solid var(--ok);color:var(--tx);font-size:13px;line-height:1.55}
+.sb-ok b{color:var(--ok)}
 </style>
-<script>
+
+<script id="script-booking-js">
 (function(){
-  const SCRIPT_KEY='sonainfo_script_bookings_v1';
-  const SCRIPT_PLANS=[
-    {id:'normal',name:'Normal Script',price:236000},
-    {id:'medium',name:'Medium Script',price:299000},
-    {id:'premium',name:'Premium Advance',price:510000}
-  ];
-  const scriptMoney=n=>'₹'+Number(n).toLocaleString('en-IN');
-  const scriptDiscount=n=>Math.round(n*.89);
-  const scriptToday=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
-  const scriptRead=()=>{try{return JSON.parse(localStorage.getItem(SCRIPT_KEY)||'[]')}catch(e){return []}};
-  const scriptWrite=a=>{try{localStorage.setItem(SCRIPT_KEY,JSON.stringify(a));return true}catch(e){return false}};
-  const scriptEsc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  let scriptStep=1,scriptChoice='normal',scriptWho='',scriptDate='',scriptTime='',scriptPay='',scriptRef='',scriptName='',scriptContact='',scriptToken='';
-  function scriptSlots(date){
-    const slots=['09:00','12:00','15:00','18:00','21:00'],bookings=scriptRead();
-    return slots.map(t=>({time:t,full:bookings.some(b=>b.date===date&&b.time===t)|| (date===scriptToday()&&t<=new Date().toTimeString().slice(0,5))}));
-  }
-  function scriptHTML(){
-    const p=SCRIPT_PLANS.find(x=>x.id===scriptChoice)||SCRIPT_PLANS[0];
-    const min=scriptToday(),max='2026-10-20';
-    return `${ph('Script Booking','Choose a script package, select the booking person, date, time and payment method.')}
-      <section class="script-hero"><span class="script-offer">✨ SPECIAL DURGA PUJA OFFER · 11% OFF</span><h2>Special Diwali Bonus</h2><p>Chairman Sir has announced an exclusive <b>11% discount</b> for everyone.</p><p style="margin-top:8px;color:#d8f4ed">Offer valid only until <b>20 October 2026</b>.</p></section>
-      <div class="script-plans">${SCRIPT_PLANS.map(x=>`<article class="script-plan ${x.id==='premium'?'featured':''}"><span class="tg ${x.id==='premium'?'y':'g'}">${x.id==='premium'?'ADVANCE PACKAGE':x.id==='medium'?'POPULAR':'STANDARD'}</span><h3>${x.name}</h3><div class="old">${scriptMoney(x.price)}</div><div class="new">${scriptMoney(scriptDiscount(x.price))}</div><div class="saving">Save ${scriptMoney(x.price-scriptDiscount(x.price))} · 11% OFF</div><p style="font-size:12px;color:var(--mu)">Final price after offer discount.</p><button class="btn ${scriptChoice===x.id?'p':'g'} w" onclick="scriptChoose('${x.id}')">${scriptChoice===x.id?'Selected ✓':'Choose package'}</button></article>`).join('')}</div>
-      <div class="cd"><h3>Complete your booking <span class="tg y">Offer ends 20 Oct</span></h3><div class="cb">
-      <div class="script-steps"><span class="${scriptStep===1?'active':''}">1 · Package & person</span><span class="${scriptStep===2?'active':''}">2 · Date & time</span><span class="${scriptStep===3?'active':''}">3 · Payment</span></div>
-      ${scriptStep===1?`<div class="script-book-grid"><div class="script-field"><label for="scriptWho">Who are you booking for?</label><select id="scriptWho"><option value="">Select person</option><option ${scriptWho==='Myself'?'selected':''}>Myself</option><option ${scriptWho==='Employee'?'selected':''}>Employee</option><option ${scriptWho==='Other person'?'selected':''}>Other person</option></select></div><div class="script-field"><label for="scriptName">Full name of person</label><input id="scriptName" value="${scriptEsc(scriptName)}" placeholder="Enter full name"></div><div class="script-field"><label for="scriptContact">Contact / employee ID</label><input id="scriptContact" value="${scriptEsc(scriptContact)}" placeholder="Phone or employee ID"></div><div class="script-field"><label>Selected package</label><input value="${scriptEsc(p.name+' — '+scriptMoney(scriptDiscount(p.price)))}" readonly></div></div><div class="script-action-row" style="display:flex;justify-content:flex-end;margin-top:18px"><button class="btn p" onclick="scriptNext(2)">Continue to date & time →</button></div>`:
-      scriptStep===2?`<div class="script-book-grid"><div class="script-field"><label for="scriptDate">Choose date</label><input id="scriptDate" type="date" min="${min}" max="${max}" value="${scriptEsc(scriptDate)}" onchange="scriptDateChanged(this.value)" required></div><div class="script-field"><label for="scriptTime">Choose available time slot</label><select id="scriptTime"><option value="">Choose a date first</option>${scriptDate?scriptSlots(scriptDate).map(x=>`<option value="${x.time}" ${x.full?'disabled':''} ${scriptTime===x.time?'selected':''}>${x.time}${x.full?' — FULL':''}</option>`).join(''):''}</select></div></div><p class="hint">Slots are 3 hours apart. A booked slot is marked FULL and cannot be selected again.</p><div class="script-action-row" style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" onclick="scriptNext(1)">← Back</button><button class="btn p" onclick="scriptNext(3)">Continue to payment →</button></div>`:
-      `<div class="script-notice"><b>Booking summary</b><p>${scriptEsc(p.name)} · ${scriptMoney(scriptDiscount(p.price))}</p><p>${scriptEsc(scriptName)} · ${scriptEsc(scriptDate)} · ${scriptEsc(scriptTime)}</p></div><div class="script-pay-grid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">${[['Sonainfo Account','🏢'],['UPI','📱'],['Bank Account','🏦']].map(x=>`<button class="script-plan ${scriptPay===x[0]?'featured':''}" style="text-align:center;cursor:pointer" onclick="scriptPayment('${x[0]}')"><span style="font-size:25px">${x[1]}</span><b>${x[0]}</b><small>${scriptPay===x[0]?'Selected ✓':'Select payment'}</small></button>`).join('')}</div><div class="script-field" style="margin-top:14px"><label for="scriptRef">Payment reference / transaction ID (optional)</label><input id="scriptRef" value="${scriptEsc(scriptRef)}" placeholder="Add reference after paying"></div><p class="hint">This form records your chosen payment method; it does not process or verify a payment.</p><div class="script-action-row" style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn" onclick="scriptNext(2)">← Back</button><button class="btn p" onclick="scriptBook()">Confirm booking</button></div>`}
-      </div></div><div class="script-notice"><b>After booking:</b> Send your booking token to the IT Team Manager. A Script Manager and Script Mentor will be allotted to you. Allocation is not automatic through this demo page.</div>
-      <div class="cd" style="margin-top:16px"><h3>Your bookings on this browser</h3><div class="cb">${scriptRead().filter(b=>!ME||b.bookedBy===ME.id).length?scriptRead().filter(b=>!ME||b.bookedBy===ME.id).map(b=>`<div class="row"><div><b>${scriptEsc(b.token)} · ${scriptEsc(b.plan)}</b><small>${scriptEsc(b.date)} at ${scriptEsc(b.time)} · ${scriptEsc(b.name)}</small></div><span class="tg y">${scriptEsc(b.status)}</span></div>`).join(''):'<p class="empty">No script bookings yet.</p>'}</div></div>`;
-  }
-  window.scriptChoose=id=>{scriptChoice=id;go('scripts')};
-  window.scriptDateChanged=v=>{scriptDate=v;scriptTime='';go('scripts')};
-  window.scriptPayment=v=>{scriptPay=v;const el=document.getElementById('scriptRef');if(el)scriptRef=el.value;go('scripts')};
-  window.scriptNext=n=>{
-    const who=document.getElementById('scriptWho'),name=document.getElementById('scriptName'),contact=document.getElementById('scriptContact'),date=document.getElementById('scriptDate'),time=document.getElementById('scriptTime'),ref=document.getElementById('scriptRef');
-    if(scriptStep===1){if(who)scriptWho=who.value;if(name)scriptName=name.value.trim();if(contact)scriptContact=contact.value.trim();if(!scriptWho||!scriptName){toast('Select who you are booking for and enter their name.');return}}
-    if(scriptStep===2){if(date)scriptDate=date.value;if(time)scriptTime=time.value;if(!scriptDate||!scriptTime){toast('Choose a date and available time slot.');return}if(scriptDate>'2026-10-20'||scriptDate<scriptToday()){toast('Offer bookings are available through 20 October 2026 only.');return}if(scriptSlots(scriptDate).find(x=>x.time===scriptTime)?.full){toast('That slot is full. Please choose another time.');scriptTime='';go('scripts');return}}
-    if(scriptStep===3&&ref)scriptRef=ref.value.trim();scriptStep=n;go('scripts');
-  };
-  window.scriptBook=()=>{
-    const ref=document.getElementById('scriptRef');if(ref)scriptRef=ref.value.trim();
-    if(!scriptPay){toast('Please select a payment method.');return}
-    if(!scriptDate||!scriptTime||!scriptName){toast('Complete all booking steps first.');return}
-    if(scriptDate>'2026-10-20'||scriptDate<scriptToday()){toast('Offer bookings are available through 20 October 2026 only.');return}
-    const all=scriptRead();if(all.some(b=>b.date===scriptDate&&b.time===scriptTime)){toast('This slot has just become full. Choose another slot.');scriptStep=2;scriptTime='';go('scripts');return}
-    const p=SCRIPT_PLANS.find(x=>x.id===scriptChoice)||SCRIPT_PLANS[0];
-    scriptToken='SONA-SCR-'+Date.now().toString(36).toUpperCase();
-    const booking={token:scriptToken,plan:p.name,basePrice:p.price,discountPercent:11,amount:scriptDiscount(p.price),who:scriptWho,name:scriptName,contact:scriptContact,date:scriptDate,time:scriptTime,payment:scriptPay,paymentReference:scriptRef,status:'Booking recorded · payment pending',bookedBy:ME?ME.id:null,createdAt:new Date().toISOString()};
-    all.push(booking);if(!scriptWrite(all)){toast('Could not save booking on this browser.');return}
-    scriptStep=4;
-    document.getElementById('c').innerHTML=ph('Booking confirmation','Your script booking request has been recorded.')+`<div class="script-confirm"><div style="font-size:42px">🎉</div><h2>Thank you, ${scriptEsc(scriptName)}!</h2><p>Your booking token number is</p><div class="script-token">${scriptEsc(scriptToken)}</div><p><b>${scriptEsc(p.name)}</b> · ${scriptMoney(scriptDiscount(p.price))}</p><p>${scriptEsc(scriptDate)} at ${scriptEsc(scriptTime)} · ${scriptEsc(scriptPay)}</p><p class="tg y" style="margin:12px">Payment pending verification</p><div class="script-notice" style="text-align:left"><b>Next step</b><p>Please send this token to the <b>IT Team Manager</b>. Your Script Manager and Script Mentor will be allotted after the team reviews your booking.</p><p>Token: <b>${scriptEsc(scriptToken)}</b></p></div><button class="btn p" onclick="GenUI.copy('${scriptToken}')">Copy booking token</button> <button class="btn" onclick="go('scripts')">Back to Script Booking</button></div>`;
-    if(typeof log==='function')log('Script booking recorded: '+scriptToken);
-  };
-  // Keep the existing navigation and views intact; add one new item and one view.
-  if(Array.isArray(VW)&&!VW.some(x=>x[0]==='scripts'))VW.push(['scripts','Script Booking','✦']);
-  V.scripts=scriptHTML;
+'use strict';
+var PLANS=[
+ {id:'normal',name:'Normal',price:236000,icon:'✎',tag:'',pts:['Standard script support','1 Script Manager allotted','Basic mentor guidance']},
+ {id:'medium',name:'Medium',price:299000,icon:'✍',tag:'POPULAR',pts:['Everything in Normal','Extended revisions','Mentor check-ins']},
+ {id:'premium',name:'Premium Advance',price:510000,icon:'♛',tag:'BEST VALUE',pts:['Everything in Medium','Priority allotment','Advanced mentor support']}];
+var PCT=11, OFFER_END=new Date('2026-10-20T23:59:59+05:30').getTime();
+var SLOTS=[[9,12],[12,15],[15,18],[18,21],[21,24]], CAP=3;
+var SB={step:1,plan:'',date:'',slot:-1,method:'',pw:'',upi:'',holder:'',utr:''};
+var $=function(s){return document.querySelector(s)};
+var pad=function(n){return String(n).padStart(2,'0')};
+var dk=function(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+var offerOn=function(){return Date.now()<=OFFER_END};
+var fin=function(p){return offerOn()?Math.round(p*(100-PCT)/100):p};
+var plan=function(id){return PLANS.filter(function(p){return p.id===id})[0]};
+var hh=function(h){return pad(h%24)+':00'};
+var slotLbl=function(i){return hh(SLOTS[i][0])+' – '+hh(SLOTS[i][1])};
+var dLbl=function(k){return new Date(k+'T00:00').toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'})};
+var list=function(){return S.scriptBookings||(S.scriptBookings=[])};
+var admin=function(){return can('accedit')||ME.role==='Chairman'||ME.role==='HOD'||ME.office==='IT Cell'};
+
+/* A slot is FULL when its 3-hour window has started today, or all seats are taken. */
+function slotState(date,i){
+ var booked=list().filter(function(b){return b.date===date&&b.slot===i}).length;
+ var started=date===dk(new Date())&&SLOTS[i][0]<=new Date().getHours();
+ var left=Math.max(0,CAP-booked);
+ return {full:started||left<=0,left:left,started:started};
+}
+function days(){var o=[],n=new Date();for(var i=0;i<7;i++){var d=new Date(n.getFullYear(),n.getMonth(),n.getDate()+i);o.push(dk(d))}return o}
+
+/* ---------- pieces ---------- */
+function hero(){
+ var on=offerOn();
+ return '<div class="sb-hero '+(on?'':'sb-ended')+'"><div class="k">'+(on?'🪔 Special Durga Puja Offer':'Offer ended')+'</div>'+
+ '<h1>Book your Script</h1><p>Choose a plan, pick a date and time, pay — and you get a token number instantly.</p>'+
+ (on?'<div class="sb-off"><b>'+PCT+'% OFF</b><span><b style="font:700 13px \'IBM Plex Sans\',sans-serif;color:#fff">Chairman Sir has given all of you 11% off</b><br>Special Diwali Bonus · Valid till 20 Oct 2026 only</span></div>'+
+  '<div class="sb-cd" id="sbCd"><i>Offer ends in</i><div id="sbD">--<small>DAYS</small></div><div id="sbH">--<small>HRS</small></div><div id="sbM">--<small>MIN</small></div><div id="sbS">--<small>SEC</small></div></div>'
+  :'<div class="sb-off"><span>The 11% Durga Puja / Diwali offer was valid till 20 Oct 2026. Regular prices now apply.</span></div>')+'</div>';
+}
+function stepper(){
+ var n=['1 · Choose script','2 · Choose date','3 · Choose time','4 · Payment'];
+ return '<div class="sb-steps">'+n.map(function(t,i){var s=i+1;return '<div class="sb-st '+(SB.step===s?'on':SB.step>s?'done':'')+'">'+(SB.step>s?'✓ ':'')+t+'</div>'}).join('')+'</div>';
+}
+function summary(){
+ var p=plan(SB.plan),on=offerOn();
+ return '<div class="cd sb-sum"><h3>Booking summary</h3><div class="cb">'+
+ '<div class="row"><span>Script</span><b>'+(p?esc(p.name):'—')+'</b></div>'+
+ '<div class="row"><span>Date</span><b>'+(SB.date?esc(dLbl(SB.date)):'—')+'</b></div>'+
+ '<div class="row"><span>Time</span><b>'+(SB.slot>=0?slotLbl(SB.slot):'—')+'</b></div>'+
+ '<div class="row"><span>Price</span><b>'+(p?inr(p.price):'—')+'</b></div>'+
+ (p&&on?'<div class="row"><span>Offer '+PCT+'% off</span><b style="color:var(--ok)">− '+inr(p.price-fin(p.price))+'</b></div>':'')+
+ '<div class="sb-tot"><span>Total</span><b>'+(p?inr(fin(p.price)):'₹0')+'</b></div>'+
+ '<div class="sb-note">After booking, your request goes to the IT Team Manager. A Script Manager and Script Mentor will be allotted to you.</div></div></div>';
+}
+function planCard(p){
+ var on=offerOn(),sel=SB.plan===p.id;
+ return '<div class="sb-plan '+(sel?'sel ':'')+(p.id==='premium'?'feat':'')+'" role="button" tabindex="0" onclick="SBplan(\''+p.id+'\')" onkeydown="if(event.key===\'Enter\')SBplan(\''+p.id+'\')">'+
+ (p.tag?'<span class="sb-rib">'+p.tag+'</span>':'')+'<div class="sb-ic">'+p.icon+'</div><h3>'+p.name+'</h3>'+
+ '<div class="sb-old">'+(on?inr(p.price):'')+'</div><div class="sb-price">'+inr(fin(p.price))+'</div>'+
+ (on?'<span class="sb-save">'+PCT+'% OFF · save '+inr(p.price-fin(p.price))+'</span>':'<div style="height:12px"></div>')+
+ '<ul>'+p.pts.map(function(x){return '<li>'+x+'</li>'}).join('')+'</ul></div>';
+}
+function body(){
+ var s=SB.step,h='';
+ if(s===1)h='<div class="cd"><h3>Choose your script</h3><div class="cb"><div class="sb-plans">'+PLANS.map(planCard).join('')+'</div>'+
+  '<div class="sb-act"><span></span><button class="btn p" onclick="SBnext()" '+(SB.plan?'':'disabled')+'>Continue → Choose date</button></div></div></div>';
+ if(s===2)h='<div class="cd"><h3>Choose a date</h3><div class="cb"><div class="sb-dates">'+days().map(function(k){
+   var d=new Date(k+'T00:00');return '<div class="sb-date '+(SB.date===k?'sel':'')+'" onclick="SBdate(\''+k+'\')"><small>'+d.toLocaleDateString('en-GB',{weekday:'short'})+'</small><b>'+d.getDate()+'</b><small>'+d.toLocaleDateString('en-GB',{month:'short'})+'</small></div>'}).join('')+'</div>'+
+  '<div class="sb-act"><button class="btn" onclick="SBback()">← Back</button><button class="btn p" onclick="SBnext()" '+(SB.date?'':'disabled')+'>Continue → Choose time</button></div></div></div>';
+ if(s===3)h='<div class="cd"><h3>Choose a time · '+esc(dLbl(SB.date))+'</h3><div class="cb"><div class="sb-slots">'+SLOTS.map(function(x,i){
+   var st=slotState(SB.date,i);return '<div class="sb-slot '+(st.full?'full ':'')+(SB.slot===i?'sel':'')+'" '+(st.full?'':'onclick="SBslot('+i+')"')+'><b>'+slotLbl(i)+'</b><small>'+(st.full?'FULL':st.left+' seat(s) left')+'</small></div>'}).join('')+'</div>'+
+  '<p class="hint">Slots are 3 hours long. Today\'s slots turn FULL every 3 hours as the day goes on.</p>'+
+  '<div class="sb-act"><button class="btn" onclick="SBback()">← Back</button><button class="btn p" onclick="SBnext()" '+(SB.slot>=0?'':'disabled')+'>Continue → Payment</button></div></div></div>';
+ if(s===4){
+  var m=SB.method,f='';
+  if(m==='account')f='<div class="fg"><label for="sbPw">Sonainfo Account password (your portal password)</label><input id="sbPw" type="password" autocomplete="current-password" value="'+esc(SB.pw)+'" oninput="SBset(\'pw\',this.value)"></div>';
+  if(m==='upi')f='<div class="fg"><label for="sbUpi">Your UPI ID</label><input id="sbUpi" placeholder="name@bank" value="'+esc(SB.upi)+'" oninput="SBset(\'upi\',this.value)"></div>';
+  if(m==='bank')f='<div class="fg"><label for="sbHolder">Account holder name</label><input id="sbHolder" value="'+esc(SB.holder)+'" oninput="SBset(\'holder\',this.value)"></div><div class="fg"><label for="sbUtr">Bank transfer reference (UTR)</label><input id="sbUtr" value="'+esc(SB.utr)+'" oninput="SBset(\'utr\',this.value)"></div>';
+  h='<div class="cd"><h3>Payment</h3><div class="cb"><div class="sb-pays">'+
+   [['account','◉','Sonainfo Account','Pay from account'],['upi','📱','UPI','Fast digital payment'],['bank','🏦','Bank Account','Bank transfer']].map(function(x){
+    return '<div class="sb-pay '+(m===x[0]?'sel':'')+'" onclick="SBmethod(\''+x[0]+'\')"><i>'+x[1]+'</i><b>'+x[2]+'</b><small>'+x[3]+'</small></div>'}).join('')+'</div>'+
+   (f?'<div style="margin-top:16px">'+f+'</div>':'')+
+   '<div class="sb-act"><button class="btn" onclick="SBback()">← Back</button><button class="btn g" onclick="SBpay()">Confirm &amp; Book · '+(plan(SB.plan)?inr(fin(plan(SB.plan).price)):'')+'</button></div></div></div>';
+ }
+ return '<div class="sb-lay"><div>'+h+'</div>'+summary()+'</div>';
+}
+function myList(){
+ var all=admin(),l=list().filter(function(b){return all||b.uid===ME.id}).slice().reverse();
+ var rev=all?l.reduce(function(a,b){return a+b.amount},0):0;
+ return '<div class="cd" style="margin-top:18px"><h3><span>'+(all?'All script bookings':'My script bookings')+'</span>'+(all?'<span class="tg g">'+l.length+' bookings · '+inr(rev)+'</span>':'')+'</h3><div class="tw"><table><thead><tr><th>Token</th>'+(all?'<th>Booked by</th>':'')+'<th>Script</th><th>Date &amp; time</th><th>Amount</th><th>Status</th><th></th></tr></thead><tbody>'+
+  (l.map(function(b){return '<tr><td><b>'+esc(b.token)+'</b></td>'+(all?'<td>'+esc(b.name)+'</td>':'')+'<td>'+esc(b.planName)+'</td><td>'+esc(dLbl(b.date))+'<small>'+esc(b.slotLabel)+'</small></td><td>'+inr(b.amount)+'</td><td><span class="tg g">'+esc(b.status)+'</span></td><td><button class="btn" onclick="SBview(\''+esc(b.token)+'\')">View token</button></td></tr>'}).join('')||'<tr><td colspan="'+(all?7:6)+'" class="empty">No bookings yet. Choose a script above to book.</td></tr>')+'</tbody></table></div></div>';
+}
+function tokenHTML(b){
+ return '<div class="sb-tk"><div class="t"><b>SONAINFO</b><span>SCRIPT BOOKING</span></div><div class="bd"><small>Your token number</small><br><div class="sb-code">'+esc(b.token)+'</div>'+
+ '<h2 style="margin:4px 0">'+esc(b.planName)+' Script</h2>'+
+ '<div class="sb-mg"><div><small>Booked by</small><b>'+esc(b.name)+'</b></div><div><small>Amount</small><b>'+inr(b.amount)+'</b></div><div><small>Date</small><b>'+esc(dLbl(b.date))+'</b></div><div><small>Time</small><b>'+esc(b.slotLabel)+'</b></div></div>'+
+ (b.discount?'<p style="margin-top:10px;font-size:12px;color:#fde68a">🪔 Durga Puja offer · '+PCT+'% off applied (saved '+inr(b.discount)+')</p>':'')+'</div></div>'+
+ '<div class="sb-ok"><b>✓ Sent to the IT Team Manager.</b><br>You will be allotted a <b>Script Manager</b> and a <b>Script Mentor</b> shortly. Please keep this token number for reference.</div>';
+}
+
+/* ---------- actions ---------- */
+function rerender(){go('script')}
+window.SBplan=function(id){SB.plan=id;rerender()};
+window.SBdate=function(k){SB.date=k;SB.slot=-1;rerender()};
+window.SBslot=function(i){if(slotState(SB.date,i).full){toast('That slot is full. Choose another time.');return}SB.slot=i;rerender()};
+window.SBmethod=function(m){SB.method=m;rerender()};
+window.SBnext=function(){if(SB.step===1&&!SB.plan)return;if(SB.step===2&&!SB.date)return;if(SB.step===3&&SB.slot<0)return;SB.step=Math.min(4,SB.step+1);rerender()};
+window.SBset=function(k,v){SB[k]=v};
+window.SBback=function(){SB.step=Math.max(1,SB.step-1);rerender()};
+window.SBview=function(t){var b=list().filter(function(x){return x.token===t})[0];if(!b)return;modal('Script booking token',tokenHTML(b),'<button class="btn" onclick="window.print()">🖨 Print</button><button class="btn p" onclick="cm()">Close</button>')};
+window.SBpay=function(){
+ var p=plan(SB.plan);if(!p||!SB.date||SB.slot<0){toast('Complete script, date and time first.');return}
+ if(slotState(SB.date,SB.slot).full){toast('Sorry, this slot just became full. Choose another time.');SB.step=3;SB.slot=-1;rerender();return}
+ if(!SB.method){toast('Please choose a payment method.');return}
+ if(SB.method==='account'&&SB.pw!==ME.pw){toast('Incorrect Sonainfo Account password.');return}
+ if(SB.method==='upi'&&!/^[\w.\-]+@[A-Za-z][A-Za-z0-9]+$/.test(SB.upi.trim())){toast('Enter a valid UPI ID, e.g. name@bank.');return}
+ if(SB.method==='bank'&&(SB.holder.trim().length<2||!/^[A-Za-z0-9]{8,}$/.test(SB.utr.trim()))){toast('Enter account holder name and a valid UTR (8+ letters/digits).');return}
+ var token,amount=fin(p.price);
+ do{token='SCR-'+dk(new Date()).replace(/-/g,'')+'-'+Math.random().toString(36).slice(2,8).toUpperCase()}while(list().some(function(b){return b.token===token}));
+ var b={id:'SB'+Date.now(),token:token,uid:ME.id,name:ME.name,plan:p.id,planName:p.name,orig:p.price,amount:amount,discount:p.price-amount,
+  date:SB.date,slot:SB.slot,slotLabel:slotLbl(SB.slot),method:SB.method,status:'Booked · sent to IT Team',t:now()};
+ list().push(b);
+ if(Array.isArray(S.tk))S.tk.push({id:nid(S.tk),title:'Script booking '+token,cat:'Other',desc:b.planName+' script · '+dLbl(b.date)+' '+b.slotLabel+' · allot Script Manager & Script Mentor for '+b.name,by:ME.name,uid:ME.id,st:'Open',t:now(),reply:''});
+ log('Script booked: '+token+' ('+p.name+')');save();
+ SB={step:1,plan:'',date:'',slot:-1,method:'',pw:'',upi:'',holder:'',utr:''};
+ rerender();
+ modal('🎉 Script booked!',tokenHTML(b),'<button class="btn" onclick="window.print()">🖨 Print</button><button class="btn p" onclick="cm()">Done</button>');
+ toast('Booked. Token '+token);
+};
+
+/* ---------- view, nav, permissions, sync ---------- */
+V.script=function(){
+ if(!ME)return'';
+ if(SB.date&&SB.slot>=0&&slotState(SB.date,SB.slot).full){SB.slot=-1;if(SB.step>3)SB.step=3}
+ setTimeout(tick,0);
+ return hero()+stepper()+body()+myList();
+};
+if(!VW.some(function(v){return v[0]==='script'})){
+ var ix=VW.findIndex(function(v){return v[0]==='exam'});VW.splice(ix<0?VW.length:ix+1,0,['script','Script Booking','✍']);
+}
+var _ens=window.ensure;
+window.ensure=function(){if(typeof _ens==='function')_ens.apply(this,arguments);
+ (S.users||[]).forEach(function(u){u.perm=u.perm||{};u.perm.script=1;u.perm.itteam=1});S.scriptBookings=S.scriptBookings||[]};
+if(typeof DOCS!=='undefined'){DOCS.scr=function(){return {items:S.scriptBookings||[]}};APPLY.scr=function(d){S.scriptBookings=d.items||[]}}
+var _go=window.go;
+window.go=function(v){var r=_go.apply(this,arguments);
+ if(view==='script'){var c=document.querySelector('#proCrumb b');if(c)c.textContent='Script Booking';document.title='Script Booking · Sonainfo Portal'}return r};
+
+var lastOn=offerOn(),lastHr=new Date().getHours();
+function tick(){
+ var el=$('#sbD');
+ if(el){var r=Math.max(0,OFFER_END-Date.now()),d=Math.floor(r/864e5);r%=864e5;var h=Math.floor(r/36e5);r%=36e5;
+  var m=Math.floor(r/6e4),s=Math.floor(r%6e4/1000);
+  $('#sbD').firstChild.nodeValue=d;$('#sbH').firstChild.nodeValue=pad(h);$('#sbM').firstChild.nodeValue=pad(m);$('#sbS').firstChild.nodeValue=pad(s)}
+}
+setInterval(function(){
+ tick();
+ if(typeof ME==='undefined'||!ME||view!=='script')return;
+ var on=offerOn(),hr=new Date().getHours();
+ if(on!==lastOn||hr!==lastHr){lastOn=on;lastHr=hr;if(!$('#mo').classList.contains('on'))go('script')}
+},1000);
+})();
+</script>
+
+
+<style id="itteam-css">
+.it-hero{position:relative;overflow:hidden;border-radius:20px;padding:26px 28px;margin-bottom:18px;color:#fff;background:radial-gradient(480px 220px at 90% -10%,rgba(94,234,212,.45),transparent),radial-gradient(380px 200px at 0 110%,rgba(129,140,248,.4),transparent),linear-gradient(130deg,#0b1d2e,#0f4c5c 55%,#4338ca);box-shadow:0 18px 44px rgba(11,29,46,.35)}
+.it-hero:after{content:"</>";position:absolute;right:24px;bottom:-30px;font:700 130px ui-monospace,monospace;opacity:.1}
+.it-hero .k{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#99f6e4}
+.it-hero h1{font-size:clamp(26px,4vw,38px);margin:6px 0 4px}.it-hero p{opacity:.88;max-width:620px;font-size:14px}
+.it-lead{display:flex;align-items:center;gap:14px;margin-top:16px;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);width:fit-content;max-width:100%}
+.it-lead .av{width:46px;height:46px;font-size:18px;background:linear-gradient(135deg,#5eead4,#818cf8);color:#08202e}
+.it-lead small{display:block;opacity:.75;font-size:11px}
+.it-tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.it-tools input{flex:1;min-width:200px;max-width:340px;padding:10px 14px;border:1px solid var(--bd);border-radius:12px;background:var(--sf)}
+.it-tools input:focus{outline:none;border-color:#14b8a6;box-shadow:0 0 0 4px rgba(20,184,166,.2)}
+.it-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.it-card{position:relative;padding:18px;border:1px solid var(--bd);border-radius:16px;background:var(--sf);box-shadow:0 1px 3px rgba(15,30,50,.06);transition:.2s;overflow:hidden}
+.it-card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(15,30,50,.14)}
+.it-card:before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#5eead4,#818cf8,#f0abfc)}
+.it-card.t1:before{background:linear-gradient(90deg,#b8862b,#e6c26e)}
+.it-top{display:flex;gap:12px;align-items:center}
+.it-card .av{width:44px;height:44px;font-size:16px;background:linear-gradient(135deg,#0f766e,#4338ca)}
+.it-card.t1 .av{background:linear-gradient(135deg,#b8862b,#7c2d12)}
+.it-card b{display:block}.it-card small{color:var(--mu)}
+.it-post{margin:12px 0 8px;font-weight:600;font-size:13px}
+.it-sal{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--mu)}
+.it-sal b{font:700 19px Newsreader,serif;color:var(--pr);display:inline}
+.it-bar{height:6px;background:var(--hv);border-radius:9px;margin-top:6px;overflow:hidden}.it-bar span{display:block;height:100%;background:linear-gradient(90deg,#14b8a6,#818cf8)}
+.it-tier{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 8px;align-items:center}
+.it-tier h3{font-size:18px}
+</style>
+<script id="itteam-js">
+(function(){
+'use strict';
+var q='';
+function sal(){return can('finance')}
+function total(){return IT_TEAM.reduce(function(a,m){return a+m.sal},0)}
+function card(m,i){
+ var mx=IT_TEAM[0].sal;
+ return '<div class="it-card '+(i<3?'t1':'')+'"><div class="it-top"><div class="av">'+esc(m.name[0])+'</div><div><b>'+esc(m.name)+'</b><small>'+esc(m.id)+'</small></div></div>'+
+ '<div class="it-post">'+esc(m.post)+'</div>'+
+ (sal()?'<div class="it-sal"><span>Monthly salary</span><b>'+inr(m.sal)+'</b></div><div class="it-bar"><span style="width:'+(m.sal/mx*100)+'%"></span></div>':'<div class="it-sal"><span>Salary details are visible to Finance only</span></div>')+'</div>';
+}
+function grid(){
+ var l=IT_TEAM.filter(function(m){return !q||(m.name+m.id+m.post).toLowerCase().indexOf(q)>-1});
+ var g=document.getElementById('itGrid');if(!g)return;
+ g.innerHTML=l.map(function(m){return card(m,IT_TEAM.indexOf(m))}).join('')||'<div class="cd empty" style="grid-column:1/-1">No IT Team member matches your search.</div>';
+}
+window.itFilter=function(v){q=String(v||'').toLowerCase().trim();grid()};
+window.itCsv=function(){
+ var rows=[['ID','Name','IT Team Post'].concat(sal()?['Monthly Salary']:[])].concat(IT_TEAM.map(function(m){return [m.id,m.name,m.post].concat(sal()?[m.sal]:[])}));
+ csv('it-team',rows[0],rows.slice(1));
+};
+V.itteam=function(){
+ setTimeout(grid,0);
+ var L=IT_TEAM[0];
+ return '<div class="it-hero"><div class="k">💻 Technology · Sonainfo</div><h1>IT Team</h1><p>The 15-member team that runs the portal, servers, security and support.</p>'+
+  '<div class="it-lead"><div class="av">'+esc(L.name[0])+'</div><div><small>IT Team Lead</small><b>'+esc(L.name)+'</b><small>'+L.id+'</small></div></div></div>'+
+  '<div class="g4"><div class="cd kp hl"><small>Team members</small><div>'+IT_TEAM.length+'</div></div>'+
+  (sal()?'<div class="cd kp"><small>Monthly payroll</small><div>'+inr(total())+'</div></div><div class="cd kp"><small>Yearly payroll</small><div>'+inr(total()*12)+'</div></div><div class="cd kp"><small>Average salary</small><div>'+inr(total()/IT_TEAM.length)+'</div></div>':'<div class="cd kp"><small>Leadership roles</small><div>5</div></div><div class="cd kp"><small>Coordinators</small><div>6</div></div><div class="cd kp"><small>Specialists</small><div>4</div></div>')+'</div>'+
+  '<div class="it-tools"><input type="search" placeholder="Search name, ID or post" aria-label="Search IT Team" oninput="itFilter(this.value)"><button class="btn" onclick="itCsv()">⬇ Export CSV</button><button class="btn" onclick="go(\'exam\');setTimeout(function(){exTab(\'itres\')},0)">✎ IT Team exam result</button></div>'+
+  '<div class="it-grid" id="itGrid"></div>';
+};
+/* dashboard: IT Team snapshot */
+var _d=V.dashboard;
+V.dashboard=function(){
+ var h=_d();
+ var top=IT_TEAM.slice(0,3).map(function(m){return '<div class="row"><div><b>'+esc(m.name)+'</b><small>'+esc(m.post)+'</small></div><span class="tg">'+m.id+'</span></div>'}).join('');
+ return h+'<div class="cd" style="margin-top:16px"><h3>IT Team<button class="btn" onclick="go(\'itteam\')">Open</button></h3><div class="cb">'+top+'<div class="row"><span>Total team size</span><b>'+IT_TEAM.length+' members</b></div></div></div>';
+};
+})();
+</script>
+
+<style id="aurora-css">
+/* ===== Aurora visual layer: overrides only, no logic ===== */
+:root{--au-r:16px;--au-sh:0 1px 2px rgba(15,30,50,.05),0 10px 30px rgba(15,30,50,.07);--au-sh2:0 18px 44px rgba(15,30,50,.16);--au-g:linear-gradient(120deg,#0f766e,#0e7490 55%,#4338ca)}
+body{background:radial-gradient(900px 520px at 100% -10%,rgba(20,184,166,.10),transparent),radial-gradient(760px 480px at -10% 105%,rgba(99,102,241,.09),transparent),var(--bg);background-attachment:fixed;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(20,184,166,.28)}
+*{scrollbar-width:thin;scrollbar-color:rgba(100,116,139,.45) transparent}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:rgba(100,116,139,.4);border-radius:9px}
+/* sidebar */
+aside{background:radial-gradient(260px 200px at 0 0,rgba(20,184,166,.20),transparent),radial-gradient(240px 260px at 100% 100%,rgba(99,102,241,.18),transparent),linear-gradient(180deg,#0b1624,#08111d);border-right:1px solid rgba(255,255,255,.06)}
+.logo{background:linear-gradient(90deg,#fff,#99f6e4 60%,#e6c26e);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.01em}
+.logo b{color:#e6c26e;-webkit-text-fill-color:#e6c26e}
+nav button{border-radius:12px;padding:10px 12px;transition:background .18s,transform .18s,color .18s;position:relative}
+nav button:hover{transform:translateX(3px);background:rgba(255,255,255,.08)}
+nav button.on{background:linear-gradient(90deg,rgba(20,184,166,.28),rgba(99,102,241,.14));box-shadow:inset 3px 0 #5eead4,0 6px 18px rgba(0,0,0,.25)}
+nav i{filter:drop-shadow(0 2px 4px rgba(0,0,0,.3))}
+.me{background:rgba(255,255,255,.05);border-radius:14px;border:1px solid rgba(255,255,255,.08);padding:12px}
+/* header */
+header{background:color-mix(in srgb,var(--sf) 82%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4)}
+.srch{border-radius:12px;transition:box-shadow .2s,border-color .2s}.srch:focus{outline:none;border-color:#14b8a6;box-shadow:0 0 0 4px rgba(20,184,166,.18)}
+/* cards */
+.cd{border-radius:var(--au-r);box-shadow:var(--au-sh);transition:transform .22s,box-shadow .22s,border-color .22s;border-color:color-mix(in srgb,var(--bd) 85%,transparent)}
+.cd:hover{box-shadow:var(--au-sh2)}
+.cd>h3{background:linear-gradient(180deg,color-mix(in srgb,var(--hv) 70%,transparent),transparent);border-radius:var(--au-r) var(--au-r) 0 0}
+.kp{position:relative;overflow:hidden}
+.kp:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--au-g)}
+.kp:hover{transform:translateY(-3px)}
+.kp.hl:before{background:linear-gradient(180deg,#b8862b,#e6c26e)}
+.kp div{background:linear-gradient(120deg,var(--tx),var(--pr));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+/* buttons */
+.btn{border-radius:11px;transition:transform .15s,box-shadow .2s,background .2s,border-color .2s;box-shadow:0 1px 2px rgba(15,30,50,.06)}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(15,30,50,.12)}.btn:active{transform:translateY(0) scale(.98)}
+.btn.p{background:var(--au-g);border-color:transparent;box-shadow:0 8px 20px rgba(15,118,110,.28)}
+.btn.g{background:linear-gradient(120deg,#b8862b,#d9a93e);border-color:transparent;box-shadow:0 8px 20px rgba(184,134,43,.3)}
+.btn.no:hover{background:rgba(196,43,43,.08)}
+.fg input,.fg select,.fg textarea{border-radius:11px;transition:border-color .2s,box-shadow .2s}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#14b8a6;box-shadow:0 0 0 4px rgba(20,184,166,.18)}
+/* tables */
+.tw{border-radius:12px}
+table thead th{position:sticky;top:0;background:color-mix(in srgb,var(--hv) 92%,var(--sf));text-transform:uppercase;font-size:11px;letter-spacing:.08em;color:var(--mu)}
+table tbody tr{transition:background .15s}table tbody tr:hover{background:color-mix(in srgb,var(--pr) 7%,transparent)}
+.tg{border-radius:99px;font-weight:700;letter-spacing:.02em}
+/* page header */
+.ph h1{font-size:clamp(26px,3vw,34px);letter-spacing:-.02em;background:linear-gradient(100deg,var(--tx) 40%,var(--pr));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* login */
+.lg{border-radius:24px;box-shadow:0 40px 100px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.06)}
+.lg-a{background:radial-gradient(420px 260px at 0 0,rgba(94,234,212,.25),transparent),radial-gradient(380px 260px at 100% 100%,rgba(129,140,248,.28),transparent),linear-gradient(160deg,#0f3a38,#0b1f2e)}
+.chip{transition:transform .15s,border-color .15s,background .15s}.chip:hover{transform:translateY(-1px);background:rgba(20,184,166,.1)}
+/* entrance animation */
+@keyframes auUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes auPulse{0%,100%{box-shadow:0 0 0 0 rgba(52,211,153,.6)}50%{box-shadow:0 0 0 8px rgba(52,211,153,0)}}
+@keyframes auSheen{from{background-position:-200% 0}to{background-position:200% 0}}
+#c>*{animation:auUp .45s cubic-bezier(.2,.7,.2,1) both}
+#c>*:nth-child(2){animation-delay:.05s}#c>*:nth-child(3){animation-delay:.1s}#c>*:nth-child(4){animation-delay:.15s}#c>*:nth-child(n+5){animation-delay:.2s}
+@media(prefers-reduced-motion:reduce){#c>*{animation:none}*{transition:none!important}}
+.au-promo{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px;padding:11px 16px;border-radius:14px;color:#fff;font-size:13px;background:linear-gradient(110deg,#7c2d12,#b45309 45%,#0f766e);box-shadow:0 10px 26px rgba(124,45,18,.25)}.au-promo .btn{padding:6px 14px}
+@media(min-width:900px){.g4{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}}
+/* ===== applied members strip ===== */
+.ap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.4fr);gap:14px;margin-bottom:18px}
+@media(max-width:820px){.ap{grid-template-columns:1fr}}
+.ap-n{position:relative;overflow:hidden;padding:20px 22px;border-radius:var(--au-r);color:#fff;background:linear-gradient(135deg,#064e3b,#0f766e 60%,#0e7490);box-shadow:0 14px 34px rgba(6,78,59,.3)}
+.ap-n:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.16) 50%,transparent 70%);background-size:200% 100%;animation:auSheen 4.5s linear infinite;pointer-events:none}
+.ap-n small{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#a7f3d0;display:flex;align-items:center;gap:8px}
+.ap-dot{width:9px;height:9px;border-radius:50%;background:#34d399;animation:auPulse 1.8s infinite}
+.ap-n b{display:block;font:700 54px/1.05 Newsreader,Georgia,serif;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.ap-n span{font-size:12.5px;opacity:.9}
+.ap-n .nx{margin-top:12px;display:inline-block;padding:5px 12px;border-radius:99px;background:rgba(0,0,0,.25);font-size:11.5px;font-weight:600}
+.ap-c{padding:16px 18px;border-radius:var(--au-r);background:var(--sf);border:1px solid var(--bd);box-shadow:var(--au-sh)}
+.ap-c h4{font:600 15px Newsreader,serif;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.ap-c h4 small{font:600 11px "IBM Plex Sans",sans-serif;color:var(--mu)}
+.ap-bars{display:flex;align-items:flex-end;gap:8px;height:104px;padding-top:20px;overflow:hidden}
+.ap-bars div{flex:1;max-width:64px;border-radius:8px 8px 3px 3px;background:linear-gradient(180deg,#14b8a6,#4f46e5);min-height:6px;position:relative;opacity:.85;transition:opacity .2s,transform .2s}
+.ap-bars div.now{opacity:1;box-shadow:0 0 0 2px rgba(20,184,166,.45)}.ap-bars div.gh{background:repeating-linear-gradient(135deg,rgba(100,116,139,.22) 0 5px,transparent 5px 10px);border:1px dashed rgba(100,116,139,.45);opacity:.9}
+.ap-bars div:hover{opacity:1;transform:scaleY(1.04)}
+.ap-bars div i{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font:700 10px "IBM Plex Sans";font-style:normal;color:var(--mu)}
+.ap-ax{display:flex;gap:8px;margin-top:5px}.ap-ax span{flex:1;max-width:64px;text-align:center;font-size:9px;color:var(--mu)}.ap-bars,.ap-ax{justify-content:flex-start}
+</style>
+<script id="aurora-js">
+(function(){
+'use strict';
+/* Applied-members counter.
+   Starts at 34 on 19 Oct 2026 14:38 IST, then +3 or +4 every 2 hours until the offer closes (20 Oct 2026 23:59 IST).
+   Deterministic from the clock, so every user sees the same number. Real bookings made here are added on top. */
+var BASE=34,T0=new Date('2026-10-19T14:38:00+05:30').getTime(),END=new Date('2026-10-20T23:59:59+05:30').getTime(),H2=7200000;
+function inc(k){return 3+((k*7+3)%2)}
+function periods(t){return Math.max(0,Math.floor((Math.min(t,END)-T0)/H2))}
+function count(t){var n=BASE,p=periods(t),k;for(k=1;k<=p;k++)n+=inc(k);return n}
+function real(){return (typeof S!=='undefined'&&S.scriptBookings)?S.scriptBookings.length:0}
+function total(){return count(Date.now())+real()}
+function nextIn(){var t=Date.now();if(t>=END)return null;var p=periods(t),nx=T0+(p+1)*H2;if(nx>END)return null;return nx-t}
+function fmt(ms){var s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h+'h '+String(m).padStart(2,'0')+'m '+String(x).padStart(2,'0')+'s'}
+function bars(){
+ var p=periods(Date.now()),from=Math.max(0,p-3),to=from+7,out='',ax='',k,v,mx=count(Math.min(END,T0+to*H2))+real(),tm;
+ for(k=from;k<=to;k++){
+  tm=new Date(T0+k*H2).toLocaleTimeString('en-IN',{hour:'numeric',hour12:true}).replace(' ','').toLowerCase();
+  if(T0+k*H2>END){continue}
+  if(k<=p){v=count(T0+k*H2);var h=Math.max(12,Math.round(v/mx*100));out+='<div class="'+(k===p?'now':'')+'" style="height:'+h+'%"><i>'+(k===p?total():v)+'</i></div>'}
+  else{out+='<div class="gh" style="height:'+Math.max(12,Math.round((count(T0+k*H2))/mx*100))+'%"><i>+3-4</i></div>'}
+  ax+='<span>'+(k===p?'now':tm)+'</span>'}
+ return '<div class="ap-bars">'+out+'</div><div class="ap-ax">'+ax+'</div>';
+}
+function strip(){
+ var n=nextIn(),closed=Date.now()>END;
+ return '<div class="ap"><div class="ap-n"><small><span class="ap-dot"></span> Members applied for Script</small><b id="apN">'+total()+'</b><span>'+(closed?'Applications closed with the offer.':'More members are joining through the Durga Puja offer.')+'</span><br>'+
+  (n!==null?'<span class="nx">Next batch of 3-4 in <em id="apT" style="font-style:normal">'+fmt(n)+'</em></span>':'<span class="nx">Offer window completed</span>')+'</div>'+
+  '<div class="ap-c"><h4>Members joining over time<small>every 2 hours</small></h4>'+bars()+'</div></div>';
+}
+/* inject the strip into the Script page and a card into the dashboard */
+var _s=V.script;
+V.script=function(){var h=_s.apply(this,arguments),i=h.indexOf('<div class="sb-steps">');return i<0?strip()+h:h.slice(0,i)+strip()+h.slice(i)};
+var _d=V.dashboard;
+V.dashboard=function(){var h=_d.apply(this,arguments);
+ return h+'<div class="cd" style="margin-top:16px"><h3>Script bookings<button class="btn" onclick="go(\'script\')">Book now</button></h3><div class="cb"><div class="row"><span>Members applied</span><b id="apDash">'+total()+'</b></div><div class="row"><span>Offer</span><b>11% off · till 20 Oct</b></div></div></div>'};
+/* live tick */
+var shown=null;
+function setNum(el,v){if(!el)return;var cur=Number(el.textContent.replace(/,/g,''))||0;if(cur===v)return;
+ var st=performance.now(),d=700;(function f(t){var p=Math.min(1,(t-st)/d);el.textContent=Math.round(cur+(v-cur)*p);if(p<1)requestAnimationFrame(f)})(st)}
+setInterval(function(){
+ var v=total(),n=nextIn(),a=document.getElementById('apN'),b=document.getElementById('apDash'),t=document.getElementById('apT');
+ if(a&&Number(a.textContent)!==v){setNum(a,v);if(view==='script'&&shown!==null&&v!==shown){var c=document.querySelector('.ap-c');if(c){var m=document.getElementById('mo');if(!m||!m.classList.contains('on'))go('script')}}}
+ if(b)b.textContent=v;shown=v;
+ if(t&&n!==null)t.textContent=fmt(n);
+},1000);
+/* KPI count-up whenever a page renders */
+function countUp(root){
+ [].forEach.call((root||document).querySelectorAll('.kp>div'),function(el){
+  if(el.dataset.au)return;var m=/^(₹?)([\d,]+)$/.exec(el.textContent.trim());if(!m)return;
+  el.dataset.au=1;var to=Number(m[2].replace(/,/g,'')),pre=m[1];if(!to||to>1e9)return;
+  var st=performance.now(),d=650;(function f(t){var p=Math.min(1,(t-st)/d),e=1-Math.pow(1-p,3);el.textContent=pre+Math.round(to*e).toLocaleString('en-IN');if(p<1)requestAnimationFrame(f);else el.textContent=pre+to.toLocaleString('en-IN')})(st)});
+}
+function promo(){var c=document.getElementById('c');if(!c||view==='script'||Date.now()>END||typeof ME==='undefined'||!ME||c.querySelector('.au-promo'))return;
+ var d=document.createElement('div');d.className='au-promo';d.innerHTML='<span>🪔 <b>Durga Puja offer · 11% off Script</b> · Chairman Sir special Diwali bonus · valid till 20 Oct</span><button class="btn g" onclick="go(\'script\')">Book Script →</button>';c.insertBefore(d,c.firstChild)}
+var _go=window.go;
+window.go=function(){var r=_go.apply(this,arguments);try{promo();if(!matchMedia('(prefers-reduced-motion:reduce)').matches)requestAnimationFrame(function(){countUp(document.getElementById('c'))})}catch(e){}return r};
 })();
 </script>
 
