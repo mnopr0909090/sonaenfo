@@ -286,6 +286,32 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 @media(max-width:700px){.sona-live-clock{display:none}#sonaCommandOverlay{padding:8vh 10px 12px}.sona-command-panel{border-radius:17px}.sona-command-head{padding:15px}.sona-command-foot{padding:9px 13px}#app main>header .sona-command-btn span{display:none}}
 @media(prefers-reduced-motion:reduce){.sona-command-panel,.sona-toast,#sonaCommandOverlay{animation:none!important;transition:none!important}}
 </style>
+
+<style id="dcPublicResultsCss">
+/* Public selection result checker */
+#dc-public-results{width:min(980px,100%);margin:0 auto 30px;padding:0 2px;color:#eaf6ff}
+#dc-public-results .dc-result-card{border:1px solid rgba(71,211,218,.32);border-radius:22px;overflow:hidden;background:linear-gradient(145deg,rgba(8,35,56,.97),rgba(7,20,37,.98));box-shadow:0 22px 55px rgba(0,0,0,.24)}
+#dc-public-results .dc-result-head{padding:24px 26px 18px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:14px}
+#dc-public-results .dc-result-emblem{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#00b7a4,#1679a0);font-size:24px;box-shadow:0 8px 22px #00b7a433}
+#dc-public-results h2{font:600 27px/1.1 Newsreader,Georgia,serif;color:#fff;margin-bottom:5px}
+#dc-public-results .dc-result-sub{font-size:12px;color:#a9c3d5}
+#dc-public-results .dc-result-body{padding:22px 26px 26px}
+#dc-public-results .dc-result-form{display:flex;gap:10px;max-width:650px}
+#dc-public-results .dc-result-form input{flex:1;min-width:0;padding:14px 15px;border:1px solid #365267;border-radius:12px;background:#061626;color:#fff;font-size:15px;letter-spacing:1px}
+#dc-public-results .dc-result-form button{border:0;border-radius:12px;padding:0 20px;background:linear-gradient(100deg,#0f9d8d,#137c9b);color:white;font-weight:800}
+#dc-public-results .dc-result-help{margin-top:10px;color:#91a9bc;font-size:11px}
+#dc-public-results .dc-result-state{display:flex;align-items:center;gap:13px;margin-top:18px;padding:17px;border-radius:13px;border:1px solid rgba(255,255,255,.12)}
+#dc-public-results .dc-result-state b,#dc-public-results .dc-result-state span{display:block}
+#dc-public-results .dc-result-state b{font-size:15px;letter-spacing:.06em;margin-bottom:3px}
+#dc-public-results .dc-result-state span{font-size:12px;line-height:1.6;color:inherit;opacity:.86}
+#dc-public-results .dc-result-icon{width:38px;height:38px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;font-size:22px;font-weight:900}
+#dc-public-results .dc-result-success{background:rgba(16,185,129,.12);border-color:rgba(52,211,153,.4);color:#a7f3d0}#dc-public-results .dc-result-success .dc-result-icon{background:#064e3b;color:#a7f3d0}
+#dc-public-results .dc-result-no{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.35);color:#fecaca}#dc-public-results .dc-result-no .dc-result-icon{background:#7f1d1d;color:#fecaca}
+#dc-public-results .dc-result-neutral{background:rgba(148,163,184,.1);color:#dbeafe}
+#dc-public-results .dc-result-note{margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1);font-size:10px;line-height:1.6;color:#8da9bc}
+@media(max-width:600px){#dc-public-results{margin-bottom:22px}#dc-public-results .dc-result-head{padding:19px 17px}#dc-public-results .dc-result-body{padding:18px 17px}#dc-public-results h2{font-size:23px}#dc-public-results .dc-result-form{flex-direction:column}#dc-public-results .dc-result-form button{padding:13px}}
+</style>
+
 </head>
 <body>
 <!-- ===== Sonainfo Intro Splash (additive) ===== -->
@@ -438,6 +464,17 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
       </section>
     </section>
   </div>
+  <section id="dc-public-results" aria-labelledby="dcResultTitle">
+    <div class="dc-result-card">
+      <div class="dc-result-head"><div class="dc-result-emblem">✓</div><div><h2 id="dcResultTitle">Disciplinary Committee · Selection Result</h2><div class="dc-result-sub">Official result lookup · Enter your roll number to check selection status and assigned position</div></div></div>
+      <div class="dc-result-body">
+        <form class="dc-result-form" onsubmit="event.preventDefault();checkDCResult()"><input id="dcResultRoll" inputmode="numeric" autocomplete="off" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit roll number" aria-label="Six-digit roll number" required><button type="submit">Check Result →</button></form>
+        <div class="dc-result-help">Example: 240006 · Results are checked against the selection list published on this page.</div>
+        <div id="dcResultOutput" aria-live="polite"></div>
+        <div class="dc-result-note">Selection list supplied for this website update. Please verify the final list and assigned positions with the committee before treating this page as an official institutional announcement.</div>
+      </div>
+    </div>
+  </section>
   <footer class="portal-footer"><div class="footer-brand"><span class="footer-mark">⌂</span><span><b>Sonainfo</b><small>A student-run organization · IIIT Hyderabad</small></span></div><div class="footer-item"><b>◇</b><span>Secure Access<small>Protected &amp; controlled</small></span></div><div class="footer-item"><b>♧</b><span>Trusted Platform<small>For our community</small></span></div><div class="footer-item"><b>▥</b><span>Continuous Improvement<small>People · Services · Progress</small></span></div><div class="footer-help"><b>Need Help?</b><small>Contact your portal administrator</small></div></footer>
 </div>
 <div id="app" class="hide">
@@ -451,6 +488,90 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 <div id="ts"></div>
 
 <script>
+
+/* ===== Public disciplinary committee result checker ===== */
+const DC_RESULT_ROWS = [
+  {roll:'240006', group:'Female', position:'Committee President'},
+  {roll:'240013', group:'Female', position:'Vice President'},
+  {roll:'240038', group:'Female', position:'General Secretary'},
+  {roll:'240044', group:'Female', position:'Joint Secretary'},
+  {roll:'240052', group:'Female', position:'Chief Coordinator'},
+  {roll:'240056', group:'Female', position:'Deputy Coordinator'},
+  {roll:'240070', group:'Female', position:'Head of Enquiry'},
+  {roll:'240085', group:'Female', position:'Deputy Head of Enquiry'},
+  {roll:'240099', group:'Female', position:'Head of Case Review'},
+  {roll:'240100', group:'Female', position:'Deputy Head of Case Review'},
+  {roll:'240114', group:'Female', position:'Head of Member Welfare'},
+  {roll:'240118', group:'Female', position:'Head of Ethics & Conduct'},
+  {roll:'240123', group:'Female', position:'Head of Evidence Review'},
+  {roll:'240132', group:'Female', position:'Head of Complaints'},
+  {roll:'240138', group:'Female', position:'Head of Appeals'},
+  {roll:'240139', group:'Female', position:'Head of Compliance'},
+  {roll:'240140', group:'Female', position:'Head of Policy'},
+  {roll:'240149', group:'Female', position:'Head of Documentation'},
+  {roll:'240162', group:'Female', position:'Head of Records'},
+  {roll:'240164', group:'Female', position:'Head of Reporting'},
+  {roll:'240170', group:'Female', position:'Head of Communications'},
+  {roll:'240184', group:'Female', position:'Head of Public Relations'},
+  {roll:'240187', group:'Female', position:'Head of Member Support'},
+  {roll:'240193', group:'Female', position:'Head of Training'},
+  {roll:'240208', group:'Female', position:'Head of Orientation'},
+  {roll:'240216', group:'Female', position:'Head of Case Allocation'},
+  {roll:'240228', group:'Female', position:'Head of Case Tracking'},
+  {roll:'240229', group:'Female', position:'Head of Follow-up'},
+  {roll:'240240', group:'Female', position:'Head of Conflict Resolution'},
+  {roll:'240241', group:'Female', position:'Head of Mediation'},
+  {roll:'240244', group:'Female', position:'Head of Fair Practices'},
+  {roll:'240248', group:'Female', position:'Head of Transparency'},
+  {roll:'240249', group:'Female', position:'Head of Audit Liaison'},
+  {roll:'240252', group:'Female', position:'Head of Legal Liaison'},
+  {roll:'240266', group:'Female', position:'Head of HR Liaison'},
+  {roll:'240273', group:'Female', position:'Head of HOD Liaison'},
+  {roll:'240280', group:'Female', position:'Head of SEC Liaison'},
+  {roll:'240284', group:'Female', position:'Head of Exam Coordination'},
+  {roll:'240288', group:'Female', position:'Head of Meeting Operations'},
+  {roll:'240289', group:'Female', position:'Head of Scheduling'},
+  {roll:'240290', group:'Female', position:'Head of Digital Records'},
+  {roll:'240291', group:'Female', position:'Head of Data Verification'},
+  {roll:'240303', group:'Female', position:'Head of Quality Assurance'},
+  {roll:'240315', group:'Female', position:'Head of Process Improvement'},
+  {roll:'240319', group:'Female', position:'Head of Policy Research'},
+  {roll:'240322', group:'Female', position:'Head of Member Engagement'},
+  {roll:'240323', group:'Female', position:'Head of Grievance Support'},
+  {roll:'240328', group:'Female', position:'Head of Witness Coordination'},
+  {roll:'240337', group:'Female', position:'Head of Confidentiality'},
+  {roll:'240338', group:'Female', position:'Head of Risk Review'},
+  {roll:'240339', group:'Female', position:'Head of Internal Controls'},
+  {roll:'240340', group:'Female', position:'Head of Incident Review'},
+  {roll:'240345', group:'Female', position:'Head of Case Summaries'},
+  {roll:'240020', group:'Male', position:'Head of Notices'},
+  {roll:'240032', group:'Male', position:'Head of Correspondence'},
+  {roll:'240087', group:'Male', position:'Head of Committee Logistics'},
+  {roll:'240102', group:'Male', position:'Head of Accessibility'},
+  {roll:'240137', group:'Male', position:'Head of Inclusion'},
+  {roll:'240144', group:'Male', position:'Head of Ethics Education'},
+  {roll:'240197', group:'Male', position:'Head of Outreach'},
+  {roll:'240203', group:'Male', position:'Head of Volunteer Coordination'},
+  {roll:'240221', group:'Male', position:'Head of Regional Coordination'},
+  {roll:'240243', group:'Male', position:'Head of Event Conduct'},
+  {roll:'240251', group:'Male', position:'Head of Review Standards'},
+  {roll:'240276', group:'Male', position:'Head of Decision Records'},
+  {roll:'240278', group:'Male', position:'Head of Action Monitoring'},
+  {roll:'240287', group:'Male', position:'Head of Appeals Support'},
+  {roll:'240298', group:'Male', position:'Head of Member Relations'},
+  {roll:'240305', group:'Male', position:'Head of Operations'},
+  {roll:'240334', group:'Male', position:'Committee Member – A'}
+];
+function checkDCResult(){
+ const input=document.getElementById('dcResultRoll');
+ const out=document.getElementById('dcResultOutput');
+ const roll=String(input&&input.value||'').replace(/\s+/g,'').trim();
+ if(!/^\d{6}$/.test(roll)){out.innerHTML='<div class="dc-result-state dc-result-neutral"><b>Enter a valid roll number</b><span>Please enter the 6-digit roll number.</span></div>';return;}
+ const found=DC_RESULT_ROWS.find(x=>x.roll===roll);
+ if(found){out.innerHTML='<div class="dc-result-state dc-result-success"><div class="dc-result-icon">✓</div><div><b>SELECTED</b><span>Roll No. '+esc(found.roll)+'</span><span>Disciplinary Committee · '+esc(found.position)+'</span></div></div>';}
+ else {out.innerHTML='<div class="dc-result-state dc-result-no"><div class="dc-result-icon">×</div><div><b>NOT SELECTED</b><span>Roll No. '+esc(roll)+'</span><span>This roll number is not present in the published selection list.</span></div></div>';}
+}
+
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN'),cr=n=>'₹'+(n/1e7).toFixed(2)+' Cr';
