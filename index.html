@@ -679,30 +679,30 @@ function applyRequestedCompanyUpdates(){
  addAnn('IT Exam Notice — 15 October 2026','The IT examination is scheduled for tomorrow, 15 October 2026. Registered candidates: 67. The question paper is available in the Exam Cell portal and requires the access code provided by the Exam Cell.','Exam');
  save();
 }
-/* ===== Confidential election-counting complaint: DC review forwarded to HOD ===== */
+/* ===== Confidential election-counting complaint: HOD closure decision ===== */
 function applyElectionCountingComplaintUpdate(){
  const CASE_ID='CMP-20261025-ELECTION';
  const title='Election Counting Complaint — Disciplinary Committee Review';
  const complaint='A confidential concern was raised alleging possible irregularities in election vote counting. The allegation is disputed and has not been established as fact. The complainant’s identity remains confidential.';
  const dcDecision='Disciplinary Committee preliminary review: the information currently available indicates that vote counting was conducted live and that HOD and Disciplinary Committee representatives were present during the process. On that basis, the allegation appears unsupported at this stage. A possible attempt to damage the committee’s reputation has been raised as a concern, but no motive or conspiracy is established by this record. The decision and observations are forwarded to the HOD for independent review and final direction. Any final conclusion should be based on the official counting record, attendance and audit trail.';
- const hodReply='HOD Office: The Disciplinary Committee’s preliminary observations and recommendation have been received for review. The HOD will consider the live-counting record, presence of authorised representatives and any supporting evidence before issuing a final decision. Until then, the complaint is marked “Referred to HOD”; neither wrongdoing nor a deliberate false complaint is treated as conclusively established.';
+ const hodReply='HOD Office — Final Decision: After reviewing the Disciplinary Committee’s preliminary observations and the information currently available, the complaint is closed due to insufficient supporting evidence. The available information indicates that counting was conducted live and HOD/DC representatives were reportedly present. The allegation of irregularities has not been substantiated. No disciplinary action will be initiated against the Election Committee on the basis of this complaint unless credible new evidence emerges. The complainant’s identity remains confidential.';
  let c=S.cases.find(x=>x.id===CASE_ID||x.token===CASE_ID);
  if(!c){
-  c={id:CASE_ID,token:CASE_ID,title,against:'Not disclosed — confidential complainant',dept:'Election Committee',targetDept:'HOD Office',sev:'Medium',desc:complaint,st:'Referred to HOD',holder:'HOD',h:[],facts:[]};
+  c={id:CASE_ID,token:CASE_ID,title,against:'Not disclosed — confidential complainant',dept:'Election Committee',targetDept:'HOD Office',sev:'Medium',desc:complaint,st:'Closed',holder:'HOD',h:[],facts:[]};
   S.cases.push(c);
  }
- c.title=title;c.token=CASE_ID;c.against='Not disclosed — confidential complainant';c.dept='Election Committee';c.targetDept='HOD Office';c.sev='Medium';c.desc=complaint;c.st='Referred to HOD';c.holder='HOD';c.facts=c.facts||[];
- for(const [label,value] of [['Complaint type','Election counting concern — disputed allegation'],['Complainant','Identity withheld'],['DC preliminary assessment','Allegation appears unsupported based on information currently available'],['Counting context','Live counting; HOD and Disciplinary Committee representatives reportedly present'],['Decision status','Forwarded to HOD for final review'],['Current status','Referred to HOD']]){c.facts=c.facts.filter(f=>f[0]!==label);c.facts.push([label,value]);}
+ c.title=title;c.token=CASE_ID;c.against='Not disclosed — confidential complainant';c.dept='Election Committee';c.targetDept='HOD Office';c.sev='Medium';c.desc=complaint;c.st='Closed';c.holder='HOD';c.facts=c.facts||[];
+ for(const [label,value] of [['Complaint type','Election counting concern — disputed allegation'],['Complainant','Identity withheld'],['DC preliminary assessment','Allegation not substantiated by information currently available'],['Counting context','Live counting; HOD and Disciplinary Committee representatives reportedly present'],['Final decision','Complaint closed due to insufficient supporting evidence'],['Closed by','HOD Office'],['Current status','Closed']]){c.facts=c.facts.filter(f=>f[0]!==label);c.facts.push([label,value]);}
  c.h=c.h||[];
  if(!c.h.some(x=>x.a==='Disciplinary Committee preliminary assessment forwarded to HOD'))c.h.push({t:'25 Oct 2026',by:'Disciplinary Committee',a:'Disciplinary Committee preliminary assessment forwarded to HOD',n:dcDecision});
- if(!c.h.some(x=>x.a==='HOD review pending'))c.h.push({t:'25 Oct 2026',by:'HOD Office',a:'HOD review pending',n:hodReply});
- const annTitle='DC Review Update: Election Counting Complaint Referred to HOD';
- const annText='The Disciplinary Committee has recorded a preliminary assessment that the election-counting allegation appears unsupported in light of information indicating live counting and the presence of HOD/DC representatives. This is not a final finding. The observations have been forwarded to the HOD for review of official records and final direction. Any suggestion of an ulterior motive remains unverified; the complainant’s identity remains confidential.';
- const oldAnn=S.ann.find(a=>a.title==='HOD Update: Election Counting Complaint Forwarded for Enquiry');
- if(oldAnn){oldAnn.title=annTitle;oldAnn.text=annText;oldAnn.cat='Case Update';oldAnn.pin=true;oldAnn.date='2026-10-25';oldAnn.by='Disciplinary Committee / HOD Office';}
- else if(!S.ann.some(a=>a.title===annTitle))S.ann.unshift({id:nid(S.ann),title:annTitle,text:annText,cat:'Case Update',pin:true,date:'2026-10-25',by:'Disciplinary Committee / HOD Office'});
- const logText='Disciplinary Committee preliminary review forwarded to HOD for final direction';
- if(!S.log.some(x=>x.a===logText))S.log.unshift({t:'25 Oct 2026',a:logText,u:'Disciplinary Committee'});
+ if(!c.h.some(x=>x.a==='HOD final decision — complaint closed'))c.h.push({t:'25 Oct 2026',by:'HOD Office',a:'HOD final decision — complaint closed',n:hodReply});
+ const annTitle='HOD Decision: Election Counting Complaint Closed';
+ const annText='The HOD Office has closed the election-counting complaint due to insufficient supporting evidence. The information currently available indicates that counting was conducted live and HOD/DC representatives were reportedly present; the allegation of irregularities has not been substantiated. No disciplinary action will be initiated against the Election Committee on the basis of this complaint unless credible new evidence emerges. The complainant’s identity remains confidential.';
+ const oldAnn=S.ann.find(a=>['HOD Update: Election Counting Complaint Forwarded for Enquiry','DC Review Update: Election Counting Complaint Referred to HOD'].includes(a.title));
+ if(oldAnn){oldAnn.title=annTitle;oldAnn.text=annText;oldAnn.cat='Case Update';oldAnn.pin=true;oldAnn.date='2026-10-25';oldAnn.by='HOD Office';}
+ else if(!S.ann.some(a=>a.title===annTitle))S.ann.unshift({id:nid(S.ann),title:annTitle,text:annText,cat:'Case Update',pin:true,date:'2026-10-25',by:'HOD Office'});
+ const logText='HOD closed election counting complaint due to insufficient supporting evidence';
+ if(!S.log.some(x=>x.a===logText))S.log.unshift({t:'25 Oct 2026',a:logText,u:'HOD Office'});
  save();
 }
 
