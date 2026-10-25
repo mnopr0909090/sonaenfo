@@ -679,6 +679,32 @@ function applyRequestedCompanyUpdates(){
  addAnn('IT Exam Notice — 15 October 2026','The IT examination is scheduled for tomorrow, 15 October 2026. Registered candidates: 67. The question paper is available in the Exam Cell portal and requires the access code provided by the Exam Cell.','Exam');
  save();
 }
+/* ===== Confidential election-counting complaint and HOD referral ===== */
+function applyElectionCountingComplaintUpdate(){
+ const CASE_ID='CMP-20261025-ELECTION';
+ const title='Confidential concern: suspected irregularities in election vote counting';
+ const complaint='A confidential concern has been raised about possible irregularities in the Election Committee vote-counting process. The concern has not been treated as a proven allegation. The Disciplinary Committee is requested to independently verify the vote-count records, tally sheets and relevant audit trail, and record its findings. The complainant’s identity must remain confidential and must not be disclosed to persons involved in the election.';
+ const hodReply='HOD response: The concern has been reviewed for referral. The case has been forwarded to the Disciplinary Committee for an impartial enquiry. The committee should verify the available records and document its findings before any conclusion is reached. The complainant’s identity is to be kept strictly confidential.';
+ let c=S.cases.find(x=>x.id===CASE_ID||x.token===CASE_ID);
+ if(!c){
+  c={id:CASE_ID,token:CASE_ID,title,against:'Not disclosed — confidential complainant',dept:'Election Committee',targetDept:'Disciplinary Committee',sev:'High',desc:complaint,st:'Under Enquiry',holder:'Disciplinary Committee',h:[],facts:[['Complaint type','Confidential election-process concern'],['Complainant','Identity withheld'],['Referred by','HOD'],['Referred to','Disciplinary Committee'],['Status','Under Enquiry']]};
+  c.h.push({t:'25 Oct 2026',by:'Concerned Member (identity confidential)',a:'Confidential complaint registered',n:complaint});
+  c.h.push({t:'25 Oct 2026',by:'HOD Office',a:'HOD response: forwarded to Disciplinary Committee',n:hodReply});
+  S.cases.push(c);
+ }else{
+  c.title=title;c.token=CASE_ID;c.against='Not disclosed — confidential complainant';c.dept='Election Committee';c.targetDept='Disciplinary Committee';c.sev='High';c.desc=complaint;c.st='Under Enquiry';c.holder='Disciplinary Committee';c.facts=c.facts||[];
+  for(const [label,value] of [['Complaint type','Confidential election-process concern'],['Complainant','Identity withheld'],['Referred by','HOD'],['Referred to','Disciplinary Committee'],['Status','Under Enquiry']]){c.facts=c.facts.filter(f=>f[0]!==label);c.facts.push([label,value]);}
+  c.h=c.h||[];
+  if(!c.h.some(x=>x.a==='HOD response: forwarded to Disciplinary Committee'))c.h.push({t:'25 Oct 2026',by:'HOD Office',a:'HOD response: forwarded to Disciplinary Committee',n:hodReply});
+ }
+ const annTitle='HOD Update: Election Counting Complaint Forwarded for Enquiry';
+ const annText='The HOD has forwarded a confidential concern regarding possible irregularities in election vote counting to the Disciplinary Committee for an impartial enquiry. The committee will verify the relevant records and document its findings. No allegation is considered established at this stage. The complainant’s identity will remain confidential.';
+ if(!S.ann.some(a=>a.title===annTitle))S.ann.unshift({id:nid(S.ann),title:annTitle,text:annText,cat:'Case Update',pin:true,date:'2026-10-25',by:'HOD Office'});
+ const logText='HOD forwarded confidential election-counting complaint to Disciplinary Committee';
+ if(!S.log.some(x=>x.a===logText))S.log.unshift({t:'25 Oct 2026',a:logText,u:'HOD Office'});
+ save();
+}
+
 function chairmanDecisionForm(id){
  const c=S.cases.find(x=>x.id===id);if(!c||!can('chairmandecide')){toast('Chairman permission required.');return;}
  form('Chairman decision — '+c.id,[
@@ -724,7 +750,7 @@ function applyImageCaseUpdates(){
  save();
 }
 
-function ready(){pill();chips();applyNavyaCaseUpdate();applyRequestedCompanyUpdates();applyImageCaseUpdates();$('#sy').textContent=DB?'Shared data is on. Every device sees the same cases, penalties and finance.':'Data is saved in this browser (works on GitHub Pages).';
+function ready(){pill();chips();applyNavyaCaseUpdate();applyRequestedCompanyUpdates();applyImageCaseUpdates();applyElectionCountingComplaintUpdate();$('#sy').textContent=DB?'Shared data is on. Every device sees the same cases, penalties and finance.':'Data is saved in this browser (works on GitHub Pages).';
  try{const u=S.users.find(x=>x.id===+sessionStorage.getItem('sona_u'));if(u)start(u,1)}catch(e){}}
 function refresh(){if(!ME)return;const u=S.users.find(x=>x.id===ME.id);if(!u){toast('Your account was removed.');logout();return}ME=u;$('#meN').textContent=u.name;$('#meR').textContent=u.role;chips();
  if(!$('#mo').classList.contains('on')&&view!=='employees')go(view);else if(view==='employees')go(view)}
