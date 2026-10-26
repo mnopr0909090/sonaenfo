@@ -475,7 +475,7 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
       </div>
     </div>
   </section>
-  <footer class="portal-footer"><div class="footer-brand"><span class="footer-mark">⌂</span><span><b>Sonainfo</b><small></small></span></div><div class="footer-item"><b>◇</b><span>Secure Access<small>Protected &amp; controlled</small></span></div><div class="footer-item"><b>♧</b><span>Trusted Platform<small>For our community</small></span></div><div class="footer-item"><b>▥</b><span>Continuous Improvement<small>People · Services · Progress</small></span></div><div class="footer-help"><b>Need Help?</b><small>Contact your portal administrator</small></div></footer>
+  <footer class="portal-footer"><div class="footer-brand"><span class="footer-mark">⌂</span><span><b>Sonainfo</b><small>A student-run organization · IIIT Hyderabad</small></span></div><div class="footer-item"><b>◇</b><span>Secure Access<small>Protected &amp; controlled</small></span></div><div class="footer-item"><b>♧</b><span>Trusted Platform<small>For our community</small></span></div><div class="footer-item"><b>▥</b><span>Continuous Improvement<small>People · Services · Progress</small></span></div><div class="footer-help"><b>Need Help?</b><small>Contact your portal administrator</small></div></footer>
 </div>
 <div id="app" class="hide">
  <aside id="sb"><div class="logo">Sona<b>info</b></div><nav id="nav"></nav>
@@ -2518,5 +2518,54 @@ document.addEventListener('keydown',function(e){
 })();
 </script>
 
+<!-- ===== Meeting Centre: schedule + code/IP pre-join gate ===== -->
+<style>
+.meet-hero{padding:26px;border-radius:18px;color:#f8fafc;background:radial-gradient(circle at 90% 0,rgba(45,212,191,.24),transparent 35%),linear-gradient(125deg,#071b2e,#0f4c5c 65%,#18213b);margin-bottom:18px;position:relative;overflow:hidden}
+.meet-hero .ey{font-size:10px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#99f6e4}.meet-hero h1{font-size:clamp(27px,4vw,38px);margin:7px 0}.meet-hero p{color:#c9dce8;max-width:680px}.meet-meta{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.meet-pill{padding:7px 11px;border:1px solid #ffffff35;background:#ffffff0d;border-radius:99px;font-size:11px}
+.meet-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr);gap:16px}.meet-schedule{padding:0}.meet-item{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px 13px;align-items:center;padding:16px 17px;border-bottom:1px solid var(--bd)}.meet-item:last-child{border-bottom:0}.meet-n{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(15,118,110,.12);color:var(--pr);font-weight:900;grid-row:span 2}.meet-item b{display:block;font-size:14px}.meet-item small{display:block;color:var(--mu);margin-top:3px}.meet-time{font-size:12px;font-weight:800;white-space:nowrap;grid-column:2}.meet-join-btn{grid-column:2;justify-self:start;display:inline-flex!important;visibility:visible!important;opacity:1!important;align-items:center;justify-content:center;min-width:154px;min-height:42px;padding:10px 16px!important;margin-top:2px;border-radius:11px!important;background:linear-gradient(135deg,#0f766e,#0e7490)!important;color:#fff!important;font-weight:800!important;box-shadow:0 5px 14px #0f766e25;cursor:pointer;position:relative;z-index:2}.meet-join-btn:hover{transform:translateY(-1px);filter:brightness(1.06)}.meet-side{padding:18px}.meet-side h3{font-size:18px;margin-bottom:8px}.meet-side p{font-size:12px;color:var(--mu);line-height:1.7}.meet-note{margin-top:14px;padding:12px;border-radius:12px;background:var(--hv);font-size:11px;color:var(--mu)}.meet-room{padding:24px;text-align:center}.meet-room .room-icon{font-size:40px}.meet-room h2{margin:8px 0}.meet-room p{color:var(--mu);font-size:13px}.meet-code-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:14px}.meet-code-row code{padding:8px 10px;border-radius:8px;background:var(--hv)}.meet-chair-alert{display:flex;gap:12px;align-items:flex-start;padding:16px 18px;margin:0 0 16px;border:1px solid #f59e0b66;border-radius:15px;background:linear-gradient(120deg,#fffbeb,#fff7ed);color:#78350f}.meet-chair-alert .bell{font-size:24px}.meet-chair-alert b{display:block;font-size:14px}.meet-chair-alert p{margin:4px 0 0;font-size:12px;line-height:1.6}.meet-day-chip{display:inline-flex;padding:6px 10px;border-radius:99px;background:#d1fae5;color:#065f46;font-size:11px;font-weight:800;margin-top:10px}
+@media(max-width:800px){.meet-layout{grid-template-columns:1fr}.meet-item{grid-template-columns:38px minmax(0,1fr)}.meet-n{grid-row:span 3}.meet-time{grid-column:2;white-space:normal}.meet-join-btn{grid-column:2;grid-row:auto;justify-self:start}} @media(max-width:480px){.meet-item{grid-template-columns:34px minmax(0,1fr);padding:14px 12px}.meet-n{width:32px;height:32px}.meet-join-btn{grid-column:2;grid-row:auto;justify-self:stretch;width:100%;margin-top:5px}.meet-hero{padding:20px}}
+</style>
+<script>
+(function(){
+  const MEETING_ACCESS_CODE = 'SONA-MEET-2026'; // Change this in the HTML before publishing; front-end codes are not secret.
+  const meetingSlots = [
+    ['Disciplinary Committee','10:00 AM – 11:00 AM'],
+    ['Head of Department (HOD)','11:00 AM – 12:00 PM'],
+    ['IT Team','12:00 PM – 1:00 PM'],
+    ['Client Team','1:00 PM – 2:00 PM'],
+    ['Operational Team','2:00 PM – 3:00 PM'],
+    ['Management Team','3:00 PM – 4:00 PM'],
+    ['Exam Cell','4:00 PM – 5:00 PM'],
+    ['Financial Team','5:00 PM – 6:00 PM'],
+    ['Promotional Department','6:00 PM – 7:00 PM']
+  ];
+  let meetingJoined = null;
+  if (typeof VW !== 'undefined' && !VW.some(x=>x[0]==='meetings')) VW.push(['meetings','Meeting Centre','▣']);
+  function grantMeetingNav(){if(typeof S!=='undefined'&&Array.isArray(S.users))S.users.forEach(u=>{u.perm=u.perm||{};u.perm.meetings=1});if(typeof ME!=='undefined'&&ME){ME.perm=ME.perm||{};ME.perm.meetings=1}}
+  if(typeof window.ensure==='function'){const oldMeetingEnsure=window.ensure;window.ensure=function(){oldMeetingEnsure.apply(this,arguments);grantMeetingNav()}}
+  grantMeetingNav();
+  if (typeof V !== 'undefined') V.meetings = function(){
+    if (meetingJoined) return '<div class="ph"><div><h1>Meeting Centre</h1><p>Department schedule and meeting access</p></div><button class="btn" onclick="meetingLeave()">Leave meeting</button></div><div class="cd meet-room"><div class="room-icon">✓</div><h2>Pre-join checks complete</h2><p>You passed the local access-code and IP-format checks for <b>'+meetingEsc(meetingJoined.dept)+'</b>.</p><div class="meet-code-row" style="justify-content:center"><code>IP entered: '+meetingEsc(meetingJoined.ip)+'</code><span class="tg y">Demo meeting room</span></div><div class="meet-note">This page does not connect audio/video or create a real meeting. Add a meeting provider link (for example, an authorised video-conference URL) to enable actual joining.</div><button class="btn p" style="margin-top:14px" onclick="meetingLeave()">Back to schedule</button></div>';
+    const chairAlert=(typeof ME!=='undefined'&&ME&&(ME.role==='Chairman'||ME.office==='Chairman'))?'<div class="meet-chair-alert" role="status"><div class="bell">🔔</div><div><b>Meeting reminder for Chairman Rahul Kumar</b><p>Sir, you have department meetings scheduled today, 26 October 2026. Please review the timetable and join the relevant meeting using the Join Meeting button.</p><span class="meet-day-chip">TODAY · 10:00 AM – 7:00 PM</span></div></div>':'';
+    return chairAlert+'<div class="meet-hero"><div class="ey">SONAINFO · MEETING CENTRE</div><h1>Department Meetings</h1><p>One organised schedule for every team. Select your department, enter the meeting access code, and provide the IP address you want recorded before continuing.</p><div class="meet-meta"><span class="meet-pill">◷ 10:00 AM – 7:00 PM</span><span class="meet-pill">▦ 9 departments</span><span class="meet-pill">♙ Code required before joining</span></div></div><div class="meet-layout"><section class="cd"><h3>Meeting Schedule <span class="tg">1 hour each</span></h3><div class="meet-schedule">'+meetingSlots.map((x,i)=>'<div class="meet-item"><div class="meet-n">'+String(i+1).padStart(2,'0')+'</div><div><b>'+meetingEsc(x[0])+'</b><small>Department meeting · Please join during your assigned slot</small></div><div class="meet-time">'+x[1]+'</div><button class="btn p meet-join-btn" type="button" onclick="meetingStartFromButton(this)" data-dept="'+meetingEsc(x[0])+'">🔐 Join Meeting</button></div>').join('')+'</div></section><aside class="cd meet-side" style="position:static;width:auto;background:var(--sf);color:var(--tx);padding:18px;display:block"><h3>Join a Meeting</h3><p>Select your department and click <b>Join</b>. You will be asked for the access code and IP address before the page allows you to continue.</p><div class="fg" style="margin-top:16px"><label for="meetingDept">Department</label><select id="meetingDept" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--sf)">'+meetingSlots.map(x=>'<option value="'+meetingEsc(x[0])+'">'+meetingEsc(x[0])+'</option>').join('')+'</select></div><button class="btn p w" onclick="meetingStart()">🔐 Continue to secure check</button><div class="meet-note"><b>Privacy & security</b><br>This standalone HTML cannot reliably discover or verify a visitor’s public IP address. The IP field is user-entered and is not proof of identity. Real access control and server-side IP logging require a backend.</div></aside></div>';
+  };
+  window.meetingStartFromButton=function(button){window.meetingStart(button.getAttribute('data-dept'));};
+  window.meetingStart=function(selectedDept){
+    const dept=selectedDept || document.getElementById('meetingDept')?.value || meetingSlots[0][0];
+    const body='<p style="color:var(--mu);margin-bottom:14px">Department: <b>'+meetingEsc(dept)+'</b>. Complete both fields before continuing.</p><form id="meetingGateForm"><div class="fg"><label for="meetingAccessCode">Meeting access code</label><input id="meetingAccessCode" type="password" autocomplete="off" placeholder="Enter code provided by organiser" required></div><div class="fg"><label for="meetingIp">IP address</label><input id="meetingIp" type="text" autocomplete="off" placeholder="e.g. 192.0.2.10 or IPv6 address" required><small style="color:var(--mu)">Enter the IP address you have been instructed to provide. This page does not independently verify it.</small></div><div id="meetingGateError" class="err" aria-live="polite"></div><button class="btn p w" type="submit">Verify and continue →</button></form>';
+    modal('Meeting access verification',body,'<button class="btn" onclick="cm()">Cancel</button>');
+    document.getElementById('meetingGateForm').addEventListener('submit',function(e){
+      e.preventDefault();const code=document.getElementById('meetingAccessCode').value.trim();const ip=document.getElementById('meetingIp').value.trim();
+      const ipOk=/^(?:(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}|[0-9a-fA-F:]{2,39})$/.test(ip);
+      const err=document.getElementById('meetingGateError');
+      if(code!==MEETING_ACCESS_CODE){err.textContent='Incorrect meeting access code. Please contact the organiser.';return;}
+      if(!ipOk){err.textContent='Enter a valid IPv4 or IPv6 address format.';return;}
+      meetingJoined={dept:dept,ip:ip};cm();go('meetings');
+    });
+  };
+  window.meetingLeave=function(){meetingJoined=null;go('meetings')};
+  window.meetingEsc=function(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
+})();
+</script>
 </body>
 </html>
