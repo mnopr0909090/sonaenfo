@@ -287,30 +287,7 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 @media(prefers-reduced-motion:reduce){.sona-command-panel,.sona-toast,#sonaCommandOverlay{animation:none!important;transition:none!important}}
 </style>
 
-<style id="dcPublicResultsCss">
-/* Public selection result checker */
-#dc-public-results{width:min(980px,100%);margin:0 auto 30px;padding:0 2px;color:#eaf6ff}
-#dc-public-results .dc-result-card{border:1px solid rgba(71,211,218,.32);border-radius:22px;overflow:hidden;background:linear-gradient(145deg,rgba(8,35,56,.97),rgba(7,20,37,.98));box-shadow:0 22px 55px rgba(0,0,0,.24)}
-#dc-public-results .dc-result-head{padding:24px 26px 18px;border-bottom:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:14px}
-#dc-public-results .dc-result-emblem{width:48px;height:48px;display:grid;place-items:center;border-radius:15px;background:linear-gradient(135deg,#00b7a4,#1679a0);font-size:24px;box-shadow:0 8px 22px #00b7a433}
-#dc-public-results h2{font:600 27px/1.1 Newsreader,Georgia,serif;color:#fff;margin-bottom:5px}
-#dc-public-results .dc-result-sub{font-size:12px;color:#a9c3d5}
-#dc-public-results .dc-result-body{padding:22px 26px 26px}
-#dc-public-results .dc-result-form{display:flex;gap:10px;max-width:650px}
-#dc-public-results .dc-result-form input{flex:1;min-width:0;padding:14px 15px;border:1px solid #365267;border-radius:12px;background:#061626;color:#fff;font-size:15px;letter-spacing:1px}
-#dc-public-results .dc-result-form button{border:0;border-radius:12px;padding:0 20px;background:linear-gradient(100deg,#0f9d8d,#137c9b);color:white;font-weight:800}
-#dc-public-results .dc-result-help{margin-top:10px;color:#91a9bc;font-size:11px}
-#dc-public-results .dc-result-state{display:flex;align-items:center;gap:13px;margin-top:18px;padding:17px;border-radius:13px;border:1px solid rgba(255,255,255,.12)}
-#dc-public-results .dc-result-state b,#dc-public-results .dc-result-state span{display:block}
-#dc-public-results .dc-result-state b{font-size:15px;letter-spacing:.06em;margin-bottom:3px}
-#dc-public-results .dc-result-state span{font-size:12px;line-height:1.6;color:inherit;opacity:.86}
-#dc-public-results .dc-result-icon{width:38px;height:38px;flex:0 0 auto;display:grid;place-items:center;border-radius:50%;font-size:22px;font-weight:900}
-#dc-public-results .dc-result-success{background:rgba(16,185,129,.12);border-color:rgba(52,211,153,.4);color:#a7f3d0}#dc-public-results .dc-result-success .dc-result-icon{background:#064e3b;color:#a7f3d0}
-#dc-public-results .dc-result-no{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.35);color:#fecaca}#dc-public-results .dc-result-no .dc-result-icon{background:#7f1d1d;color:#fecaca}
-#dc-public-results .dc-result-neutral{background:rgba(148,163,184,.1);color:#dbeafe}
-#dc-public-results .dc-result-note{margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.1);font-size:10px;line-height:1.6;color:#8da9bc}
-@media(max-width:600px){#dc-public-results{margin-bottom:22px}#dc-public-results .dc-result-head{padding:19px 17px}#dc-public-results .dc-result-body{padding:18px 17px}#dc-public-results h2{font-size:23px}#dc-public-results .dc-result-form{flex-direction:column}#dc-public-results .dc-result-form button{padding:13px}}
-</style>
+
 
 </head>
 <body>
@@ -464,17 +441,6 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
       </section>
     </section>
   </div>
-  <section id="dc-public-results" aria-labelledby="dcResultTitle">
-    <div class="dc-result-card">
-      <div class="dc-result-head"><div class="dc-result-emblem">✓</div><div><h2 id="dcResultTitle">Disciplinary Committee · Selection Result</h2><div class="dc-result-sub">Official result lookup · Enter your roll number to check selection status and assigned position</div></div></div>
-      <div class="dc-result-body">
-        <form class="dc-result-form" onsubmit="event.preventDefault();checkDCResult()"><input id="dcResultRoll" inputmode="numeric" autocomplete="off" maxlength="6" pattern="[0-9]{6}" placeholder="Enter 6-digit roll number" aria-label="Six-digit roll number" required><button type="submit">Check Result →</button></form>
-        <div class="dc-result-help">Example: 240006 · Results are checked against the selection list published on this page.</div>
-        <div id="dcResultOutput" aria-live="polite"></div>
-        <div class="dc-result-note">Selection list supplied for this website update. Please verify the final list and assigned positions with the committee before treating this page as an official institutional announcement.</div>
-      </div>
-    </div>
-  </section>
   <footer class="portal-footer"><div class="footer-brand"><span class="footer-mark">⌂</span><span><b>Sonainfo</b><small>A student-run organization · IIIT Hyderabad</small></span></div><div class="footer-item"><b>◇</b><span>Secure Access<small>Protected &amp; controlled</small></span></div><div class="footer-item"><b>♧</b><span>Trusted Platform<small>For our community</small></span></div><div class="footer-item"><b>▥</b><span>Continuous Improvement<small>People · Services · Progress</small></span></div><div class="footer-help"><b>Need Help?</b><small>Contact your portal administrator</small></div></footer>
 </div>
 <div id="app" class="hide">
@@ -489,88 +455,6 @@ tbody tr:hover{background:var(--hv)}th{position:sticky;top:0;z-index:1}.kp{borde
 
 <script>
 
-/* ===== Public disciplinary committee result checker ===== */
-const DC_RESULT_ROWS = [
-  {roll:'240006', group:'Female', position:'Committee President'},
-  {roll:'240013', group:'Female', position:'Vice President'},
-  {roll:'240038', group:'Female', position:'General Secretary'},
-  {roll:'240044', group:'Female', position:'Joint Secretary'},
-  {roll:'240052', group:'Female', position:'Chief Coordinator'},
-  {roll:'240056', group:'Female', position:'Deputy Coordinator'},
-  {roll:'240070', group:'Female', position:'Head of Enquiry'},
-  {roll:'240085', group:'Female', position:'Deputy Head of Enquiry'},
-  {roll:'240099', group:'Female', position:'Head of Case Review'},
-  {roll:'240100', group:'Female', position:'Deputy Head of Case Review'},
-  {roll:'240114', group:'Female', position:'Head of Member Welfare'},
-  {roll:'240118', group:'Female', position:'Head of Ethics & Conduct'},
-  {roll:'240123', group:'Female', position:'Head of Evidence Review'},
-  {roll:'240132', group:'Female', position:'Head of Complaints'},
-  {roll:'240138', group:'Female', position:'Head of Appeals'},
-  {roll:'240139', group:'Female', position:'Head of Compliance'},
-  {roll:'240140', group:'Female', position:'Head of Policy'},
-  {roll:'240149', group:'Female', position:'Head of Documentation'},
-  {roll:'240162', group:'Female', position:'Head of Records'},
-  {roll:'240164', group:'Female', position:'Head of Reporting'},
-  {roll:'240170', group:'Female', position:'Head of Communications'},
-  {roll:'240184', group:'Female', position:'Head of Public Relations'},
-  {roll:'240187', group:'Female', position:'Head of Member Support'},
-  {roll:'240193', group:'Female', position:'Head of Training'},
-  {roll:'240208', group:'Female', position:'Head of Orientation'},
-  {roll:'240216', group:'Female', position:'Head of Case Allocation'},
-  {roll:'240228', group:'Female', position:'Head of Case Tracking'},
-  {roll:'240229', group:'Female', position:'Head of Follow-up'},
-  {roll:'240240', group:'Female', position:'Head of Conflict Resolution'},
-  {roll:'240241', group:'Female', position:'Head of Mediation'},
-  {roll:'240244', group:'Female', position:'Head of Fair Practices'},
-  {roll:'240248', group:'Female', position:'Head of Transparency'},
-  {roll:'240249', group:'Female', position:'Head of Audit Liaison'},
-  {roll:'240252', group:'Female', position:'Head of Legal Liaison'},
-  {roll:'240266', group:'Female', position:'Head of HR Liaison'},
-  {roll:'240273', group:'Female', position:'Head of HOD Liaison'},
-  {roll:'240280', group:'Female', position:'Head of SEC Liaison'},
-  {roll:'240284', group:'Female', position:'Head of Exam Coordination'},
-  {roll:'240288', group:'Female', position:'Head of Meeting Operations'},
-  {roll:'240289', group:'Female', position:'Head of Scheduling'},
-  {roll:'240290', group:'Female', position:'Head of Digital Records'},
-  {roll:'240291', group:'Female', position:'Head of Data Verification'},
-  {roll:'240303', group:'Female', position:'Head of Quality Assurance'},
-  {roll:'240315', group:'Female', position:'Head of Process Improvement'},
-  {roll:'240319', group:'Female', position:'Head of Policy Research'},
-  {roll:'240322', group:'Female', position:'Head of Member Engagement'},
-  {roll:'240323', group:'Female', position:'Head of Grievance Support'},
-  {roll:'240328', group:'Female', position:'Head of Witness Coordination'},
-  {roll:'240337', group:'Female', position:'Head of Confidentiality'},
-  {roll:'240338', group:'Female', position:'Head of Risk Review'},
-  {roll:'240339', group:'Female', position:'Head of Internal Controls'},
-  {roll:'240340', group:'Female', position:'Head of Incident Review'},
-  {roll:'240345', group:'Female', position:'Head of Case Summaries'},
-  {roll:'240020', group:'Male', position:'Head of Notices'},
-  {roll:'240032', group:'Male', position:'Head of Correspondence'},
-  {roll:'240087', group:'Male', position:'Head of Committee Logistics'},
-  {roll:'240102', group:'Male', position:'Head of Accessibility'},
-  {roll:'240137', group:'Male', position:'Head of Inclusion'},
-  {roll:'240144', group:'Male', position:'Head of Ethics Education'},
-  {roll:'240197', group:'Male', position:'Head of Outreach'},
-  {roll:'240203', group:'Male', position:'Head of Volunteer Coordination'},
-  {roll:'240221', group:'Male', position:'Head of Regional Coordination'},
-  {roll:'240243', group:'Male', position:'Head of Event Conduct'},
-  {roll:'240251', group:'Male', position:'Head of Review Standards'},
-  {roll:'240276', group:'Male', position:'Head of Decision Records'},
-  {roll:'240278', group:'Male', position:'Head of Action Monitoring'},
-  {roll:'240287', group:'Male', position:'Head of Appeals Support'},
-  {roll:'240298', group:'Male', position:'Head of Member Relations'},
-  {roll:'240305', group:'Male', position:'Head of Operations'},
-  {roll:'240334', group:'Male', position:'Committee Member – A'}
-];
-function checkDCResult(){
- const input=document.getElementById('dcResultRoll');
- const out=document.getElementById('dcResultOutput');
- const roll=String(input&&input.value||'').replace(/\s+/g,'').trim();
- if(!/^\d{6}$/.test(roll)){out.innerHTML='<div class="dc-result-state dc-result-neutral"><b>Enter a valid roll number</b><span>Please enter the 6-digit roll number.</span></div>';return;}
- const found=DC_RESULT_ROWS.find(x=>x.roll===roll);
- if(found){out.innerHTML='<div class="dc-result-state dc-result-success"><div class="dc-result-icon">✓</div><div><b>SELECTED</b><span>Roll No. '+esc(found.roll)+'</span><span>Disciplinary Committee · '+esc(found.position)+'</span></div></div>';}
- else {out.innerHTML='<div class="dc-result-state dc-result-no"><div class="dc-result-icon">×</div><div><b>NOT SELECTED</b><span>Roll No. '+esc(roll)+'</span><span>This roll number is not present in the published selection list.</span></div></div>';}
-}
 
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1562,8 +1446,8 @@ th{font-size:11px;text-transform:uppercase;letter-spacing:.07em}
 var $=function(s,r){return (r||document).querySelector(s)};
 var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 var H=function(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Finance',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile',script:'Script Booking',itteam:'IT Team',insights:'Insights'};
-var GROUPS=[['Overview',['dashboard','insights']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports','script','itteam']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
+var TITLES={dashboard:'Dashboard',cases:'Cases',complaint:'Register complaint',penalties:'Penalty list',finance:'Financial Team',reportmarks:'Report Marks',employees:'Employees',departments:'Departments',announcements:'Announcements',sec:'SEC Committee',dc:'Disciplinary Committee',hod:'HOD Office',exam:'Exam Cell',election:'Election',chat:'Chat',pages:'Website builder',leave:'Leave & Holidays',reports:'Reports',tickets:'Help desk',audit:'Audit log',access:'Access control',tokenbuyer:'Token Buyer',profile:'My profile',script:'Script Booking',itteam:'IT Team',insights:'Insights'};
+var GROUPS=[['Overview',['dashboard','insights']],['Governance',['cases','complaint','penalties','sec','dc','hod']],['Operations',['finance','employees','departments','announcements','exam','election','leave','reports','reportmarks','script','itteam']],['Collaboration',['chat','tickets']],['Administration',['pages','audit','access','tokenbuyer']]];
 
 function groupNav(){
   var nav=$('#nav');if(!nav)return;
@@ -2567,5 +2451,287 @@ document.addEventListener('keydown',function(e){
   window.meetingEsc=function(v){return String(v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
 })();
 </script>
+<!-- ===== ADD-ON: Financial Team (October statement) + Report Marks + Shivani account ===== -->
+<style id="ft-css">
+/* ---------- Financial Team ---------- */
+.ft-hero{position:relative;overflow:hidden;border-radius:16px;padding:28px 30px 26px;color:#e9f3f1;margin-bottom:16px;background:radial-gradient(700px 320px at 100% 0,rgba(230,194,110,.16),transparent 60%),linear-gradient(135deg,#0b1d2e 0%,#0f3a38 100%)}
+.ft-hero h1{font-size:clamp(22px,3.4vw,30px);color:#fff;line-height:1.15}
+.ft-hero .ft-sub{color:#a9c7c2;font-size:13px;margin-top:4px;max-width:60ch}
+.ft-bal{display:flex;flex-wrap:wrap;gap:22px 48px;margin:22px 0 24px;align-items:flex-end}
+.ft-bal .ft-lab{font-size:12.5px;color:#a9c7c2;margin-bottom:2px}
+.ft-big{font:600 clamp(34px,6vw,54px)/1.05 Newsreader,Georgia,serif;color:#fff;letter-spacing:-.01em;font-variant-numeric:lining-nums}
+.ft-big.neg{color:#ffb4a8}
+.ft-mid{font:600 clamp(24px,3.6vw,32px)/1.1 Newsreader,Georgia,serif;color:#e6c26e}
+.ft-mid.neg{color:#ffb4a8}
+.ft-short{display:inline-flex;align-items:center;gap:6px;margin-top:6px;padding:3px 10px;border-radius:99px;background:rgba(255,120,100,.18);color:#ffc9bf;font-size:12px;font-weight:600}
+.ft-tracks{display:grid;gap:14px;padding-bottom:12px}
+.ft-tr-l{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:#c5dcd8;margin-bottom:5px;flex-wrap:wrap}
+.ft-tr-l b{color:#fff;font-weight:600}
+.ft-track{position:relative}
+.ft-bar{display:flex;gap:2px;height:20px}
+.ft-bar i{display:block;flex-basis:0;border-radius:4px;min-width:0}
+.ft-bar i.sp{background:transparent}
+.ft-inc{background:#2dd4bf}.ft-paid{background:#e6a93e}.ft-pend{background:#7b93ad}.ft-over{background:#f0705a}
+.ft-mark{position:absolute;top:-5px;bottom:-5px;width:0;border-left:2px dashed rgba(255,255,255,.75)}
+.ft-mark span{position:absolute;bottom:-20px;right:6px;font-size:10.5px;color:#fff;white-space:nowrap;opacity:.85}
+.ft-key{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:16px;font-size:12px;color:#c5dcd8}
+.ft-key span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.ft-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.ft-kpis .cd{padding:15px 18px}
+.ft-kpis small{color:var(--mu);display:block}
+.ft-kpis b{display:block;font:600 26px/1.15 Newsreader,Georgia,serif;margin-top:3px;font-variant-numeric:lining-nums}
+.ft-kpis em{font-style:normal;font-size:12px;color:var(--mu)}
+.ft-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.ft-row{padding:12px 18px;border-bottom:1px solid var(--bd)}
+.ft-row:last-child{border-bottom:0}
+.ft-row .ft-t{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.ft-row .ft-t b{font-weight:600}
+.ft-row .ft-t span{font:600 17px Newsreader,Georgia,serif;font-variant-numeric:lining-nums;white-space:nowrap}
+.ft-row .ft-n{font-size:12px;color:var(--mu);margin-top:1px;max-width:52ch}
+.ft-row .ft-m{display:flex;align-items:center;gap:10px;margin-top:8px}
+.ft-row .ft-m i{display:block;height:7px;border-radius:4px;background:var(--pr);min-width:3px}
+.ft-row .ft-m i.am{background:#d08a1c}
+.ft-row .ft-m small{color:var(--mu);font-size:11.5px;white-space:nowrap}
+.ft-tot{display:flex;justify-content:space-between;align-items:baseline;padding:13px 18px;background:var(--hv);border-radius:0 0 10px 10px;font-weight:600}
+.ft-tot span:last-child{font:600 19px Newsreader,Georgia,serif}
+.ft-status{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px 18px}
+.ft-st{border:1px solid var(--bd);border-radius:10px;padding:14px 16px;background:var(--sf)}
+.ft-st h4{font:600 16px Newsreader,Georgia,serif;margin:8px 0 2px}
+.ft-st p{font-size:12.5px;color:var(--mu)}
+.ft-st .v{font:600 24px Newsreader,Georgia,serif;margin-top:8px;font-variant-numeric:lining-nums}
+.ft-chip{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid}
+.ft-chip.h{color:var(--wa);border-color:var(--wa);background:rgba(180,83,9,.08)}
+.ft-chip.p{color:var(--er);border-color:var(--er);background:rgba(196,43,43,.07)}
+.ft-ledger{min-width:0}.ft-ledger td,.ft-ledger th{padding:10px 16px}
+.ft-ledger td.num,.ft-ledger th.num{text-align:right;white-space:nowrap;font-variant-numeric:lining-nums tabular-nums}
+.ft-ledger tr.sub td{font-weight:600;background:var(--hv);border-top:1px solid var(--bd)}
+.ft-ledger tr.fin td{font-weight:600;background:var(--hv);border-top:2px solid var(--tx)}
+.ft-ledger .pos{color:var(--ok)}.ft-ledger .neg{color:var(--er)}
+.ft-divider{display:flex;align-items:center;gap:12px;margin:26px 0 14px}
+.ft-divider h2{font-size:20px}.ft-divider::after{content:"";flex:1;height:1px;background:var(--bd)}
+.ft-note{font-size:12px;color:var(--mu);margin:10px 2px 0}
+.ft-hero .ft-bar i{transform-origin:left;animation:ftgrow .7s cubic-bezier(.2,.7,.2,1) both}
+@keyframes ftgrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@media(prefers-reduced-motion:reduce){.ft-hero .ft-bar i{animation:none}}
+@media(max-width:900px){.ft-kpis{grid-template-columns:1fr 1fr}.ft-grid{grid-template-columns:1fr}.ft-status{grid-template-columns:1fr}}
+@media(max-width:520px){.ft-hero{padding:22px 18px}.ft-kpis b{font-size:22px}.ft-ledger td,.ft-ledger th{padding:9px 10px}}
+@media print{aside,header,.ph>div:last-child,.btn{display:none!important}main{margin:0!important}.ft-hero{background:#0f3a38!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+/* ---------- Report Marks ---------- */
+.rpm-hero{padding:24px 26px;border-radius:16px;color:#fff;margin-bottom:16px;background:radial-gradient(circle at 90% 0,rgba(94,234,212,.28),transparent 42%),linear-gradient(125deg,#0b1d2e,#0f4c5c 60%,#2f3a8f)}
+.rpm-hero h1{font-size:clamp(24px,4vw,32px);color:#fff}.rpm-hero p{opacity:.88;font-size:13px;margin-top:4px;max-width:62ch}
+.rpm-lock{display:inline-flex;gap:8px;align-items:center;margin-top:12px;padding:7px 13px;border-radius:99px;background:rgba(255,255,255,.14);font-size:12px;font-weight:600}
+.rpm-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bd)}
+.rpm-tools input,.rpm-tools select{padding:8px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--sf)}
+.rpm-in{width:84px;padding:6px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--sf);text-align:center;font-weight:600}
+.rpm-bar{height:8px;border-radius:99px;background:var(--hv);overflow:hidden;min-width:110px}.rpm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#d08a1c,#0f766e)}
+</style>
+<script id="ft-js">
+(function(){
+'use strict';
+if(typeof V==='undefined'||typeof VW==='undefined'||typeof S==='undefined'||typeof DOCS==='undefined'){return}
+
+/* =============== shared helpers =============== */
+var OWNER='shivani@sonainfo.com',MAXM=10;
+var rs=function(n){return (n<0?'−':'')+'₹'+Math.abs(Math.round(n)).toLocaleString('en-IN')};
+var lk=function(n){return '₹'+(Math.abs(n)/1e5).toFixed(2)+' L'};
+var cx=function(n){return '₹'+(Math.abs(n)/1e7).toFixed(2)+' Cr'};
+var pc=function(a,b){return b?(a/b*100).toFixed(1)+'%':'0%'};
+var sum=function(l){return (l||[]).reduce(function(s,x){return s+(Number(x.a)||0)},0)};
+
+/* =============== Financial Team data =============== */
+function finSeed(){return{month:'October 2026',updated:'27 Oct 2026',
+ inc:[
+  {id:1,n:'Client Department',a:6273000,note:'Client payments received in October'},
+  {id:2,n:'Other sources',a:3400000,note:'Miscellaneous receipts'},
+  {id:3,n:'HOD penalties',a:2300000,note:'Penalties collected through the HOD Office'},
+  {id:4,n:'Script profit',a:1292000,note:'Company profit from Script'},
+  {id:5,n:'Disciplinary penalties',a:1200000,note:'Fines collected through the Disciplinary Committee'},
+  {id:6,n:'Scale server',a:700000,note:'Income from the scale server'}],
+ chair:[
+  {id:1,n:'Personal amount with Chairman',a:1000000,note:'Held personally by the Chairman'},
+  {id:2,n:'Company server payment',a:702456,note:'Server payment made by the company'},
+  {id:3,n:'Script loss paid by the company',a:2200000,note:'The company had to pay this in Script because of the Chairman’s fault'}],
+ hold:[
+  {id:1,n:'Disciplinary Committee',note:'Payment is on hold'},
+  {id:2,n:'IT Team',note:'Payment is on hold'}],
+ pend:{n:'Employee payments pending',count:2245,a:12000000}}}
+function fin(){var f=S.fin2;if(!f||!f.inc||!f.chair||!f.pend){f=S.fin2=finSeed()}return f}
+
+function figures(){
+ var f=fin(),inc=sum(f.inc),paid=sum(f.chair),pend=Number(f.pend.a)||0,bal=inc-paid,after=bal-pend;
+ return{f:f,inc:inc,paid:paid,pend:pend,bal:bal,after:after};
+}
+
+/* =============== Financial Team view =============== */
+var _fin=V.finance;
+V.finance=function(){
+ var g=figures(),f=g.f,ed=can('finedit'),scale=Math.max(g.inc,g.paid+g.pend)||1;
+ var covered=Math.max(0,Math.min(g.pend,g.bal)),over=Math.max(0,g.pend-Math.max(0,g.bal));
+ var markPos=(g.inc/scale*100).toFixed(2);
+ var neg=g.after<0;
+ var maxInc=Math.max.apply(null,f.inc.map(function(x){return Number(x.a)||0}).concat([1]));
+ var incSorted=f.inc.slice().sort(function(a,b){return b.a-a.a});
+ var avg=f.pend.count?Math.round(g.pend/f.pend.count):0;
+
+ var hero='<section class="ft-hero" aria-label="October balance summary">'+
+  '<h1>Financial Team · '+esc(f.month)+' statement</h1>'+
+  '<p class="ft-sub">What came in, what the Chairman spent, what is on hold, and what is left in the account. Updated '+esc(f.updated)+'.</p>'+
+  '<div class="ft-bal"><div><div class="ft-lab">Current balance</div><div class="ft-big'+(g.bal<0?' neg':'')+'">'+rs(g.bal)+'</div></div>'+
+  '<div><div class="ft-lab">Balance after '+cx(g.pend)+' pending employee payments</div><div class="ft-mid'+(neg?' neg':'')+'">'+rs(g.after)+'</div>'+
+  (neg?'<span class="ft-short">⚠ Short by '+rs(-g.after)+'</span>':'<span class="ft-short" style="background:rgba(45,212,191,.16);color:#bff5ec">✓ Fully covered</span>')+'</div></div>'+
+  '<div class="ft-tracks">'+
+   '<div><div class="ft-tr-l"><span>Income received in '+esc(f.month.split(' ')[0])+'</span><b>'+rs(g.inc)+'</b></div>'+
+    '<div class="ft-track"><div class="ft-bar" role="img" aria-label="Income '+rs(g.inc)+'"><i class="ft-inc" style="flex-grow:'+g.inc+'"></i><i class="sp" style="flex-grow:'+Math.max(0,scale-g.inc)+'"></i></div></div></div>'+
+   '<div><div class="ft-tr-l"><span>Money going out (paid + pending)</span><b>'+rs(g.paid+g.pend)+'</b></div>'+
+    '<div class="ft-track"><div class="ft-bar" role="img" aria-label="Paid '+rs(g.paid)+', pending '+rs(g.pend)+'">'+
+     '<i class="ft-paid" style="flex-grow:'+g.paid+'"></i>'+(covered?'<i class="ft-pend" style="flex-grow:'+covered+'"></i>':'')+(over?'<i class="ft-over" style="flex-grow:'+over+'"></i>':'')+'</div>'+
+     '<div class="ft-mark" style="left:'+markPos+'%"><span>Income ends here</span></div></div></div>'+
+  '</div>'+
+  '<div class="ft-key"><span style="--c:#2dd4bf">Income</span><span style="--c:#e6a93e">Chairman spending (paid)</span><span style="--c:#7b93ad">Pending, covered by balance</span><span style="--c:#f0705a">Pending, not covered</span></div>'+
+ '</section>';
+
+ var kpis='<div class="ft-kpis">'+
+  '<div class="cd"><small>Total income</small><b>'+rs(g.inc)+'</b><em>'+cx(g.inc)+' from '+f.inc.length+' sources</em></div>'+
+  '<div class="cd"><small>Chairman spending</small><b>'+rs(g.paid)+'</b><em>'+pc(g.paid,g.inc)+' of income</em></div>'+
+  '<div class="cd"><small>Pending payments</small><b>'+rs(g.pend)+'</b><em>'+Number(f.pend.count).toLocaleString('en-IN')+' employees</em></div>'+
+  '<div class="cd"><small>Payments on hold</small><b>'+f.hold.length+' teams</b><em>'+f.hold.map(function(h){return esc(h.n)}).join(' and ')+'</em></div></div>';
+
+ var incCard='<div class="cd"><h3><span>Income by source</span><span class="tg">'+esc(f.month)+'</span></h3>'+
+  incSorted.map(function(x){return '<div class="ft-row"><div class="ft-t"><b>'+esc(x.n)+'</b><span>'+rs(x.a)+'</span></div><div class="ft-n">'+esc(x.note||'')+'</div><div class="ft-m"><i style="width:'+Math.max(2,x.a/maxInc*100*0.78)+'%"></i><small>'+pc(x.a,g.inc)+' of income</small></div></div>'}).join('')+
+  '<div class="ft-tot"><span>Total income</span><span>'+rs(g.inc)+'</span></div></div>';
+
+ var maxCh=Math.max.apply(null,f.chair.map(function(x){return Number(x.a)||0}).concat([1]));
+ var chCard='<div class="cd"><h3><span>Where the Chairman spent</span><span class="tg">'+f.chair.length+' items</span></h3>'+
+  f.chair.map(function(x){return '<div class="ft-row"><div class="ft-t"><b>'+esc(x.n)+'</b><span>'+rs(x.a)+'</span></div><div class="ft-n">'+esc(x.note||'')+'</div><div class="ft-m"><i class="am" style="width:'+Math.max(2,x.a/maxCh*100*0.78)+'%"></i><small>'+pc(x.a,g.paid)+' of this total</small></div></div>'}).join('')+
+  '<div class="ft-tot"><span>Total Chairman spending</span><span>'+rs(g.paid)+'</span></div></div>';
+
+ var status='<div class="cd" style="margin-bottom:16px"><h3><span>Holds and pending payments</span></h3><div class="ft-status">'+
+  f.hold.map(function(h){return '<div class="ft-st"><span class="ft-chip h">⏸ On hold</span><h4>'+esc(h.n)+' payment</h4><p>'+esc(h.note||'Payment is on hold')+'.</p><p style="margin-top:6px">Amount not set yet, so it is not counted in the balance.</p></div>'}).join('')+
+  '<div class="ft-st"><span class="ft-chip p">⧖ Pending</span><h4>'+Number(f.pend.count).toLocaleString('en-IN')+' employee payments</h4><p>'+esc(f.pend.n)+(avg?' · about '+rs(avg)+' per employee':'')+'.</p><div class="v">'+rs(g.pend)+'</div></div>'+
+ '</div></div>';
+
+ var run=0,rows='';
+ function line(n,a,sign,cls){run+=sign*a;rows+='<tr><td>'+esc(n)+'</td><td class="num '+(sign>0?'pos':'neg')+'">'+(sign>0?'+':'−')+rs(a).replace('−','')+'</td><td class="num">'+rs(run)+'</td></tr>'}
+ incSorted.forEach(function(x){line(x.n,x.a,1)});
+ rows+='<tr class="sub"><td>Total income</td><td class="num"></td><td class="num">'+rs(g.inc)+'</td></tr>';
+ f.chair.forEach(function(x){line(x.n,x.a,-1)});
+ rows+='<tr class="fin"><td>Current balance</td><td class="num"></td><td class="num '+(g.bal<0?'neg':'')+'">'+rs(g.bal)+'</td></tr>';
+ run=g.bal;line(Number(f.pend.count).toLocaleString('en-IN')+' employee payments pending',g.pend,-1);
+ rows+='<tr class="fin"><td>Balance after pending payments'+(neg?' <span class="ft-chip p">Shortfall</span>':'')+'</td><td class="num"></td><td class="num '+(neg?'neg':'pos')+'">'+rs(g.after)+'</td></tr>';
+ var ledger='<div class="cd"><h3><span>Balance statement</span><span class="tg">Running balance</span></h3><div class="tw"><table class="ft-ledger"><thead><tr><th>Item</th><th class="num">Amount</th><th class="num">Balance</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>'+
+  '<p class="ft-note">Calculated from October figures only. No opening balance is included. Payments on hold have no amount yet and are not deducted.</p>';
+
+ var btns='<button class="btn" onclick="window.print()">Print statement</button><button class="btn" onclick="ftCsv()">Download CSV</button>'+(ed?'<button class="btn p" onclick="ftEdit()">Edit October figures</button>':'');
+ var old='';try{old=_fin?_fin.apply(this,arguments):''}catch(e){old=''}
+ var i=old.indexOf('<div class="g2">');var rest=i>-1?old.slice(i):'';
+ var restHead=rest?'<div class="ft-divider"><h2>Portal ledger</h2>'+(ed?'<span style="display:flex;gap:8px"><button class="btn" onclick="totalForm()">Update total account</button><button class="btn p" onclick="txForm()">+ Add transaction</button></span>':'')+'</div>':'';
+ return ph('Financial Team','Income, Chairman spending, holds and the current balance for '+esc(f.month)+'.',btns)+hero+kpis+'<div class="ft-grid">'+incCard+chCard+'</div>'+status+ledger+restHead+rest;
+};
+
+window.ftCsv=function(){var g=figures(),f=g.f,r=[];
+ f.inc.forEach(function(x){r.push(['Income',x.n,x.a])});r.push(['Total','Total income',g.inc]);
+ f.chair.forEach(function(x){r.push(['Chairman spending',x.n,x.a])});r.push(['Total','Total Chairman spending',g.paid]);
+ r.push(['Balance','Current balance',g.bal]);r.push(['Pending',f.pend.count+' employee payments',g.pend]);r.push(['Balance','Balance after pending',g.after]);
+ csv('financial-team-'+f.month.toLowerCase().replace(/\s+/g,'-'),['Section','Item','Amount (INR)'],r)};
+window.ftEdit=function(){
+ if(!can('finedit')){toast('View only.');return}
+ var f=fin(),fields=[];
+ f.inc.forEach(function(x,i){fields.push({k:'i'+i,l:'Income · '+x.n+' (₹)',t:'number',v:x.a})});
+ f.chair.forEach(function(x,i){fields.push({k:'c'+i,l:'Chairman · '+x.n+' (₹)',t:'number',v:x.a})});
+ fields.push({k:'pa',l:'Pending employee payments (₹)',t:'number',v:f.pend.a});
+ fields.push({k:'pn',l:'Employees pending',t:'number',v:f.pend.count});
+ form('Edit '+f.month+' figures',fields,function(v){
+  var bad=Object.keys(v).some(function(k){return !isFinite(Number(v[k]))||Number(v[k])<0||v[k]===''});
+  if(bad){toast('Enter valid amounts (0 or more).');return}
+  f.inc.forEach(function(x,i){x.a=Math.round(Number(v['i'+i]))});
+  f.chair.forEach(function(x,i){x.a=Math.round(Number(v['c'+i]))});
+  f.pend.a=Math.round(Number(v.pa));f.pend.count=Math.round(Number(v.pn));
+  f.updated=new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+  log('Updated Financial Team figures for '+f.month);save();cm();go('finance');toast('Figures saved');
+ });
+};
+
+/* =============== Report Marks =============== */
+var DEPTS=['Disciplinary Committee','HOD Office','SEC Committee','Chairman Office','Exam Cell','Election Committee','IT Team','IT Cell','Financial Team','Script Department','CEO Office','Client Department','Operational Team','Management Team','Promotional Department','HR Department','Legal Liaison','Audit Team','Quality Assurance','Training & Orientation','Public Relations','Communications','Member Welfare','Complaints Cell','Appeals Cell','Case Review','Evidence Review','Records & Documentation','Data Verification','Policy Research','Compliance','Ethics & Conduct','Mediation Cell','Volunteer Coordination','Outreach','Event Management','Meeting Operations','Scheduling Cell','Digital Records','Security Cell','Network Administration','Software Development','UI/UX Design','Technical Documentation','Project Coordination','Support Desk','Accounts','Payroll','Procurement','Token Buyer Cell'];
+/* first 27 reports get initial marks between 7 and 10; the other 23 stay pending for Shivani */
+var SEEDM=[9,8.5,9.5,8,9,7.5,8.5,9,8,7,9.5,8,7.5,9,8.5,10,7,8,9,7.5,8.5,9,8,7.5,9.5,8,8.5];
+var Q={q:'',f:'all',s:'dept'};
+var canMark=function(){return !!ME&&String(ME.email||'').toLowerCase()===OWNER};
+var store=function(){return S.reportMarks||(S.reportMarks={})};
+var fm=function(n){return (Math.round(n*10)/10).toString()};
+function seedMarks(){
+ if(S.reportMarksSeeded)return;var st=store();
+ DEPTS.forEach(function(d,i){if(i<SEEDM.length&&!st[d])st[d]={marks:SEEDM[i],by:'Initial marks',at:'27 Oct 2026'}});
+ S.reportMarksSeeded=1;
+}
+function mrows(){
+ var st=store();
+ var l=DEPTS.map(function(d,i){var r=st[d];return{n:i+1,i:i,d:d,m:(r&&r.marks!=null&&r.marks!=='')?Number(r.marks):null,by:r?r.by:'',at:r?r.at:''}});
+ l=l.filter(function(x){return(!Q.q||x.d.toLowerCase().indexOf(Q.q)>-1)&&(Q.f==='all'||(Q.f==='done'?x.m!==null:x.m===null))});
+ if(Q.s==='hi')l.sort(function(a,b){return(b.m===null?-1:b.m)-(a.m===null?-1:a.m)||a.n-b.n});
+ else if(Q.s==='lo')l.sort(function(a,b){return(a.m===null?99:a.m)-(b.m===null?99:b.m)||a.n-b.n});
+ return l;
+}
+function mbody(){
+ var tb=document.getElementById('rpmBody');if(!tb)return;
+ var ed=canMark(),l=mrows();
+ tb.innerHTML=l.map(function(x){
+  var cell=ed?'<input class="rpm-in" type="number" min="0" max="'+MAXM+'" step="0.5" value="'+(x.m===null?'':x.m)+'" aria-label="Marks for '+esc(x.d)+' report" onchange="rpmSet('+x.i+',this.value)">':(x.m===null?'<span class="tg">Pending</span>':'<b>'+fm(x.m)+'</b>');
+  return '<tr><td>'+x.n+'</td><td><b>'+esc(x.d)+' report</b></td><td>'+cell+' <small>/ '+MAXM+'</small></td><td><div class="rpm-bar"><i style="width:'+(x.m===null?0:x.m/MAXM*100)+'%"></i></div></td><td><small>'+esc(x.by||'—')+'<br>'+esc(x.at||'')+'</small></td></tr>';
+ }).join('')||'<tr><td colspan="5" style="padding:18px;color:var(--mu)">No department matches your search.</td></tr>';
+}
+window.rpmQ=function(v){Q.q=String(v||'').toLowerCase().trim();mbody()};
+window.rpmF=function(v){Q.f=v;mbody()};
+window.rpmS=function(v){Q.s=v;mbody()};
+window.rpmSet=function(i,v){
+ if(!canMark()){toast('Only shivani@sonainfo.com can give marks.');return}
+ var name=DEPTS[i];if(!name)return;
+ if(String(v).trim()===''){delete store()[name]}
+ else{var n=Number(v);if(!isFinite(n)||n<0||n>MAXM){toast('Marks must be between 0 and '+MAXM+'.');go('reportmarks');return}
+  store()[name]={marks:n,by:ME.name+' ('+ME.email+')',at:now()}}
+ log('Report marks: '+name+' = '+(String(v).trim()===''?'cleared':v));save();go('reportmarks');toast('Marks saved');
+};
+window.rpmCsv=function(){csv('report-marks',['No','Department report','Marks (out of '+MAXM+')','Marked by','Time'],mrows().map(function(x){return[x.n,x.d+' report',x.m===null?'Pending':x.m,x.by,x.at]}))};
+V.reportmarks=function(){
+ seedMarks();setTimeout(mbody,0);
+ var st=store(),done=DEPTS.filter(function(d){return st[d]&&st[d].marks!=null&&st[d].marks!==''}).map(function(d){return Number(st[d].marks)});
+ var avg=done.length?done.reduce(function(a,b){return a+b},0)/done.length:0;
+ return '<div class="rpm-hero"><h1>Department report marks</h1><p>One report for each of '+DEPTS.length+' departments, including the DC report and the HOD report. Each report is marked out of '+MAXM+'. Everyone can see the marks.</p><div class="rpm-lock">'+(canMark()?'✎ You can give marks (shivani@sonainfo.com)':'🔒 Only shivani@sonainfo.com can give marks. You can view them.')+'</div></div>'+
+ '<div class="g4"><div class="cd kp hl"><small>Total reports</small><div>'+DEPTS.length+'</div></div><div class="cd kp"><small>Marked</small><div>'+done.length+'</div></div><div class="cd kp"><small>Pending</small><div>'+(DEPTS.length-done.length)+'</div></div><div class="cd kp"><small>Average marks</small><div>'+(done.length?fm(avg):'-')+' <span style="font-size:13px;color:var(--mu)">/ '+MAXM+'</span></div></div></div>'+
+ '<div class="cd" style="margin-top:16px"><div class="rpm-tools"><input type="search" placeholder="Search department" aria-label="Search department" oninput="rpmQ(this.value)"><select onchange="rpmF(this.value)" aria-label="Filter"><option value="all">All reports</option><option value="done">Marked</option><option value="pend">Pending</option></select><select onchange="rpmS(this.value)" aria-label="Sort"><option value="dept">Department order</option><option value="hi">Marks: high to low</option><option value="lo">Marks: low to high</option></select><button class="btn" onclick="rpmCsv()">Download CSV</button></div>'+
+ '<div class="tw"><table><thead><tr><th>#</th><th>Report</th><th>Marks</th><th>Score</th><th>Marked by</th></tr></thead><tbody id="rpmBody"></tbody></table></div></div>';
+};
+
+/* =============== navigation, accounts, sync =============== */
+VW.forEach(function(v){if(v[0]==='finance')v[1]='Financial Team'});
+if(!VW.some(function(v){return v[0]==='reportmarks'})){var ri=VW.findIndex(function(v){return v[0]==='reports'});VW.splice(ri>-1?ri+1:VW.length,0,['reportmarks','Report Marks','★'])}
+
+function addShivani(){
+ if(!S.users)return false;
+ if(S.users.some(function(u){return String(u.email).toLowerCase()===OWNER}))return false;
+ S.users.push({id:nid(S.users),name:'Shivani',email:OWNER,pw:'admin',role:'Script Head',office:'Script',perm:mk('dashboard reportmarks announcements chat leave tickets reports')});
+ return true;
+}
+function initAll(){
+ var added=addShivani();
+ (S.users||[]).forEach(function(u){u.perm=u.perm||{};u.perm.reportmarks=1});
+ fin();seedMarks();
+ if(added&&typeof chips==='function')try{chips()}catch(e){}
+}
+var _ens=window.ensure;
+window.ensure=function(){if(typeof _ens==='function')_ens.apply(this,arguments);initAll()};
+var _rdy=window.ready;
+window.ready=function(){try{initAll()}catch(e){console.error(e)}if(typeof _rdy==='function')_rdy.apply(this,arguments);try{save()}catch(e){}};
+
+DOCS.fin2=function(){return{d:S.fin2||{}}};
+APPLY.fin2=function(d){S.fin2=(d&&d.d&&d.d.inc)?d.d:S.fin2};
+DOCS.rpm=function(){return{marks:S.reportMarks||{},seeded:!!S.reportMarksSeeded}};
+APPLY.rpm=function(d){S.reportMarks=d.marks||{};if(d.seeded)S.reportMarksSeeded=1};
+
+/* offline mode boots before this script runs, so initialise now if data is already ready */
+if(typeof READY!=='undefined'&&READY){try{initAll();save()}catch(e){console.error(e)}}
+})();
+</script>
+
 </body>
 </html>
