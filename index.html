@@ -2523,7 +2523,7 @@ document.addEventListener('keydown',function(e){
 .rpm-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bd)}
 .rpm-tools input,.rpm-tools select{padding:8px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--sf)}
 .rpm-in{width:84px;padding:6px 8px;border:1px solid var(--bd);border-radius:8px;background:var(--sf);text-align:center;font-weight:600}
-.rpm-bar{height:8px;border-radius:99px;background:var(--hv);overflow:hidden;min-width:110px}.rpm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#d08a1c,#0f766e)}
+.rpm-g{display:inline-block;font-size:11px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid}.rpm-g.g3{color:#0f766e;border-color:#0f766e;background:rgba(15,118,110,.08)}.rpm-g.g2{color:#2f7fb8;border-color:#2f7fb8;background:rgba(47,127,184,.08)}.rpm-g.g1{color:var(--wa);border-color:var(--wa);background:rgba(180,83,9,.08)}.rpm-dist{display:flex;gap:2px;height:14px;margin-bottom:8px}.rpm-dist i{display:block;flex-basis:0;border-radius:4px}.rpm-bar{height:8px;border-radius:99px;background:var(--hv);overflow:hidden;min-width:110px}.rpm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#d08a1c,#0f766e)}
 </style>
 <script id="ft-js">
 (function(){
@@ -2652,22 +2652,30 @@ window.ftEdit=function(){
 };
 
 /* =============== Report Marks =============== */
-var DEPTS=['Disciplinary Committee','HOD Office','SEC Committee','Chairman Office','Exam Cell','Election Committee','IT Team','IT Cell','Financial Team','Script Department','CEO Office','Client Department','Operational Team','Management Team','Promotional Department','HR Department','Legal Liaison','Audit Team','Quality Assurance','Training & Orientation','Public Relations','Communications','Member Welfare','Complaints Cell','Appeals Cell','Case Review','Evidence Review','Records & Documentation','Data Verification','Policy Research','Compliance','Ethics & Conduct','Mediation Cell','Volunteer Coordination','Outreach','Event Management','Meeting Operations','Scheduling Cell','Digital Records','Security Cell','Network Administration','Software Development','UI/UX Design','Technical Documentation','Project Coordination','Support Desk','Accounts','Payroll','Procurement','Token Buyer Cell'];
-/* first 27 reports get initial marks between 7 and 10; the other 23 stay pending for Shivani */
-var SEEDM=[9,8.5,9.5,8,9,7.5,8.5,9,8,7,9.5,8,7.5,9,8.5,10,7,8,9,7.5,8.5,9,8,7.5,9.5,8,8.5];
+/* All 50 departments, each report marked out of 10, initial marks between 7 and 10. Shivani can change any mark. */
+var MARKS=[['Financial Team',9],['HOD Team',8.5],['IT Team',9.5],['Client Team',8.5],['Disciplinary Team',9],['Tech Team',9],['SEC Committee',9.5],['Script Department',8],['CEO Office',10],['Chairman Office',9.5],['Exam Cell',8.5],['Election Committee',8],['Token Buyer Team',7.5],['Meeting Centre Team',8.5],['Help Desk',8],['IT Cell',9],['Operational Team',8],['Management Team',9],['Promotional Department',7.5],['HR Department',8.5],['Legal Liaison',7.5],['Audit Team',9.5],['Quality Assurance',9],['Training & Orientation',8],['Public Relations',8.5],['Communications',8],['Member Welfare',9],['Complaints Cell',7.5],['Appeals Cell',8],['Case Review Team',9],['Evidence Review',8.5],['Records & Documentation',9.5],['Data Verification',8],['Policy Research',7],['Compliance Team',9],['Ethics & Conduct',9.5],['Mediation Cell',8],['Volunteer Coordination',7.5],['Outreach Team',7],['Event Management',8.5],['Meeting Operations',9],['Scheduling Cell',8],['Digital Records',8.5],['Security Cell',9.5],['Network Administration',9],['Software Development',9],['UI/UX Design',8],['Technical Documentation',7.5],['Project Coordination',8.5],['Support Desk',7.5]];
+var DEPTS=MARKS.map(function(m){return m[0]});
 var Q={q:'',f:'all',s:'dept'};
 var canMark=function(){return !!ME&&String(ME.email||'').toLowerCase()===OWNER};
 var store=function(){return S.reportMarks||(S.reportMarks={})};
 var fm=function(n){return (Math.round(n*10)/10).toString()};
+var grade=function(m){return m>=9?'Excellent':m>=8?'Very good':'Good'};
 function seedMarks(){
- if(S.reportMarksSeeded)return;var st=store();
- DEPTS.forEach(function(d,i){if(i<SEEDM.length&&!st[d])st[d]={marks:SEEDM[i],by:'Initial marks',at:'27 Oct 2026'}});
- S.reportMarksSeeded=1;
+ if(S.reportMarksVer===2)return;
+ var old=store(),nw={};
+ MARKS.forEach(function(m){var o=old[m[0]];
+  /* keep a mark Shivani gave herself; everything else gets the new initial mark */
+  nw[m[0]]=(o&&o.by&&String(o.by).indexOf('@')>-1)?o:{marks:m[1],by:'Initial marks',at:'27 Oct 2026'}});
+ S.reportMarks=nw;S.reportMarksVer=2;S.reportMarksSeeded=1;
+}
+function ranked(){
+ var st=store(),l=DEPTS.map(function(d,i){var r=st[d];return{n:i+1,i:i,d:d,m:(r&&r.marks!=null&&r.marks!=='')?Number(r.marks):null,by:r?r.by:'',at:r?r.at:''}});
+ var vals=l.filter(function(x){return x.m!==null}).map(function(x){return x.m}).sort(function(a,b){return b-a}).filter(function(v,i,a){return a.indexOf(v)===i});
+ l.forEach(function(x){x.rank=x.m===null?null:vals.indexOf(x.m)+1});
+ return l;
 }
 function mrows(){
- var st=store();
- var l=DEPTS.map(function(d,i){var r=st[d];return{n:i+1,i:i,d:d,m:(r&&r.marks!=null&&r.marks!=='')?Number(r.marks):null,by:r?r.by:'',at:r?r.at:''}});
- l=l.filter(function(x){return(!Q.q||x.d.toLowerCase().indexOf(Q.q)>-1)&&(Q.f==='all'||(Q.f==='done'?x.m!==null:x.m===null))});
+ var l=ranked().filter(function(x){return(!Q.q||x.d.toLowerCase().indexOf(Q.q)>-1)&&(Q.f==='all'||(Q.f==='done'?x.m!==null:x.m===null))});
  if(Q.s==='hi')l.sort(function(a,b){return(b.m===null?-1:b.m)-(a.m===null?-1:a.m)||a.n-b.n});
  else if(Q.s==='lo')l.sort(function(a,b){return(a.m===null?99:a.m)-(b.m===null?99:b.m)||a.n-b.n});
  return l;
@@ -2677,8 +2685,8 @@ function mbody(){
  var ed=canMark(),l=mrows();
  tb.innerHTML=l.map(function(x){
   var cell=ed?'<input class="rpm-in" type="number" min="0" max="'+MAXM+'" step="0.5" value="'+(x.m===null?'':x.m)+'" aria-label="Marks for '+esc(x.d)+' report" onchange="rpmSet('+x.i+',this.value)">':(x.m===null?'<span class="tg">Pending</span>':'<b>'+fm(x.m)+'</b>');
-  return '<tr><td>'+x.n+'</td><td><b>'+esc(x.d)+' report</b></td><td>'+cell+' <small>/ '+MAXM+'</small></td><td><div class="rpm-bar"><i style="width:'+(x.m===null?0:x.m/MAXM*100)+'%"></i></div></td><td><small>'+esc(x.by||'—')+'<br>'+esc(x.at||'')+'</small></td></tr>';
- }).join('')||'<tr><td colspan="5" style="padding:18px;color:var(--mu)">No department matches your search.</td></tr>';
+  return '<tr><td>'+x.n+'</td><td><b>'+esc(x.d)+'</b></td><td>'+cell+' <small>/ '+MAXM+'</small></td><td>'+(x.m===null?'—':'<span class="rpm-g g'+(x.m>=9?3:x.m>=8?2:1)+'">'+grade(x.m)+'</span>')+'</td><td><div class="rpm-bar"><i style="width:'+(x.m===null?0:x.m/MAXM*100)+'%"></i></div></td><td>'+(x.rank?'#'+x.rank:'—')+'</td><td><small>'+esc(x.by||'—')+'<br>'+esc(x.at||'')+'</small></td></tr>';
+ }).join('')||'<tr><td colspan="7" style="padding:18px;color:var(--mu)">No department matches your search.</td></tr>';
 }
 window.rpmQ=function(v){Q.q=String(v||'').toLowerCase().trim();mbody()};
 window.rpmF=function(v){Q.f=v;mbody()};
@@ -2691,15 +2699,22 @@ window.rpmSet=function(i,v){
   store()[name]={marks:n,by:ME.name+' ('+ME.email+')',at:now()}}
  log('Report marks: '+name+' = '+(String(v).trim()===''?'cleared':v));save();go('reportmarks');toast('Marks saved');
 };
-window.rpmCsv=function(){csv('report-marks',['No','Department report','Marks (out of '+MAXM+')','Marked by','Time'],mrows().map(function(x){return[x.n,x.d+' report',x.m===null?'Pending':x.m,x.by,x.at]}))};
+window.rpmCsv=function(){csv('report-marks',['No','Department','Marks (out of '+MAXM+')','Grade','Rank','Marked by','Time'],mrows().map(function(x){return[x.n,x.d,x.m===null?'Pending':x.m,x.m===null?'':grade(x.m),x.rank||'',x.by,x.at]}))};
 V.reportmarks=function(){
  seedMarks();setTimeout(mbody,0);
- var st=store(),done=DEPTS.filter(function(d){return st[d]&&st[d].marks!=null&&st[d].marks!==''}).map(function(d){return Number(st[d].marks)});
- var avg=done.length?done.reduce(function(a,b){return a+b},0)/done.length:0;
- return '<div class="rpm-hero"><h1>Department report marks</h1><p>One report for each of '+DEPTS.length+' departments, including the DC report and the HOD report. Each report is marked out of '+MAXM+'. Everyone can see the marks.</p><div class="rpm-lock">'+(canMark()?'✎ You can give marks (shivani@sonainfo.com)':'🔒 Only shivani@sonainfo.com can give marks. You can view them.')+'</div></div>'+
- '<div class="g4"><div class="cd kp hl"><small>Total reports</small><div>'+DEPTS.length+'</div></div><div class="cd kp"><small>Marked</small><div>'+done.length+'</div></div><div class="cd kp"><small>Pending</small><div>'+(DEPTS.length-done.length)+'</div></div><div class="cd kp"><small>Average marks</small><div>'+(done.length?fm(avg):'-')+' <span style="font-size:13px;color:var(--mu)">/ '+MAXM+'</span></div></div></div>'+
- '<div class="cd" style="margin-top:16px"><div class="rpm-tools"><input type="search" placeholder="Search department" aria-label="Search department" oninput="rpmQ(this.value)"><select onchange="rpmF(this.value)" aria-label="Filter"><option value="all">All reports</option><option value="done">Marked</option><option value="pend">Pending</option></select><select onchange="rpmS(this.value)" aria-label="Sort"><option value="dept">Department order</option><option value="hi">Marks: high to low</option><option value="lo">Marks: low to high</option></select><button class="btn" onclick="rpmCsv()">Download CSV</button></div>'+
- '<div class="tw"><table><thead><tr><th>#</th><th>Report</th><th>Marks</th><th>Score</th><th>Marked by</th></tr></thead><tbody id="rpmBody"></tbody></table></div></div>';
+ var all=ranked(),done=all.filter(function(x){return x.m!==null}),vals=done.map(function(x){return x.m});
+ var avg=vals.length?vals.reduce(function(a,b){return a+b},0)/vals.length:0;
+ var top=done.slice().sort(function(a,b){return b.m-a.m||a.n-b.n}).slice(0,5),low=done.slice().sort(function(a,b){return a.m-b.m||a.n-b.n}).slice(0,5);
+ var ex=done.filter(function(x){return x.m>=9}).length,vg=done.filter(function(x){return x.m>=8&&x.m<9}).length,gd=done.filter(function(x){return x.m<8}).length,tot=done.length||1;
+ var list=function(a){return a.map(function(x){return '<div class="row"><span><b>'+esc(x.d)+'</b></span><b>'+fm(x.m)+' <small style="display:inline">/ '+MAXM+'</small></b></div>'}).join('')};
+ var seg=function(n,c,l){return n?'<i style="flex-grow:'+n+';background:'+c+'" title="'+l+': '+n+'"></i>':''};
+ return '<div class="rpm-hero"><h1>Department report marks</h1><p>One report for each of '+DEPTS.length+' departments, including Financial, HOD, IT, Client, Disciplinary and Tech teams. Each report is marked out of '+MAXM+'. The Chairman and everyone else can see who got how much.</p><div class="rpm-lock">'+(canMark()?'✎ You can change marks (shivani@sonainfo.com)':'🔒 Only shivani@sonainfo.com can change marks. You can view them.')+'</div></div>'+
+ '<div class="g4"><div class="cd kp hl"><small>Total departments</small><div>'+DEPTS.length+'</div></div><div class="cd kp"><small>Marked</small><div>'+done.length+'</div></div><div class="cd kp"><small>Average marks</small><div>'+(done.length?fm(avg):'-')+' <span style="font-size:13px;color:var(--mu)">/ '+MAXM+'</span></div></div><div class="cd kp"><small>Highest / lowest</small><div>'+(vals.length?fm(Math.max.apply(null,vals))+' / '+fm(Math.min.apply(null,vals)):'-')+'</div></div></div>'+
+ '<div class="g3" style="margin-top:16px"><div class="cd"><h3>Top 5 departments</h3><div class="cb">'+list(top)+'</div></div><div class="cd"><h3>Needs improvement</h3><div class="cb">'+list(low)+'</div></div>'+
+ '<div class="cd"><h3>How marks are spread</h3><div class="cb"><div class="rpm-dist" role="img" aria-label="'+ex+' excellent, '+vg+' very good, '+gd+' good">'+seg(ex,'#0f766e','Excellent')+seg(vg,'#2f7fb8','Very good')+seg(gd,'#d08a1c','Good')+'</div>'+
+ '<div class="row"><span><span class="rpm-g g3">Excellent</span> 9 to 10</span><b>'+ex+'</b></div><div class="row"><span><span class="rpm-g g2">Very good</span> 8 to 8.5</span><b>'+vg+'</b></div><div class="row"><span><span class="rpm-g g1">Good</span> 7 to 7.5</span><b>'+gd+'</b></div></div></div></div>'+
+ '<div class="cd" style="margin-top:16px"><div class="rpm-tools"><input type="search" placeholder="Search department" aria-label="Search department" oninput="rpmQ(this.value)"><select onchange="rpmF(this.value)" aria-label="Filter"><option value="all">All departments</option><option value="done">Marked</option><option value="pend">Pending</option></select><select onchange="rpmS(this.value)" aria-label="Sort"><option value="dept">Department order</option><option value="hi">Marks: high to low</option><option value="lo">Marks: low to high</option></select><button class="btn" onclick="rpmCsv()">Download CSV</button></div>'+
+ '<div class="tw"><table><thead><tr><th>#</th><th>Department</th><th>Marks</th><th>Grade</th><th>Score</th><th>Rank</th><th>Marked by</th></tr></thead><tbody id="rpmBody"></tbody></table></div></div>';
 };
 
 /* =============== navigation, accounts, sync =============== */
@@ -2725,8 +2740,8 @@ window.ready=function(){try{initAll()}catch(e){console.error(e)}if(typeof _rdy==
 
 DOCS.fin2=function(){return{d:S.fin2||{}}};
 APPLY.fin2=function(d){S.fin2=(d&&d.d&&d.d.inc)?d.d:S.fin2};
-DOCS.rpm=function(){return{marks:S.reportMarks||{},seeded:!!S.reportMarksSeeded}};
-APPLY.rpm=function(d){S.reportMarks=d.marks||{};if(d.seeded)S.reportMarksSeeded=1};
+DOCS.rpm=function(){return{marks:S.reportMarks||{},seeded:!!S.reportMarksSeeded,ver:S.reportMarksVer||0}};
+APPLY.rpm=function(d){S.reportMarks=d.marks||{};if(d.seeded)S.reportMarksSeeded=1;S.reportMarksVer=d.ver||0};
 
 /* offline mode boots before this script runs, so initialise now if data is already ready */
 if(typeof READY!=='undefined'&&READY){try{initAll();save()}catch(e){console.error(e)}}
