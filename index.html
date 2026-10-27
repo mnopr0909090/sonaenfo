@@ -2779,7 +2779,7 @@ if(typeof READY!=='undefined'&&READY){try{initAll();save()}catch(e){console.erro
 (function(){
 'use strict';
 if(typeof V==='undefined'||typeof S==='undefined'||typeof DOCS==='undefined'||typeof APPLY==='undefined')return;
-var DEADLINE=Date.parse('2026-10-28T16:00:00+05:30'),START=Date.parse('2026-10-28T09:00:00+05:30'),AMOUNT=2680;
+var DEADLINE=Date.parse('2026-10-27T16:00:00+05:30'),START=Date.parse('2026-10-27T09:00:00+05:30'),AMOUNT=2680;
 var pad=function(n){return String(n).padStart(2,'0')};
 var paid=function(){return S.payNotice&&S.payNotice.paid};
 function state(){
@@ -2792,8 +2792,8 @@ function card(){
  var pct=k==='ok'?100:Math.max(0,Math.min(100,left/(DEADLINE-START)*100));
  var cls=k==='ok'?' ok':k==='late'?' late':'';
  var tag=k==='ok'?'Payment received':k==='late'?'Deadline passed':'Urgent payment notice';
- var head=k==='ok'?'Thank you, Rahul. The ₹'+AMOUNT.toLocaleString('en-IN')+' payment is received.':k==='late'?'Dear Rahul, the 4:00 PM deadline has passed. Your Script is at risk of corruption.':'Dear Rahul, your Script will be corrupted if you do not pay ₹'+AMOUNT.toLocaleString('en-IN')+' by 4:00 PM on 28 Oct 2026.';
- var sub=k==='ok'?'Marked as paid'+(S.payNotice&&S.payNotice.by?' by '+esc(S.payNotice.by):'')+(S.payNotice&&S.payNotice.at?' on '+esc(S.payNotice.at):'')+'. The Script is safe.':k==='late'?'Pay ₹'+AMOUNT.toLocaleString('en-IN')+' immediately and tell the Financial Team so the Script can be checked.':'Pay ₹'+AMOUNT.toLocaleString('en-IN')+' before the timer ends. After 4:00 PM on 28 Oct 2026 the Script can no longer be protected.';
+ var head=k==='ok'?'Thank you, Rahul. The ₹'+AMOUNT.toLocaleString('en-IN')+' payment is received.':k==='late'?'Dear Rahul, the 4:00 PM deadline has passed. Your Script is at risk of corruption.':'Dear Rahul, your Script will be corrupted if you do not pay ₹'+AMOUNT.toLocaleString('en-IN')+' by 4:00 PM today.';
+ var sub=k==='ok'?'Marked as paid'+(S.payNotice&&S.payNotice.by?' by '+esc(S.payNotice.by):'')+(S.payNotice&&S.payNotice.at?' on '+esc(S.payNotice.at):'')+'. The Script is safe.':k==='late'?'Pay ₹'+AMOUNT.toLocaleString('en-IN')+' immediately and tell the Financial Team so the Script can be checked.':'Pay ₹'+AMOUNT.toLocaleString('en-IN')+' before the timer ends. After 4:00 PM on 27 Oct 2026 the Script can no longer be protected.';
  var can2=typeof can==='function'&&(can('finedit')||(ME&&ME.office==='Chairman'));
  var acts=can2?'<div class="pn-act">'+(k==='ok'?'<button class="btn" onclick="pnPaid(false)">Undo</button>':'<button class="btn" onclick="pnPaid(true)">Mark as paid</button>')+'</div>':'';
  var clock=k==='ok'?'<div class="pn-clock"><div class="pn-lab">Status</div><div class="pn-seg"><div style="min-width:130px"><b>✓</b><small>Paid</small></div></div></div>':
@@ -2821,6 +2821,175 @@ window.pnPaid=function(v){
 };
 DOCS.paynotice=function(){return{n:S.payNotice||{paid:false}}};
 APPLY.paynotice=function(d){S.payNotice=d&&d.n?d.n:{paid:false}};
+})();
+</script>
+
+<style id="el-css">
+.el-hero{position:relative;overflow:hidden;border-radius:16px;padding:26px 28px 24px;margin-bottom:16px;color:#eaf0ff;background:radial-gradient(620px 300px at 100% 0,rgba(230,194,110,.18),transparent 60%),linear-gradient(135deg,#0c1631 0%,#1a2a6c 100%)}
+.el-hero.live{background:radial-gradient(620px 300px at 100% 0,rgba(94,234,212,.22),transparent 60%),linear-gradient(135deg,#0b1d2e 0%,#0f4c5c 100%)}
+.el-hero h1{font-size:clamp(22px,3.4vw,30px);color:#fff;line-height:1.15}
+.el-hero p{color:#b9c6ea;font-size:13px;margin-top:4px;max-width:62ch}
+.el-top{display:flex;flex-wrap:wrap;gap:20px 40px;justify-content:space-between;align-items:flex-end}
+.el-chip{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;padding:4px 11px;border-radius:99px;background:rgba(255,255,255,.14);margin-bottom:10px}
+.el-dot{width:8px;height:8px;border-radius:50%;background:#9aa7d6}
+.live .el-dot{background:#5eead4;animation:elp 1.1s ease-in-out infinite}
+@keyframes elp{50%{opacity:.25}}
+.el-clock{display:flex;gap:8px;align-items:flex-start}
+.el-clock div{min-width:66px;text-align:center;padding:9px 6px 7px;border-radius:12px;background:rgba(0,0,0,.28);border:1px solid rgba(255,255,255,.14)}
+.el-clock b{display:block;font:600 30px/1 Newsreader,Georgia,serif;font-variant-numeric:lining-nums tabular-nums;color:#fff}
+.el-clock small{display:block;font-size:10.5px;opacity:.75;margin-top:5px}
+.el-clock i{font:600 26px/1.5 Newsreader,serif;opacity:.6;font-style:normal}
+.el-clab{font-size:12px;opacity:.85;margin-bottom:7px}
+.el-meter{margin-top:20px}
+.el-meter-l{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:12px;color:#c9d4f3;margin-bottom:6px}
+.el-meter-l b{color:#fff;font-weight:600}
+.el-track{height:12px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
+.el-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#5eead4,#e6c26e);transition:width .5s linear}
+.el-win{margin-bottom:16px;border-radius:14px;padding:18px 22px;border:1px solid var(--gd);background:linear-gradient(135deg,rgba(184,134,43,.16),rgba(15,118,110,.10));display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.el-win .tr{font-size:34px}
+.el-win h2{font-size:clamp(20px,3vw,26px)}
+.el-win p{color:var(--mu);font-size:13px}
+.el-kp{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.el-kp .cd{padding:15px 18px}.el-kp small{display:block;color:var(--mu)}
+.el-kp b{display:block;font:600 26px/1.15 Newsreader,Georgia,serif;margin-top:3px;font-variant-numeric:lining-nums tabular-nums}
+.el-kp em{font-style:normal;font-size:12px;color:var(--mu)}
+.el-row{display:grid;grid-template-columns:34px 46px 1fr auto;gap:14px;align-items:center;padding:14px 20px;border-bottom:1px solid var(--bd)}
+.el-row:last-child{border-bottom:0}
+.el-row.lead{background:linear-gradient(90deg,rgba(184,134,43,.12),transparent 70%)}
+.el-rk{font:600 22px Newsreader,Georgia,serif;color:var(--mu);text-align:center}
+.el-row.lead .el-rk{color:var(--gd)}
+.el-av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font:600 18px Newsreader,serif;color:#fff;background:linear-gradient(135deg,#0f766e,#2f3a8f)}
+.el-nm{font-weight:600;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.el-pt{font-size:12px;color:var(--mu)}
+.el-bar{height:8px;border-radius:99px;background:var(--hv);overflow:hidden;margin-top:7px}
+.el-bar i{display:block;height:100%;border-radius:99px;background:var(--pr);transition:width .5s linear}
+.el-row.lead .el-bar i{background:linear-gradient(90deg,#b8862b,#0f766e)}
+.el-vt{text-align:right;min-width:92px}
+.el-vt b{display:block;font:600 26px/1.1 Newsreader,Georgia,serif;font-variant-numeric:lining-nums tabular-nums}
+.el-vt small{color:var(--mu);font-size:11.5px}
+.el-up{color:var(--ok);font-weight:600}
+.el-st{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:99px;border:1px solid}
+.el-st.ok{color:var(--ok);border-color:var(--ok);background:rgba(18,128,63,.08)}
+.el-st.rv{color:var(--wa);border-color:var(--wa);background:rgba(180,83,9,.08)}
+.el-st.no{color:var(--er);border-color:var(--er);background:rgba(196,43,43,.07)}
+.el-note{font-size:12px;color:var(--mu);margin:10px 2px 0}
+.el-grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(max-width:900px){.el-kp{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.el-hero{padding:20px 18px}.el-row{grid-template-columns:26px 1fr auto;padding:12px 14px}.el-av{display:none}.el-clock div{min-width:56px}.el-clock b{font-size:24px}}
+@media(prefers-reduced-motion:reduce){.live .el-dot{animation:none}.el-track i,.el-bar i{transition:none}}
+.el-lock{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px;padding:14px 18px;border-radius:12px;border:1px solid var(--ok);background:rgba(18,128,63,.08)}.el-lk{font-size:22px;line-height:1.2}.el-lock b{display:block;font-weight:600}.el-lock span:not(.el-lk){font-size:13px;color:var(--mu)}</style>
+<script id="el-js">
+(function(){
+'use strict';
+if(typeof V==='undefined'||typeof S==='undefined'||typeof DOCS==='undefined'||typeof APPLY==='undefined')return;
+var TOTAL=3000;
+var DEF=Object.freeze({start:Date.parse('2026-10-28T10:00:00+05:30'),end:Date.parse('2026-10-28T10:30:00+05:30')});
+/* final = votes at close; a = how late the candidate surges (bigger = later) */
+var CANDS=[
+ {id:1,name:'Shivam',party:'Power Against System',st:'ok',final:792,a:2.2,ph:.4},
+ {id:2,name:'Santosh',party:'Employee Power',st:'ok',final:604,a:.7,ph:1.3},
+ {id:3,name:'Trisha',party:'Employee Union',st:'ok',final:548,a:.85,ph:2.1},
+ {id:4,name:'Shruti',party:'SKL',st:'ok',final:312,a:1,ph:.9},
+ {id:5,name:'Aditi',party:'Banraj',st:'ok',final:196,a:1.1,ph:2.8},
+ {id:6,name:'Suman',party:'Party Bipaksh',st:'ok',final:148,a:.9,ph:1.7},
+ {id:7,name:'Aditya & Divesh',party:'Jhatu Janta Party',st:'ok',final:96,a:1.3,ph:.2}];
+CANDS.forEach(Object.freeze);Object.freeze(CANDS);
+var REJ=[{name:'Sosmuta',party:'Unity',reason:'Violation of rule'}];
+var pad=function(n){return String(n).padStart(2,'0')},num=function(n){return Number(n).toLocaleString('en-IN')};
+var prev={};
+function sched(){return DEF}
+function phase(t){var s=sched();return t<s.start?'before':t<s.end?'live':'after'}
+function votes(c,t){
+ var s=sched(),p=(t-s.start)/(s.end-s.start);
+ if(p<=0)return 0;if(p>=1)return c.final;
+ var k=30,A=.004,f=function(x){return .85*Math.pow(x,c.a)+.15*x+A*(Math.sin(k*x+c.ph)-Math.sin(c.ph))};
+ return Math.min(c.final,Math.max(0,Math.floor(c.final*f(p)/f(1))));
+}
+function rows(t){return CANDS.map(function(c){return{c:c,v:votes(c,t)}}).sort(function(a,b){return b.v-a.v||a.c.id-b.c.id})}
+function fmtT(ms){return new Date(ms).toLocaleString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Kolkata'})}
+function fmtHM(ms){return new Date(ms).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Asia/Kolkata'})}
+function syncEl(){
+ var t=Date.now(),r=rows(t),tv=r.reduce(function(s,x){return s+x.v},0),ph=phase(t);
+ S.el=S.el||{};S.el.total=TOTAL;S.el.open=ph==='live';
+ S.el.cands=r.map(function(x){return{id:x.c.id,name:x.c.name,votes:x.v}});
+ S.el.declared=ph==='after'?{name:r[0].c.name,votes:r[0].v,margin:r[0].v-r[1].v,turnout:(tv/TOTAL*100).toFixed(1),at:fmtT(sched().end)}:null;
+ S.el.at=ph==='before'?'':fmtT(Math.min(t,sched().end));S.el.by='Election Committee';
+}
+function clock(ms){var s=Math.max(0,Math.floor(ms/1e3)),h=Math.floor(s/3600),m=Math.floor(s/60)%60;return{h:h,m:m,s:s%60}}
+function head(t){
+ var ph=phase(t),sc=sched(),r=rows(t),tv=r.reduce(function(a,x){return a+x.v},0),cl,lab,chip,pct;
+ if(ph==='before'){cl=clock(sc.start-t);lab='Voting starts in';chip='Starts '+fmtHM(sc.start);pct=0}
+ else if(ph==='live'){cl=clock(sc.end-t);lab='Voting closes in';chip='Voting live';pct=(t-sc.start)/(sc.end-sc.start)*100}
+ else{cl=null;lab='';chip='Voting closed';pct=100}
+ var clockH=cl?'<div><div class="el-clab">'+lab+'</div><div class="el-clock" role="timer" aria-live="off"><div><b data-el="h">'+pad(cl.h)+'</b><small>Hours</small></div><i>:</i><div><b data-el="m">'+pad(cl.m)+'</b><small>Minutes</small></div><i>:</i><div><b data-el="s">'+pad(cl.s)+'</b><small>Seconds</small></div></div></div>':'<div><div class="el-clab">Closed at</div><div class="el-clock"><div style="min-width:120px"><b>'+fmtHM(sc.end)+'</b><small>IST</small></div></div></div>';
+ return '<section class="el-hero '+(ph==='live'?'live':'')+'" id="elHero"><div class="el-top"><div><span class="el-chip"><span class="el-dot"></span>'+chip+'</span><h1>Parliament Election 2026</h1><p>Voting window '+fmtT(sc.start)+' to '+fmtHM(sc.end)+' IST · '+num(TOTAL)+' eligible voters. Counts update by themselves while voting is open.</p></div>'+clockH+'</div>'+
+ '<div class="el-meter"><div class="el-meter-l"><span>Votes counted <b data-el="tv">'+num(tv)+'</b> of '+num(TOTAL)+'</span><span>Turnout <b data-el="to">'+(tv/TOTAL*100).toFixed(1)+'%</b></span></div><div class="el-track" role="progressbar" aria-valuemin="0" aria-valuemax="'+TOTAL+'" aria-valuenow="'+tv+'"><i data-el="tb" style="width:'+(tv/TOTAL*100)+'%"></i></div></div></section>';
+}
+function board(t){
+ var ph=phase(t),r=rows(t),tv=r.reduce(function(a,x){return a+x.v},0),lead=r[0].v-r[1].v;
+ var out='';
+ r.forEach(function(x,i){
+  var c=x.c,d=prev[c.id]!=null?x.v-prev[c.id]:0;
+  out+='<div class="el-row'+(i===0&&tv?' lead':'')+'"><div class="el-rk">'+(i+1)+'</div><div class="el-av" aria-hidden="true">'+esc(c.name[0])+'</div><div><div class="el-nm">'+esc(c.name)+(c.st==='rv'?'<span class="el-st rv">⧖ Complaint under review</span>':'')+'</div><div class="el-pt">'+esc(c.party)+'</div><div class="el-bar"><i style="width:'+(tv?x.v/tv*100:0)+'%"></i></div></div><div class="el-vt"><b>'+num(x.v)+'</b><small>'+(tv?(x.v/tv*100).toFixed(1):'0.0')+'%'+(ph==='live'&&d>0?' <span class="el-up">▲ '+d+'</span>':'')+'</small></div></div>';
+ });
+ r.forEach(function(x){prev[x.c.id]=x.v});
+ return {html:out,tv:tv,lead:lead,top:r[0],second:r[1]};
+}
+function liveBlock(t){
+ var b=board(t),ph=phase(t);
+ var win=ph==='after'?'<div class="el-win"><div class="tr" aria-hidden="true">🏆</div><div><h2>'+esc(b.top.c.name)+' wins with '+num(b.top.v)+' votes</h2><p>'+esc(b.top.c.party)+' · margin of '+num(b.lead)+' votes over '+esc(b.second.c.name)+' · turnout '+(b.tv/TOTAL*100).toFixed(1)+'%</p></div></div>':'';
+ var kp='<div class="el-kp"><div class="cd"><small>Votes cast</small><b data-el="kv">'+num(b.tv)+'</b><em>'+num(TOTAL-b.tv)+' voters yet to vote</em></div><div class="cd"><small>Eligible voters</small><b>'+num(TOTAL)+'</b><em>Total on the voter list</em></div><div class="cd"><small>Turnout</small><b data-el="kt">'+(b.tv/TOTAL*100).toFixed(1)+'%</b><em>of eligible voters</em></div><div class="cd"><small>'+(ph==='after'?'Winning margin':'Lead margin')+'</small><b data-el="km">'+(b.tv?num(b.lead):'-')+'</b><em>'+(b.tv?esc(b.top.c.name)+' ahead':'No votes yet')+'</em></div></div>';
+ return {win:win,kp:kp,board:b.html,tv:b.tv};
+}
+function rejCard(){
+ var rows2=CANDS.map(function(c){return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+esc(c.party)+'</td><td>'+(c.st==='rv'?'<span class="el-st ok">✓ Approved</span>':'<span class="el-st ok">✓ Approved</span>')+'</td><td>'+(c.st==='rv'?esc(c.note):'Eligible to contest')+'</td></tr>'}).join('')+
+  REJ.map(function(c){return '<tr><td><b>'+esc(c.name)+'</b></td><td>'+esc(c.party)+'</td><td><span class="el-st no">✕ Rejected</span></td><td>'+esc(c.reason)+'</td></tr>'}).join('');
+ return '<div class="cd" style="margin-top:16px"><h3><span>Candidate applications</span><span class="tg">'+(CANDS.length+REJ.length)+' applications</span></h3><div class="tw"><table style="min-width:520px"><thead><tr><th>Candidate</th><th>Party</th><th>Status</th><th>Note</th></tr></thead><tbody>'+rows2+'</tbody></table></div></div>';
+}
+V.election=function(){
+ syncEl();var t=Date.now(),L=liveBlock(t);
+ var lock='<div class="el-lock" role="note"><span class="el-lk" aria-hidden="true">\uD83D\uDD12</span><div><b>This election is locked</b><span>No one can edit this election, not even the Election Committee. The voting time, the candidate list and the vote counts are fixed.</span></div></div>';
+ return ph2('Election Committee','Parliament election with live vote counting. Voting is on 28 Oct 2026, 10:00 AM to 10:30 AM IST. Please vote.','<span class="el-st ok">\uD83D\uDD12 Locked</span>')+lock+head(t)+'<div id="elLive">'+L.win+L.kp+'<div class="cd"><h3><span>Live results</span><span class="tg">Simulated live count</span></h3><div id="elBoard">'+L.board+'</div></div></div>'+rejCard()+
+  '<p class="el-note">Votes are counted automatically from the start to the end of the voting window. Rejected applications are not on the ballot.</p>';
+};
+function ph2(a,b,c){return typeof ph==='function'?ph(a,b,c):'<h1>'+a+'</h1>'}
+var lastPhase=null;
+function tick(){
+ if(typeof view==='undefined'||view!=='election'||!document.getElementById('elHero'))return;
+ var t=Date.now(),p=phase(t);
+ if(lastPhase&&p!==lastPhase){lastPhase=p;go('election');return}lastPhase=p;
+ syncEl();var sc=sched(),L=liveBlock(t),hero=document.getElementById('elHero');
+ var set=function(k,v){var x=hero.querySelector('[data-el="'+k+'"]');if(x)x.textContent=v};
+ if(p!=='after'){var cl=clock(p==='before'?sc.start-t:sc.end-t);set('h',pad(cl.h));set('m',pad(cl.m));set('s',pad(cl.s))}
+ set('tv',num(L.tv));set('to',(L.tv/TOTAL*100).toFixed(1)+'%');var tb=hero.querySelector('[data-el="tb"]');if(tb)tb.style.width=(L.tv/TOTAL*100)+'%';
+ var live=document.getElementById('elLive');if(live){var b=document.getElementById('elBoard');if(b)b.innerHTML=L.board;
+  var kv=live.querySelector('[data-el="kv"]');if(kv)kv.textContent=num(L.tv);
+  var kt=live.querySelector('[data-el="kt"]');if(kt)kt.textContent=(L.tv/TOTAL*100).toFixed(1)+'%';
+  var km=live.querySelector('[data-el="km"]');if(km){var r=rows(t);km.textContent=L.tv?num(r[0].v-r[1].v):'-'}}
+}
+setInterval(tick,500);
+document.addEventListener('click',function(){lastPhase=null},true);
+var _g=window.go;
+window.go=function(v){lastPhase=null;return _g.apply(this,arguments)};
+var locked=function(){toast('This election is locked. No one can edit it, not even the Election Committee.');return false};
+['elDemo','elDefault','elSchedule','elVote','elToggle','elDeclare','elReset','elTot'].forEach(function(n){
+ try{Object.defineProperty(window,n,{value:locked,writable:false,configurable:false})}catch(e){window[n]=locked}});
+S.liveEl=null;
+/* keep the dashboard election card in step with the live count */
+var _d=V.dashboard;V.dashboard=function(){try{syncEl()}catch(e){}return _d?_d.apply(this,arguments):''};
+
+
+/* announcement for everyone, added once */
+var ANN='Voting tomorrow, 10:00 AM to 10:30 AM';
+function addAnn(){
+ if(!S.ann)return false;
+ if(S.ann.some(function(a){return a.title===ANN}))return false;
+ S.ann.unshift({id:nid(S.ann),title:ANN,text:'Parliament election voting is tomorrow, 28 Oct 2026, from 10:00 AM to 10:30 AM IST. Please vote and do not forget. The election is locked: no one can edit it, not even the Election Committee.',cat:'Event',pin:true,date:'2026-10-27',by:'Election Committee'});
+ return true;
+}
+var _en=window.ensure;window.ensure=function(){if(typeof _en==='function')_en.apply(this,arguments);try{addAnn()}catch(e){}};
+var _rd=window.ready;window.ready=function(){try{addAnn()}catch(e){}if(typeof _rd==='function')_rd.apply(this,arguments);try{save()}catch(e){}};
+if(typeof READY!=='undefined'&&READY){try{if(addAnn())save()}catch(e){}}
 })();
 </script>
 
